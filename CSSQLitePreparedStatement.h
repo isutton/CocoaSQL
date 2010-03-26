@@ -25,8 +25,9 @@
  @return <code>preparedStatement</code>
  
  */
-+ (id <CSQLPreparedStatement>)preparedStatementWithDatabase:(id <CSQLDatabase> *)database
-                                                     andSQL:(NSString *)sql;
++ (id)preparedStatementWithDatabase:(id)database
+                             andSQL:(NSString *)sql
+                              error:(NSError **)error;
 
 /**
  
@@ -36,7 +37,9 @@
  @return <code>preparedStatement</code>
  
  */
-- (id <CSQLPreparedStatement>)initWithDatabase:(id <CSQLDatabase> *)database
-                                        andSQL:(NSString *)sql;
+- (id)initWithDatabase:(id)database
+                andSQL:(NSString *)sql
+                 error:(NSError **)error;
+
 
 @end

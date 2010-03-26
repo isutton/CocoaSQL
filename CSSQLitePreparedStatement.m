@@ -12,14 +12,16 @@
 @implementation CSSQLitePreparedStatement
 
 
-+ (id <CSQLPreparedStatement>)preparedStatementWithDatabase:(id <CSQLDatabase> *)database 
-                                                     andSQL:(NSString *)sql
++ (id)preparedStatementWithDatabase:(id)aDatabase 
+                             andSQL:(NSString *)sql
+                              error:(NSError **)error
 {
     return nil;
 }
 
-- (id <CSQLPreparedStatement>)initWithDatabase:(id <CSQLDatabase> *)database 
-                                        andSQL:(NSString *)sql
+- (id)initWithDatabase:(id)aDatabase 
+                andSQL:(NSString *)sql
+                 error:(NSError **)error
 {
     return nil;
 }
