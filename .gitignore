@@ -1,3 +1,7 @@
-build
+build/
 *.xcodeproj/*.mode*
 *.xcodeproj/*.pbxuser
+
+# Doxygen
+html/
+latex/
