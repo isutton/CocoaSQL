@@ -7,7 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
+
 #import "CSQLDatabase.h"
+#import "CSSQLitePreparedStatement.h"
 
 #include <sqlite3.h>
 

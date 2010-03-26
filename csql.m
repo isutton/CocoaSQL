@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import "CSSQLiteDatabase.h"
+#import "CSSQLitePreparedStatement.h"
 
 int main() {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -76,6 +77,17 @@ int main() {
     }
     else {
         NSLog(@"Rows: %@", rows);
+    }
+ 
+    CSSQLitePreparedStatement *stmt = [database prepareStatement:@"SELECT * FROM t" error:&error];
+    
+    if ([stmt execute:&error]) {
+        NSLog(@"Executed successfully.");
+    }
+    
+    
+    while (dict = [stmt fetchRowAsDictionary:&error]) {
+        NSLog(@"Row: %@", dict);
     }
     
     [pool drain];

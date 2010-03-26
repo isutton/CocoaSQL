@@ -234,7 +234,9 @@
 - (id)prepareStatement:(NSString *)sql 
                  error:(NSError **)error
 {
-    return nil;
+    return [CSSQLitePreparedStatement preparedStatementWithDatabase:self
+                                                             andSQL:sql
+                                                              error:error];
 }
 
 @end

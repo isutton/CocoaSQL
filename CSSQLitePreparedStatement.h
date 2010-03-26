@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "CSSQLiteDatabase.h"
 #import "CSQLDatabase.h"
 #import "CSQLPreparedStatement.h"
 
@@ -15,6 +16,7 @@
 
 @interface CSSQLitePreparedStatement : NSObject <CSQLPreparedStatement>  {
     sqlite3_stmt *sqlitePreparedStatement;
+    BOOL canFetch;
 }
 
 /**
@@ -43,3 +45,5 @@
 
 
 @end
+
+id translate(sqlite3_stmt *preparedStatement, int column);
