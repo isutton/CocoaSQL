@@ -6,6 +6,8 @@
 //  Copyright 2010 CocoaSQL.org. All rights reserved.
 //
 
+#import "CSQLPreparedStatement.h"
+
 @protocol CSQLDatabase
 
 #pragma mark -
@@ -152,11 +154,31 @@
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql 
                                       error:(NSError **)error;
 
+/**
+ 
+ @param sql The SQL statement to be executed.
+ @param values An <code>NSArray</code> instance with values.
+ @param error An <code>NSError</code> instance.
+ 
+ @return <code>rows</code>
+ 
+ */
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql 
                            withValues:(NSArray *)values 
                                 error:(NSError **)error;
 
+/**
+ 
+ @param sql The SQL statement to be executed.
+ @param error An <code>NSError</code> instance.
+ 
+ @return <code>rows</code>
+ 
+ */
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql 
                                 error:(NSError **)error;
+
+- (id <CSQLPreparedStatement>)prepareStatement:(NSString *)sql 
+                                         error:(NSError **)error;
 
 @end
