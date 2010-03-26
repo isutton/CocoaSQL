@@ -226,8 +226,8 @@
 #pragma mark -
 #pragma mark Prepared Statement messages
 
-- (id <CSQLPreparedStatement>)prepareStatement:(NSString *)sql 
-                                         error:(NSError **)error
+- (id)prepareStatement:(NSString *)sql 
+                 error:(NSError **)error
 {
     return nil;
 }
