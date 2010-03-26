@@ -19,6 +19,8 @@ typedef int (*CSQLiteCallback)(void *, int, char**, char**);
     sqlite3 *sqliteDatabase;
 }
 
+- (sqlite3 *)sqliteDatabase;
+
 #pragma mark -
 #pragma mark Initialization related messages
 

@@ -62,6 +62,11 @@
     [super dealloc];
 }
 
+- (sqlite3 *)sqliteDatabase
+{
+    return sqliteDatabase;
+}
+
 #pragma mark -
 #pragma mark CSSQLiteDatabase related messages
 
