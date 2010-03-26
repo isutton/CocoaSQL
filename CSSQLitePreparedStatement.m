@@ -13,6 +13,9 @@
 
 /**
  
+ Prepares the underlying sqlite3 prepared statement for the next fetch 
+ operation, if any.
+ 
  */
 - (void)prepareNextFetch;
 
