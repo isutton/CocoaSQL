@@ -46,4 +46,12 @@
 
 @end
 
+/**
+ 
+ @param preparedStatement
+ @param column
+ 
+ @return <code>id</code>
+ 
+ */
 id translate(sqlite3_stmt *preparedStatement, int column);
