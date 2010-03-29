@@ -1,6 +1,11 @@
+# XCode noise
 build/
-*.xcodeproj/*.mode*
-*.xcodeproj/*.pbxuser
+*.mode1v3
+*.pbxuser
+
+# OSX noise
+.DS_Store
+profile
 
 # Doxygen
 html/
