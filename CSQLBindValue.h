@@ -9,15 +9,49 @@
 #import <Cocoa/Cocoa.h>
 
 typedef enum {
-    Float,
-    Text,
-    Integer,
-    Blob
+    CSQLInteger,
+    CSQLDouble,
+    CSQLText,
+    CSQLBlob
 } CSQLBindValueType;
 
 @interface CSQLBindValue : NSObject {
     CSQLBindValueType type;
     id value;
 }
+
+/*
+ 
+ CSQLBindValue *bv;
+ 
+ // Sets type to CSQLInteger, value to NSNumber.
+ bv = [CSQLBindValue bindValueWithInt:1];
+ 
+ // Sets type to CSQLDouble, value to NSNumber.
+ bv = [CSQLBindValue bindValueWithDouble:1.0];
+ 
+ // Sets type to CSQLText, value to NSString (copies string).
+ bv = [CSQLBindValue bindValueWithString:@"Foobar"];
+ 
+ NSString *text = @"Foobar";
+ 
+ // Sets type to CSQLBlob, value to NSData (copies from input).
+ bv = [CSQLBindValue bindValueWithData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+ 
+ */
+
++ (id)bindValueWithInt:(int)value;
++ (id)bindValueWithDouble:(double)value;
++ (id)bindValueWithString:(NSString *)value;
++ (id)bindValueWithData:(NSData *)value;
+
+- (id)initWithInt:(int)value;
+- (id)initWithDouble:(double)value;
+- (id)initWithString:(NSString *)value;
+- (id)initWithData:(NSData *)value;
+
+- (CSQLBindValueType)type;
+- (int)intValue;
+- (double)doubleValue;
 
 @end
