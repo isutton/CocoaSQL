@@ -70,16 +70,42 @@
 - (BOOL)executeWithValues:(NSArray *)values 
                     error:(NSError **)error
 {
-    int errorCode = sqlite3_step(sqlitePreparedStatement);
-    
-    if (errorCode != SQLITE_ERROR) {
-        if (errorCode == SQLITE_ROW) {
-            canFetch = YES;
+    int bindParameterCount = sqlite3_bind_parameter_count(sqlitePreparedStatement);
+
+    if (bindParameterCount > 0) {
+
+        if (!values || [values count] < bindParameterCount) {
+            NSMutableDictionary *errorDetail;
+            errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                           [NSString stringWithFormat:
+                            @"Expected %i value(s), %i provided", 
+                            bindParameterCount, [values count]],
+                           @"errorMessage",
+                           nil];
+            *error = [NSError errorWithDomain:@"CSSQLite" code:100 
+                                     userInfo:errorDetail];
+            return NO;
         }
-        return YES;
+        
+        for (int i = 1; i <= bindParameterCount; i++) {
+            
+        }
     }
 
-    return NO;
+    int errorCode = sqlite3_step(sqlitePreparedStatement);
+    
+    if (errorCode == SQLITE_ERROR) {
+        *error = [NSError errorWithDomain:@"CSSQLite" code:102 userInfo:nil];
+        return NO;
+    }
+
+    canFetch = NO;
+    
+    if (errorCode == SQLITE_ROW) {
+        canFetch = YES;
+    }
+
+    return YES;
 }
 
 - (BOOL)execute:(NSError **)error
