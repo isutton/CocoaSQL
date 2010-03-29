@@ -90,5 +90,12 @@ int main() {
         NSLog(@"Row: %@", dict);
     }
     
+    
+    CSSQLitePreparedStatement *stmt2 = [database prepareStatement:@"SELECT * FROM t WHERE v = ? OR v = ?" error:&error];
+    
+    if (![stmt2 executeWithValues:[NSArray arrayWithObjects:@"1", nil] error:&error]) {
+        NSLog(@"Error while executing prepared statement: %@", [[error userInfo] objectForKey:@"errorMessage"]);
+    }
+    
     [pool drain];
 }
