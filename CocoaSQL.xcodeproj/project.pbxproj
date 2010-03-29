@@ -27,7 +27,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = CocoaSQL;
 		};
 /* End PBXContainerItemProxy section */
@@ -36,7 +36,7 @@
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		32DBCF5E0370ADEE00C91783 /* CocoaSQL_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaSQL_Prefix.pch; sourceTree = "<group>"; };
-		823C7C20115C2F300061ECAD /* csql */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = csql; path = build/Debug/csql; sourceTree = "<group>"; };
+		823C7C20115C2F300061ECAD /* csql */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = csql; sourceTree = BUILT_PRODUCTS_DIR; };
 		823C7C89115CCD210061ECAD /* CSQLPreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLPreparedStatement.h; sourceTree = "<group>"; };
 		823C7CC4115CE4DA0061ECAD /* CSSQLitePreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSQLitePreparedStatement.h; sourceTree = "<group>"; };
 		823C7CC5115CE4DA0061ECAD /* CSSQLitePreparedStatement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSQLitePreparedStatement.m; sourceTree = "<group>"; };
