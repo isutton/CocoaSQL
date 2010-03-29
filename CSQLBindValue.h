@@ -40,15 +40,15 @@ typedef enum {
  
  */
 
-+ (id)bindValueWithInt:(int)value;
-+ (id)bindValueWithDouble:(double)value;
-+ (id)bindValueWithString:(NSString *)value;
-+ (id)bindValueWithData:(NSData *)value;
++ (id)bindValueWithInt:(int)aValue;
++ (id)bindValueWithDouble:(double)aValue;
++ (id)bindValueWithString:(NSString *)aValue;
++ (id)bindValueWithData:(NSData *)aValue;
 
-- (id)initWithInt:(int)value;
-- (id)initWithDouble:(double)value;
-- (id)initWithString:(NSString *)value;
-- (id)initWithData:(NSData *)value;
+- (id)initWithInt:(int)aValue;
+- (id)initWithDouble:(double)aValue;
+- (id)initWithString:(NSString *)aValue;
+- (id)initWithData:(NSData *)aValue;
 
 - (CSQLBindValueType)type;
 - (int)intValue;

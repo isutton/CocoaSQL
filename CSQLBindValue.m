@@ -11,4 +11,64 @@
 
 @implementation CSQLBindValue
 
++ (id)bindValueWithInt:(int)aValue
+{
+    CSQLBindValue *value = [[CSQLBindValue alloc] initWithInt:aValue];
+    return [value autorelease];
+}
+
+- (id)initWithInt:(int)aValue
+{
+    self = [super init];
+
+    if (self) {
+        value = [[NSNumber numberWithInt:aValue] retain];
+        type = CSQLInteger;
+    }
+
+    return self;
+}
+
++ (id)bindValueWithDouble:(double)aValue
+{
+    CSQLBindValue *value = [[CSQLBindValue alloc] initWithDouble:aValue];
+    return [value autorelease];
+}
+
+- (id)initWithDouble:(double)aValue
+{
+    self = [super init];
+
+    if (self) {
+        value = [[NSNumber numberWithDouble:aValue] retain];
+        type = CSQLDouble;
+    }
+
+    return self;
+}
+
++ (id)bindValueWithString:(NSString *)aValue
+{
+    CSQLBindValue *value = [[CSQLBindValue alloc] initWithString:aValue];
+    return [value autorelease];
+}
+
+- (id)initWithString:(NSString *)aValue
+{
+    self = [super init];
+
+    if (self) {
+        value = [aValue copy];
+        type = CSQLText;
+    }
+
+    return self;
+}
+
+- (void)dealloc
+{
+    [value release];
+    [super dealloc];
+}
+
 @end
