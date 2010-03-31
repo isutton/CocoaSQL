@@ -25,7 +25,7 @@
 + (id)databaseWithPath:(NSString *)aPath error:(NSError **)error
 {
     CSSQLiteDatabase *database = [[CSSQLiteDatabase alloc] initWithPath:aPath error:error];
-    return database;
+    return [database autorelease];
 }
 
 - (id)initWithPath:(NSString *)aPath error:(NSError **)error
