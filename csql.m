@@ -8,10 +8,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "CSSQLiteDatabase.h"
-#import "CSSQLitePreparedStatement.h"
-#import "CSQLBindValue.h"
-#import "NSMutableArray+CocoaSQL.h"
+
+#import "CocoaSQL.h"
 
 int main() {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -19,7 +17,10 @@ int main() {
     NSError *error = nil;
     BOOL success;
     
-    CSSQLiteDatabase *database = [CSSQLiteDatabase databaseWithPath:@"/tmp/test.db" error:&error];
+    id <CSQLDatabase> database;
+    database = [CSQLDatabase databaseWithDriver:@"SQLite" 
+                                        options:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"/tmp/test.db", @"path", nil]
+                                          error:&error];
     
     if (!database) {
         NSLog(@"Error while opening database: %@", error);
@@ -81,7 +82,7 @@ int main() {
         NSLog(@"Rows: %@", rows);
     }
  
-    CSSQLitePreparedStatement *stmt = [database prepareStatement:@"SELECT * FROM t" error:&error];
+    id <CSQLPreparedStatement> stmt = [database prepareStatement:@"SELECT * FROM t" error:&error];
     
     if ([stmt execute:&error]) {
         NSLog(@"Executed successfully.");
@@ -93,7 +94,7 @@ int main() {
     }
     
     
-    CSSQLitePreparedStatement *stmt2 = [database prepareStatement:@"SELECT * FROM t WHERE v = ? OR v = ?" error:&error];
+    id <CSQLPreparedStatement> stmt2 = [database prepareStatement:@"SELECT * FROM t WHERE v = ? OR v = ?" error:&error];
     
     if (![stmt2 executeWithValues:[NSArray arrayWithObjects:@"1", nil] error:&error]) {
         NSLog(@"Error while executing prepared statement: %@", [[error userInfo] objectForKey:@"errorMessage"]);
