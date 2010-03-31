@@ -11,23 +11,28 @@
 
 @implementation CSQLDatabaseTests
 
-#define TEST_DB @"/tmp/test.db"
+#define TEST_DB @"test.db"
 
 - (void)setUp
 {
     NSError *error = nil;
     NSFileManager *fm = [NSFileManager defaultManager];
     
-    if ([fm fileExistsAtPath:TEST_DB]) {
-        [fm removeItemAtPath:TEST_DB error:nil];
+    if ([fm fileExistsAtPath:[TEST_DB stringByExpandingTildeInPath]]) {
+        [fm removeItemAtPath:[TEST_DB stringByExpandingTildeInPath] error:nil];
     }
     
-    database = [CSQLDatabase databaseWithDriver:@"SQLite"
-                                        options:[NSMutableDictionary dictionaryWithObjectsAndKeys:TEST_DB, @"path", nil]
-                                          error:&error];
+    database = [[CSQLDatabase databaseWithDriver:@"SQLite"
+                                         options:[NSMutableDictionary dictionaryWithObjectsAndKeys:TEST_DB, @"path", nil]
+                                           error:&error] retain];
     
-    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertNil(error, @"We shouldn't have an error here: %@", error);
     STAssertNotNil(database, @"Database should not be nil.");    
+}
+
+- (void)tearDown
+{
+    [database release];
 }
 
 - (void)testExecuteSQL
@@ -38,7 +43,9 @@
     success = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR)"
                              error:&error];
     
-    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertNil(error, 
+                [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
+                 [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertTrue(success, @"SQL executed with success");
 }
 
