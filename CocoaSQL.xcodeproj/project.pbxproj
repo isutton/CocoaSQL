@@ -33,7 +33,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = CocoaSQL;
 		};
 /* End PBXContainerItemProxy section */
@@ -46,7 +46,7 @@
 		821DBB7A11633B4E0073C988 /* NSMutableArray+CocoaSQL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+CocoaSQL.m"; sourceTree = "<group>"; };
 		821DBBA811634CB30073C988 /* CSQLDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLDatabase.m; sourceTree = "<group>"; };
 		821DBC4111636C100073C988 /* CocoaSQL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaSQL.h; sourceTree = "<group>"; };
-		821DBC8F1163702E0073C988 /* Unit Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "Unit Tests.octest"; path = "build/Debug/Unit Tests.octest"; sourceTree = "<group>"; };
+		821DBC8F1163702E0073C988 /* Unit Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Unit Tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		821DBC901163702E0073C988 /* Unit Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Unit Tests-Info.plist"; sourceTree = "<group>"; };
 		821DBC9D116370800073C988 /* CSQLDatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLDatabaseTests.h; sourceTree = "<group>"; };
 		821DBC9E116370800073C988 /* CSQLDatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLDatabaseTests.m; sourceTree = "<group>"; };
