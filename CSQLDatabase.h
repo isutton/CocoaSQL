@@ -8,7 +8,7 @@
 
 #import "CSQLPreparedStatement.h"
 
-@protocol CSQLDatabase
+@protocol CSQLDatabase <NSObject>
 
 #pragma mark -
 #pragma mark Class methods
