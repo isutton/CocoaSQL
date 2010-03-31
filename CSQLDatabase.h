@@ -181,8 +181,8 @@
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql 
                                 error:(NSError **)error;
 
-- (id)prepareStatement:(NSString *)sql 
-                 error:(NSError **)error;
+- (id <CSQLPreparedStatement>)prepareStatement:(NSString *)sql 
+                                         error:(NSError **)error;
 
 @end
 

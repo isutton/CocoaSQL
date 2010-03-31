@@ -239,8 +239,8 @@
 #pragma mark -
 #pragma mark Prepared Statement messages
 
-- (id)prepareStatement:(NSString *)sql 
-                 error:(NSError **)error
+- (id <CSQLPreparedStatement>)prepareStatement:(NSString *)sql 
+                                         error:(NSError **)error
 {
     return [CSSQLitePreparedStatement preparedStatementWithDatabase:self
                                                              andSQL:sql
