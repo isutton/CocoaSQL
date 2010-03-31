@@ -10,6 +10,8 @@
 #import <Foundation/Foundation.h>
 #import "CSSQLiteDatabase.h"
 #import "CSSQLitePreparedStatement.h"
+#import "CSQLBindValue.h"
+#import "NSMutableArray+CocoaSQL.h"
 
 int main() {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -96,6 +98,14 @@ int main() {
     if (![stmt2 executeWithValues:[NSArray arrayWithObjects:@"1", nil] error:&error]) {
         NSLog(@"Error while executing prepared statement: %@", [[error userInfo] objectForKey:@"errorMessage"]);
     }
+    
+    CSQLBindValue *bv = [CSQLBindValue bindValueWithInt:1];
+    NSLog(@"%@, %i", bv, [bv retainCount]);
+    
+    NSMutableArray *bindValues = [NSMutableArray array];
+    [bindValues bindDoubleValue:2.0];
+    
+    success = [stmt2 executeWithValues:bindValues error:&error];
     
     [pool drain];
 }
