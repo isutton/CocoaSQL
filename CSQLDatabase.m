@@ -22,8 +22,9 @@
     // * CSPostgreSQLDatabase
     // * CSOracleDatabase
     //
-    NSString *aClassName = [NSString stringWithFormat:@"CS%@Database"];
-    id <CSQLDatabase> database = [[NSClassFromString(aClassName) alloc] init];
+    NSString *aClassName = [NSString stringWithFormat:@"CS%@Database", aDriver];
+    Class <CSQLDatabase> class = NSClassFromString(aClassName);
+    id <CSQLDatabase> database = [class databaseWithOptions:options error:error];
     return database;
 }
 

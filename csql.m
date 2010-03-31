@@ -107,5 +107,13 @@ int main() {
     
     success = [stmt2 executeWithValues:bindValues error:&error];
     
+    
+    id <CSQLDatabase> testdb;
+    testdb = [CSQLDatabase databaseWithDriver:@"SQLite" 
+                                      options:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"/tmp/test.db", @"path", nil]
+                                        error:&error];
+    
+    NSLog(@"%@", testdb);
+    
     [pool drain];
 }

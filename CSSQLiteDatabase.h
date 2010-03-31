@@ -29,6 +29,7 @@ typedef int (*CSQLiteCallback)(void *, int, char**, char**);
 + (id)databaseWithPath:(NSString *)aPath 
                  error:(NSError **)error;
 
+
 - (id)initWithPath:(NSString *)aPath 
                error:(NSError **)error;
 

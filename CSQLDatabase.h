@@ -13,6 +13,9 @@
 #pragma mark -
 #pragma mark Class methods
 
++ (id)databaseWithOptions:(NSDictionary *)options 
+                    error:(NSError **)error;
+
 #pragma mark -
 #pragma mark Instance methods
 

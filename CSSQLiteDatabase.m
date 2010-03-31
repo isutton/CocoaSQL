@@ -14,6 +14,14 @@
 #pragma mark -
 #pragma mark Initialization and dealloc related messages
 
++ (id <CSQLDatabase>)databaseWithOptions:(NSDictionary *)options 
+                                   error:(NSError **)error
+{
+    CSSQLiteDatabase *database;
+    database = [CSSQLiteDatabase databaseWithPath:[options objectForKey:@"path"] error:error];
+    return database;
+}
+
 + (id)databaseWithPath:(NSString *)aPath error:(NSError **)error
 {
     CSSQLiteDatabase *database = [[CSSQLiteDatabase alloc] initWithPath:aPath error:error];
