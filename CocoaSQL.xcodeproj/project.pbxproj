@@ -10,6 +10,8 @@
 		821DBB7B11633B4E0073C988 /* NSMutableArray+CocoaSQL.h in Headers */ = {isa = PBXBuildFile; fileRef = 821DBB7911633B4E0073C988 /* NSMutableArray+CocoaSQL.h */; };
 		821DBB7C11633B4E0073C988 /* NSMutableArray+CocoaSQL.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBB7A11633B4E0073C988 /* NSMutableArray+CocoaSQL.m */; };
 		821DBBA911634CB30073C988 /* CSQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBBA811634CB30073C988 /* CSQLDatabase.m */; };
+		821DBC4211636C100073C988 /* CocoaSQL.h in Headers */ = {isa = PBXBuildFile; fileRef = 821DBC4111636C100073C988 /* CocoaSQL.h */; };
+		821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
 		8223B8EF1161023F004108A1 /* CSQLBindValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 8223B8ED1161023F004108A1 /* CSQLBindValue.h */; };
 		8223B8F01161023F004108A1 /* CSQLBindValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 8223B8EE1161023F004108A1 /* CSQLBindValue.m */; };
 		823C7C2B115C2F670061ECAD /* csql.m in Sources */ = {isa = PBXBuildFile; fileRef = 82445AA7115BA72300950BD9 /* csql.m */; };
@@ -28,6 +30,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		821DBC94116370380073C988 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteInfo = CocoaSQL;
+		};
 		823C7C24115C2F3C0061ECAD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -44,6 +53,11 @@
 		821DBB7911633B4E0073C988 /* NSMutableArray+CocoaSQL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+CocoaSQL.h"; sourceTree = "<group>"; };
 		821DBB7A11633B4E0073C988 /* NSMutableArray+CocoaSQL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+CocoaSQL.m"; sourceTree = "<group>"; };
 		821DBBA811634CB30073C988 /* CSQLDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLDatabase.m; sourceTree = "<group>"; };
+		821DBC4111636C100073C988 /* CocoaSQL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaSQL.h; sourceTree = "<group>"; };
+		821DBC8F1163702E0073C988 /* Unit Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "Unit Tests.octest"; path = "build/Debug/Unit Tests.octest"; sourceTree = "<group>"; };
+		821DBC901163702E0073C988 /* Unit Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Unit Tests-Info.plist"; sourceTree = "<group>"; };
+		821DBC9D116370800073C988 /* CSQLDatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLDatabaseTests.h; sourceTree = "<group>"; };
+		821DBC9E116370800073C988 /* CSQLDatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLDatabaseTests.m; sourceTree = "<group>"; };
 		8223B8ED1161023F004108A1 /* CSQLBindValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLBindValue.h; sourceTree = "<group>"; };
 		8223B8EE1161023F004108A1 /* CSQLBindValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLBindValue.m; sourceTree = "<group>"; };
 		823C7C20115C2F300061ECAD /* csql */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = csql; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,6 +76,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		821DBC8C1163702E0073C988 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		823C7C1E115C2F300061ECAD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -87,6 +108,7 @@
 			children = (
 				8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */,
 				823C7C20115C2F300061ECAD /* csql */,
+				821DBC8F1163702E0073C988 /* Unit Tests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -99,6 +121,7 @@
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
+				821DBC901163702E0073C988 /* Unit Tests-Info.plist */,
 			);
 			name = CSQL;
 			sourceTree = "<group>";
@@ -126,6 +149,7 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				821DBC9C116370520073C988 /* Unit Tests */,
 				82445A43115B93F900950BD9 /* MySQL */,
 				82445A11115B889E00950BD9 /* SQLite */,
 				82445A10115B889000950BD9 /* CocoaSQL */,
@@ -158,6 +182,15 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		821DBC9C116370520073C988 /* Unit Tests */ = {
+			isa = PBXGroup;
+			children = (
+				821DBC9D116370800073C988 /* CSQLDatabaseTests.h */,
+				821DBC9E116370800073C988 /* CSQLDatabaseTests.m */,
+			);
+			name = "Unit Tests";
+			sourceTree = "<group>";
+		};
 		82445A10115B889000950BD9 /* CocoaSQL */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +201,7 @@
 				8223B8EE1161023F004108A1 /* CSQLBindValue.m */,
 				821DBB7911633B4E0073C988 /* NSMutableArray+CocoaSQL.h */,
 				821DBB7A11633B4E0073C988 /* NSMutableArray+CocoaSQL.m */,
+				821DBC4111636C100073C988 /* CocoaSQL.h */,
 			);
 			name = CocoaSQL;
 			sourceTree = "<group>";
@@ -204,12 +238,32 @@
 				823C7CC6115CE4DA0061ECAD /* CSSQLitePreparedStatement.h in Headers */,
 				8223B8EF1161023F004108A1 /* CSQLBindValue.h in Headers */,
 				821DBB7B11633B4E0073C988 /* NSMutableArray+CocoaSQL.h in Headers */,
+				821DBC4211636C100073C988 /* CocoaSQL.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		821DBC8E1163702E0073C988 /* Unit Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 821DBC931163702F0073C988 /* Build configuration list for PBXNativeTarget "Unit Tests" */;
+			buildPhases = (
+				821DBC8A1163702E0073C988 /* Resources */,
+				821DBC8B1163702E0073C988 /* Sources */,
+				821DBC8C1163702E0073C988 /* Frameworks */,
+				821DBC8D1163702E0073C988 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				821DBC95116370380073C988 /* PBXTargetDependency */,
+			);
+			name = "Unit Tests";
+			productName = "Unit Tests";
+			productReference = 821DBC8F1163702E0073C988 /* Unit Tests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		823C7C1F115C2F300061ECAD /* csql */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 823C7C2A115C2F5A0061ECAD /* Build configuration list for PBXNativeTarget "csql" */;
@@ -264,11 +318,19 @@
 			targets = (
 				8DC2EF4F0486A6940098B216 /* CocoaSQL */,
 				823C7C1F115C2F300061ECAD /* csql */,
+				821DBC8E1163702E0073C988 /* Unit Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		821DBC8A1163702E0073C988 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DC2EF520486A6940098B216 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -279,7 +341,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		821DBC8D1163702E0073C988 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		821DBC8B1163702E0073C988 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		823C7C1D115C2F300061ECAD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -304,6 +390,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		821DBC95116370380073C988 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			targetProxy = 821DBC94116370380073C988 /* PBXContainerItemProxy */;
+		};
 		823C7C25115C2F3C0061ECAD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
@@ -396,6 +487,60 @@
 			};
 			name = Release;
 		};
+		821DBC911163702F0073C988 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "Unit Tests-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Unit Tests";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		821DBC921163702F0073C988 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "Unit Tests-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Unit Tests";
+				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		823C7C22115C2F310061ECAD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -459,6 +604,15 @@
 			buildConfigurations = (
 				1DEB91B208733DA50010E9CD /* Debug */,
 				1DEB91B308733DA50010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		821DBC931163702F0073C988 /* Build configuration list for PBXNativeTarget "Unit Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				821DBC911163702F0073C988 /* Debug */,
+				821DBC921163702F0073C988 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
