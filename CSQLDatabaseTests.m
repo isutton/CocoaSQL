@@ -38,15 +38,27 @@
 - (void)testExecuteSQL
 {
     NSError *error = nil;
-    BOOL success;
+    int affectedRows;
     
-    success = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR)"
+    affectedRows = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR)"
                              error:&error];
     
     STAssertNil(error, 
                 [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
                  [[error userInfo] objectForKey:@"errorMessage"]]);
-    STAssertTrue(success, @"SQL executed with success");
+    STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
+
+
+    error = nil;
+    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (1, 'test')"
+                             error:&error];
+    
+    STAssertNil(error, 
+                [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
+                 [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertEquals(affectedRows, 1, @"INSERT.");
+    
+    
 }
 
 @end

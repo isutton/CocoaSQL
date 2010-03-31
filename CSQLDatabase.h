@@ -21,16 +21,14 @@
 
 /**
  
- Executes a SQL statement with bind values. If any error happened during the
- statement's execution, this method populates <code>error</code> and returns 
- <code>NO</code>.
-
+ Executes a SQL statement with bind values.
+ 
  @param sql The SQL statement to be executed.
  @param values An <code>NSArray</code> instance with values.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
  
- @return BOOL <code>YES</code> if the statement was successfully executed, 
- <code>NO</code> otherwise.
+ @return int The number of rows affected, if any.
  
  */
 - (BOOL)executeSQL:(NSString *)sql 
@@ -39,29 +37,27 @@
 
 /**
  
- Executes a SQL statement. If any error happened during the statement's 
- execution, this method populates <code>error</code> and returns 
- <code>NO</code>.
+ Executes a SQL statement.
  
  @param sql The SQL statement to be executed.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
  
- @returns BOOL <code>YES</code> if the statement was successfully executed,
- <code>NO</code> otherwise.
+ @returns int The number of rows affected, if any.
  
  */
-- (BOOL)executeSQL:(NSString *)sql 
+- (int)executeSQL:(NSString *)sql 
              error:(NSError **)error;
 
 /**
  
  Returns a NSDictionary instance containing the first row of the given SQL 
- statement. If any error occurred during the statement's execution, 
- <code>nil</code> is returned and <code>error</code> is populated.
+ statement.
  
  @param sql The SQL statement to be executed.
  @param values An <code>NSArray</code> instance with values.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
  
  @return <code>NSDictionary</code> The first row as a <code>NSDictionary</code>, 
  with the columns as keys.
@@ -74,11 +70,11 @@
 /**
  
  Returns an <code>NSDictionary</code> instance containing the first row of the
- given SQL statement. If any error occurred during the statement's execution,
- <code>nil</code> is returned and <code>error</code> is populated.
+ given SQL statement.
  
  @param sql The SQL statement to be executed.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
  
  @return <code>NSDictionary</code> The first row as a <code>NSDictionary</code>,
  with the columns as keys.
@@ -90,12 +86,12 @@
 /**
  
  Returns an <code>NSArray</code> instance containing the first row of the given
- SQL statement. If any error occurred during the statement's execution,
- <code>nil</code> is returned and <code>error</code> is populated.
+ SQL statement.
  
  @param sql The SQL statement to be executed.
  @param values An <code>NSArray</code> instance with values.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
  
  @return <code>NSArray</code> The first row as a <code>NSArray</code>.
  
@@ -107,11 +103,11 @@
 /**
  
  Returns an <code>NSArray</code> instance containing the first row of the given
- SQL statement. If any error occurred during the statement's execution,
- <code>nil</code> is returned and <code>error</code> is populated.
+ SQL statement. 
  
  @param sql The SQL statement to be executed.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
  
  @return <code>NSArray</code> The first row as a <code>NSArray</code>.
  
@@ -122,13 +118,12 @@
 /**
  
  Returns an <code>NSArray</code> instance containing all the rows returned by
- the SQL statement as <code>NSDictionary</code>. If any error occurred during 
- the statement's execution, <code>nil</code> is returned and <code>error</code>
- is populated.
+ the SQL statement as <code>NSDictionary</code>.
  
  @param sql The SQL statement to be executed.
  @param values An <code>NSArray</code> instance with values.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
  
  @return <code>NSArray</code> <code>NSArray</code> containing all the rows 
  returned by the statement as <code>NSDictionary</code>, with the column names
@@ -142,12 +137,12 @@
 /**
  
  Returns an <code>NSArray</code> instance containing all the rows returned by
- the SQL statement as <code>NSDictionary</code>. If any error occurred during 
- the statement's execution, <code>nil</code> is returned and <code>error</code>
- is populated.
+ the SQL statement as <code>NSDictionary</code>.
  
  @param sql The SQL statement to be executed.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
+
  
  @return <code>NSArray</code> <code>NSArray</code> containing all the rows 
  returned by the statement as <code>NSDictionary</code>, with the column names
@@ -161,7 +156,9 @@
  
  @param sql The SQL statement to be executed.
  @param values An <code>NSArray</code> instance with values.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
+
  
  @return <code>rows</code>
  
@@ -173,7 +170,9 @@
 /**
  
  @param sql The SQL statement to be executed.
- @param error An <code>NSError</code> instance.
+ @param error If an error occurs, upon return contains an instance of 
+ <code>NSError</code> that describes the problem.
+
  
  @return <code>rows</code>
  

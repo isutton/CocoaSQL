@@ -86,6 +86,7 @@
            context:(void *)context
              error:(NSError **)error;
 {
+    int affectedRows = 0;
     int errorCode;
     char *errorMessage;
     
@@ -100,17 +101,18 @@
         *error = [[NSError alloc] initWithDomain:@"CSSQLite" 
                                             code:errorCode 
                                         userInfo:errorDetail];
-        
-        return NO;
+    }
+    else {
+        affectedRows = sqlite3_changes(sqliteDatabase);
     }
     
-    return YES;    
+    return affectedRows;
 }
 
 #pragma mark -
 #pragma mark CSQLDatabase related messages
 
-- (BOOL)executeSQL:(NSString *)sql 
+- (int)executeSQL:(NSString *)sql 
         withValues:(NSArray *)values
              error:(NSError **)error 
 {
@@ -121,7 +123,7 @@
                       error:error];
 }
 
-- (BOOL)executeSQL:(NSString *)sql 
+- (int)executeSQL:(NSString *)sql 
              error:(NSError **)error
 {
     return [self executeSQL:sql
@@ -319,3 +321,4 @@ int rowsAsArraysCallback(void *callbackContext,
     
     return SQLITE_OK;
 }
+    
