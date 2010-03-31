@@ -31,9 +31,9 @@
  @return int The number of rows affected, if any.
  
  */
-- (BOOL)executeSQL:(NSString *)sql 
-        withValues:(NSArray *)values
-             error:(NSError **)error; 
+- (int)executeSQL:(NSString *)sql 
+       withValues:(NSArray *)values
+            error:(NSError **)error; 
 
 /**
  
@@ -47,7 +47,7 @@
  
  */
 - (int)executeSQL:(NSString *)sql 
-             error:(NSError **)error;
+            error:(NSError **)error;
 
 /**
  
