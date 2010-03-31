@@ -11,6 +11,8 @@
 
 @implementation CSSQLiteDatabase
 
+@synthesize path;
+
 #pragma mark -
 #pragma mark Initialization and dealloc related messages
 
@@ -34,17 +36,17 @@
         return nil;
     }
     
-    path = [aPath retain];
+    self.path = [aPath stringByExpandingTildeInPath];
     
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    int errorCode = sqlite3_open_v2([fileManager fileSystemRepresentationWithPath:path], 
+    int errorCode = sqlite3_open_v2([self.path UTF8String],
                                     &sqliteDatabase,
-                                    SQLITE_OPEN_READWRITE,
+                                    SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE,
                                     0);
 
     if (errorCode != SQLITE_OK) {
         NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
+        [errorDetail setObject:[NSString stringWithFormat:@"%s", sqlite3_errmsg(sqliteDatabase)]
+                        forKey:@"errorMessage"];
         *error = [[NSError alloc] initWithDomain:@"CSSQLite" 
                                             code:errorCode
                                         userInfo:errorDetail];
