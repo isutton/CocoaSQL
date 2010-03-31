@@ -88,7 +88,24 @@
         }
         
         for (int i = 1; i <= bindParameterCount; i++) {
+            CSQLBindValue *value = [values objectAtIndex:i-1];
             
+            int success;
+            
+            switch ([value type]) {
+                case CSQLInteger:
+                    success = sqlite3_bind_int(sqlitePreparedStatement, i, [value intValue]);
+                    break;
+                case CSQLDouble:
+                    success = sqlite3_bind_double(sqlitePreparedStatement, i, [value doubleValue]);
+                    break;
+                default:
+                    break;
+            }
+            
+            if (success != SQLITE_OK) {
+                // FIXME: Check error and populate NSError.
+            }
         }
     }
 
