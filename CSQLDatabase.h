@@ -182,3 +182,15 @@
                  error:(NSError **)error;
 
 @end
+
+@interface CSQLDatabase : NSObject
+{
+
+}
+
++ (id <CSQLDatabase>)databaseWithDriver:(NSString *)aDriver 
+                                options:(NSDictionary *)options
+                                  error:(NSError **)error;
+
+@end
+
