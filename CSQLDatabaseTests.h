@@ -7,10 +7,11 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-
+#import "CocoaSQL.h"
+#import "CSQLDatabase.h"
 
 @interface CSQLDatabaseTests : SenTestCase {
-
+    id <CSQLDatabase> database;
 }
 
 @end
