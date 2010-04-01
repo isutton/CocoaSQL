@@ -47,16 +47,31 @@
                 [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
                  [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
-
+    
     error = nil;
     affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (1, 'test')"
-                             error:&error];
+                                  error:&error];
     
     STAssertNil(error, 
                 [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
                  [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals(affectedRows, 1, @"INSERT.");
     
+    error = nil;
+    affectedRows = [database executeSQL:@"DELETE FROM t" error:&error];
+    
+    STAssertNil(error, 
+                [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
+                 [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertEquals(affectedRows, 1, @"DELETE.");
+    
+    error = nil;
+    affectedRows = [database executeSQL:@"DROP TABLE t" error:&error];
+    
+    STAssertNil(error, 
+                [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
+                 [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertEquals(affectedRows, 1, @"DROP TABLE.");
     
 }
 
