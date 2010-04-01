@@ -28,12 +28,12 @@
  @param error If an error occurs, upon return contains an instance of 
  <code>NSError</code> that describes the problem.
  
- @return int The number of rows affected, if any.
+ @return Number of rows affected by the SQL statement.
  
  */
-- (int)executeSQL:(NSString *)sql 
-       withValues:(NSArray *)values
-            error:(NSError **)error; 
+- (NSUInteger)executeSQL:(NSString *)sql 
+              withValues:(NSArray *)values
+                   error:(NSError **)error; 
 
 /**
  
@@ -43,11 +43,11 @@
  @param error If an error occurs, upon return contains an instance of 
  <code>NSError</code> that describes the problem.
  
- @returns int The number of rows affected, if any.
+ @return Number of rows affected by the SQL statement.
  
  */
-- (int)executeSQL:(NSString *)sql 
-            error:(NSError **)error;
+- (NSUInteger)executeSQL:(NSString *)sql 
+                   error:(NSError **)error;
 
 /**
  

@@ -37,11 +37,11 @@ typedef int (*CSQLiteCallback)(void *, int, char**, char**);
 #pragma mark -
 #pragma mark CSSQLiteDatabase related messages
 
-- (BOOL)executeSQL:(NSString *)sql
-        withValues:(NSArray *)values
-          callback:(CSQLiteCallback)callbackFunction 
-           context:(void *)context
-             error:(NSError **)error;
+- (NSUInteger)executeSQL:(NSString *)sql
+              withValues:(NSArray *)values
+                callback:(CSQLiteCallback)callbackFunction 
+                 context:(void *)context
+                   error:(NSError **)error;
 
 @end
 

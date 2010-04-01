@@ -80,11 +80,11 @@
 #pragma mark -
 #pragma mark CSSQLiteDatabase related messages
 
-- (BOOL)executeSQL:(NSString *)sql
-        withValues:(NSArray *)values
-          callback:(CSQLiteCallback)callbackFunction 
-           context:(void *)context
-             error:(NSError **)error;
+- (NSUInteger)executeSQL:(NSString *)sql
+              withValues:(NSArray *)values
+                callback:(CSQLiteCallback)callbackFunction 
+                 context:(void *)context
+                   error:(NSError **)error;
 {
     int affectedRows = 0;
     int errorCode;
@@ -112,9 +112,9 @@
 #pragma mark -
 #pragma mark CSQLDatabase related messages
 
-- (int)executeSQL:(NSString *)sql 
-        withValues:(NSArray *)values
-             error:(NSError **)error 
+- (NSUInteger)executeSQL:(NSString *)sql 
+              withValues:(NSArray *)values
+                   error:(NSError **)error 
 {
     return [self executeSQL:sql
                  withValues:values
@@ -123,8 +123,8 @@
                       error:error];
 }
 
-- (int)executeSQL:(NSString *)sql 
-             error:(NSError **)error
+- (NSUInteger)executeSQL:(NSString *)sql 
+                   error:(NSError **)error
 {
     return [self executeSQL:sql
                  withValues:nil
