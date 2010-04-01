@@ -41,13 +41,12 @@
     int affectedRows;
     
     affectedRows = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR)"
-                             error:&error];
+                                  error:&error];
     
     STAssertNil(error, 
                 [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
                  [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
-
 
     error = nil;
     affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (1, 'test')"
