@@ -132,7 +132,7 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				821DBC9C116370520073C988 /* Unit Tests */,
+				821DBC9C116370520073C988 /* Test */,
 				82445A43115B93F900950BD9 /* MySQL */,
 				82445A11115B889E00950BD9 /* SQLite */,
 				82445A10115B889000950BD9 /* CocoaSQL */,
@@ -165,13 +165,13 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
-		821DBC9C116370520073C988 /* Unit Tests */ = {
+		821DBC9C116370520073C988 /* Test */ = {
 			isa = PBXGroup;
 			children = (
 				821DBC9D116370800073C988 /* CSQLDatabaseTests.h */,
 				821DBC9E116370800073C988 /* CSQLDatabaseTests.m */,
 			);
-			name = "Unit Tests";
+			path = Test;
 			sourceTree = "<group>";
 		};
 		82445A10115B889000950BD9 /* CocoaSQL */ = {
@@ -187,6 +187,7 @@
 				821DBC4111636C100073C988 /* CocoaSQL.h */,
 			);
 			name = CocoaSQL;
+			path = Source/CocoaSQL;
 			sourceTree = "<group>";
 		};
 		82445A11115B889E00950BD9 /* SQLite */ = {
@@ -198,6 +199,7 @@
 				823C7CC5115CE4DA0061ECAD /* CSSQLitePreparedStatement.m */,
 			);
 			name = SQLite;
+			path = Source/SQLite;
 			sourceTree = "<group>";
 		};
 		82445A43115B93F900950BD9 /* MySQL */ = {
