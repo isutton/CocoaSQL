@@ -8,9 +8,6 @@
 
 #import "CSQLDatabaseTests.h"
 
-
-id databaseWithOptions();
-
 @implementation CSQLDatabaseTests
 
 #define TEST_DB @"test.db"
@@ -24,8 +21,11 @@ id databaseWithOptions();
         [fm removeItemAtPath:[TEST_DB stringByExpandingTildeInPath] error:nil];
     }
     
+    NSMutableDictionary *options = [NSMutableDictionary dictionary];
+    [options setObject:TEST_DB forKey:@"path"];
+    
     database = [[CSQLDatabase databaseWithDriver:@"SQLite"
-                                         options:[NSMutableDictionary dictionaryWithObjectsAndKeys:TEST_DB, @"path", nil]
+                                         options:options
                                            error:&error] retain];
     
     STAssertNil(error, @"We shouldn't have an error here: %@", error);
@@ -42,8 +42,11 @@ id databaseWithOptions();
     id <CSQLDatabase> database_;
     NSError *error;
     
+    NSMutableDictionary *options = [NSMutableDictionary dictionary];
+    [options setObject:TEST_DB forKey:@"path"];
+    
     database_ = [[CSQLDatabase databaseWithDriver:@"SQLite"
-                                         options:[NSMutableDictionary dictionaryWithObjectsAndKeys:TEST_DB, @"path", nil]
+                                         options:options
                                            error:&error] retain];
     
     STAssertNil(error, @"We shouldn't have an error here: %@", error);
@@ -83,6 +86,15 @@ id databaseWithOptions();
                 [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
                  [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals(affectedRows, 1, @"INSERT.");
+
+    error = nil;
+    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (2, 'test')"
+                                  error:&error];
+    
+    STAssertNil(error, 
+                [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
+                 [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertEquals(affectedRows, 1, @"INSERT.");
     
     error = nil;
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
@@ -115,7 +127,3 @@ id databaseWithOptions();
 }
 
 @end
-
-id databaseWithOptions() {
-    
-}
