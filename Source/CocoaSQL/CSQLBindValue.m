@@ -89,4 +89,10 @@
     [super dealloc];
 }
 
+- (int)intValue
+{
+    NSNumber *value_ = value;
+    return [value_ intValue];
+}
+
 @end
