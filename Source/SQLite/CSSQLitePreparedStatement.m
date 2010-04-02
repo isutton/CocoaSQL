@@ -60,7 +60,15 @@
                                        NULL);
     
     if (errorCode != SQLITE_OK) {
-        // FIXME: Populate NSError.
+        NSMutableDictionary *errorDetail;
+        errorDetail = [NSMutableDictionary dictionary];
+        [errorDetail setObject:[NSString stringWithFormat:@"%s",
+                                sqlite3_errmsg([database sqliteDatabase])]
+                        forKey:@"errorMessage"];
+
+        *error = [NSError errorWithDomain:@"CSSQLite"
+                                     code:errorCode
+                                 userInfo:errorDetail];
         return nil;
     }
     
