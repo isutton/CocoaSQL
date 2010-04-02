@@ -107,6 +107,9 @@
                 case CSQLDouble:
                     success = sqlite3_bind_double(sqlitePreparedStatement, i, [value doubleValue]);
                     break;
+                case CSQLNull:
+                    success = sqlite3_bind_null(sqlitePreparedStatement, i);
+                    break;
                 default:
                     break;
             }
