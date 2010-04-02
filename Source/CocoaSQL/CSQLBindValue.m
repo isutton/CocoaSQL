@@ -95,4 +95,9 @@
     return [value_ intValue];
 }
 
+- (CSQLBindValueType)type
+{
+    return type;
+}
+
 @end
