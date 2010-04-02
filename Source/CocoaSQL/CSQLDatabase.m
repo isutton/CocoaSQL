@@ -28,4 +28,22 @@
     return database;
 }
 
++ (id <CSQLDatabase>)databaseWithDSN:(NSString *)aDSN 
+                               error:(NSError **)error
+{
+    //
+    // From the DSN we'll get:
+    //
+    // * Driver to be used
+    // * Additional information to be passed to the Driver
+    //
+    // The additional information will be stored in a NSDictionary.
+    //
+    // After that, we'll return whatever comes out of  
+    // databaseWithDriver:options:error: 
+    //
+    
+    return nil;
+}
+
 @end

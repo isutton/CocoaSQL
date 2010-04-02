@@ -194,5 +194,8 @@
                                 options:(NSDictionary *)options
                                   error:(NSError **)error;
 
++ (id <CSQLDatabase>)databaseWithDSN:(NSString *)aDSN 
+                               error:(NSError **)error;
+
 @end
 
