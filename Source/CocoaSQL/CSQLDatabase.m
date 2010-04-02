@@ -42,8 +42,31 @@
     // After that, we'll return whatever comes out of  
     // databaseWithDriver:options:error: 
     //
+
+    // DSN: <driver>:<opt1>=<val1>;<opt2>=<val2>
+
+    NSMutableDictionary *options = [NSMutableDictionary dictionary];
+    NSScanner *scanner = [NSScanner scannerWithString:aDSN];
     
-    return nil;
+    NSString *aDriver;    
+    [scanner scanUpToString:@":" intoString:&aDriver];
+    [scanner setScanLocation:[scanner scanLocation] + 1];
+    
+    NSString *aKey;
+    NSString *aValue;
+    while (![scanner isAtEnd]) {
+        [scanner scanUpToString:@"=" intoString:&aKey];
+        [scanner setScanLocation:[scanner scanLocation] + 1];
+        [scanner scanUpToString:@";" intoString:&aValue];
+
+        if (![scanner isAtEnd]) {
+            [scanner setScanLocation:[scanner scanLocation] + 1];            
+        }
+        
+        [options setObject:aValue forKey:aKey];
+    }
+    
+    return [self databaseWithDriver:aDriver options:options error:error];
 }
 
 @end

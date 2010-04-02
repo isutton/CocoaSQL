@@ -9,6 +9,8 @@
 #import "CSQLDatabaseTests.h"
 
 
+id databaseWithOptions();
+
 @implementation CSQLDatabaseTests
 
 #define TEST_DB @"test.db"
@@ -33,6 +35,31 @@
 - (void)tearDown
 {
     [database release];
+}
+
+- (void)testDatabaseWithDriver
+{
+    id <CSQLDatabase> database_;
+    NSError *error;
+    
+    database_ = [[CSQLDatabase databaseWithDriver:@"SQLite"
+                                         options:[NSMutableDictionary dictionaryWithObjectsAndKeys:TEST_DB, @"path", nil]
+                                           error:&error] retain];
+    
+    STAssertNil(error, @"We shouldn't have an error here: %@", error);
+    STAssertNotNil(database_, @"Database should not be nil.");    
+}
+
+- (void)testDatabaseWithDSN
+{
+    id <CSQLDatabase> database_;
+    NSError *error;
+    
+    NSString *DSN = [NSString stringWithFormat:@"SQLite:path=%@", TEST_DB];
+    database_ = [CSQLDatabase databaseWithDSN:DSN error:&error];
+
+    STAssertNil(error, @"We shouldn't have an error here: %@", error);
+    STAssertNotNil(database_, @"Database should not be nil.");    
 }
 
 - (void)testExecuteSQL
@@ -88,3 +115,7 @@
 }
 
 @end
+
+id databaseWithOptions() {
+    
+}
