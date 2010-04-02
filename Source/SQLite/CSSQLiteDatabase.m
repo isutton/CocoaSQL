@@ -90,20 +90,31 @@
     int errorCode;
     char *errorMessage;
     
-    errorCode = sqlite3_exec(sqliteDatabase, [sql UTF8String], callbackFunction, 
-                             context, &errorMessage);
-    
-    if (errorCode != SQLITE_OK && errorCode != SQLITE_ABORT) {
-        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
+    if (values && [values count] > 0) {
+        id <CSQLPreparedStatement> statement;
+        statement = [self prepareStatement:sql error:error];
+        if (!statement) {
+            return 0;
+        }
         
-        [errorDetail setObject:[NSString stringWithFormat:@"%s", errorMessage] 
-                        forKey:@"errorMessage"];
-        *error = [[NSError alloc] initWithDomain:@"CSSQLite" 
-                                            code:errorCode 
-                                        userInfo:errorDetail];
+        return [statement executeWithValues:values error:error];
     }
     else {
-        affectedRows = sqlite3_changes(sqliteDatabase);
+        errorCode = sqlite3_exec(sqliteDatabase, [sql UTF8String], callbackFunction, 
+                                 context, &errorMessage);
+        
+        if (errorCode != SQLITE_OK && errorCode != SQLITE_ABORT) {
+            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
+            
+            [errorDetail setObject:[NSString stringWithFormat:@"%s", errorMessage] 
+                            forKey:@"errorMessage"];
+            *error = [[NSError alloc] initWithDomain:@"CSSQLite" 
+                                                code:errorCode 
+                                            userInfo:errorDetail];
+        }
+        else {
+            affectedRows = sqlite3_changes(sqliteDatabase);
+        }        
     }
     
     return affectedRows;
