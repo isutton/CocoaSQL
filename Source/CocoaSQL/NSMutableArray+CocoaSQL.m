@@ -16,4 +16,22 @@
     [self addObject:value];
 }
 
+- (void)bindIntValue:(int)aValue
+{
+    CSQLBindValue *value = [CSQLBindValue bindValueWithInt:aValue];
+    [self addObject:value];
+}
+
+- (void)bindStringValue:(NSString *)aValue
+{
+    CSQLBindValue *value = [CSQLBindValue bindValueWithString:aValue];
+    [self addObject:value];
+}
+
+- (void)bindDataValue:(NSData *)aValue
+{
+    CSQLBindValue *value = [CSQLBindValue bindValueWithData:aValue];
+    [self addObject:value];
+}
+
 @end

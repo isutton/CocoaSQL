@@ -12,5 +12,8 @@
 @interface NSMutableArray (CocoaSQL) 
 
 - (void)bindDoubleValue:(double)aValue;
+- (void)bindIntValue:(int)aValue;
+- (void)bindStringValue:(NSString *)aValue;
+- (void)bindDataValue:(NSData *)aValue;
 
 @end
