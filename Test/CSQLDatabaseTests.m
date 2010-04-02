@@ -58,6 +58,18 @@
     STAssertEquals(affectedRows, 1, @"INSERT.");
     
     error = nil;
+    NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
+    [values bindIntValue:1];
+    affectedRows = [database executeSQL:@"DELETE FROM t WHERE i = ?"
+                             withValues:values
+                                  error:&error];
+
+    STAssertNil(error, 
+                [NSString stringWithFormat:@"We shouldn't have an error here: %@", 
+                 [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertEquals(affectedRows, 1, @"DELETE with bind values.");
+    
+    error = nil;
     affectedRows = [database executeSQL:@"DELETE FROM t" error:&error];
     
     STAssertNil(error, 
