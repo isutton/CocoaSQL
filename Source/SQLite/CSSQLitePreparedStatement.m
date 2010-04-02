@@ -75,8 +75,8 @@
     return self;
 }
 
-- (BOOL)executeWithValues:(NSArray *)values 
-                    error:(NSError **)error
+- (NSUInteger)executeWithValues:(NSArray *)values 
+                          error:(NSError **)error
 {
     int bindParameterCount = sqlite3_bind_parameter_count(sqlitePreparedStatement);
 
@@ -136,7 +136,7 @@
     return YES;
 }
 
-- (BOOL)execute:(NSError **)error
+- (NSUInteger)execute:(NSError **)error
 {
     return [self executeWithValues:nil error:error];
 }
