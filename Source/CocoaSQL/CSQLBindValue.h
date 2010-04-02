@@ -12,7 +12,8 @@ typedef enum {
     CSQLInteger,
     CSQLDouble,
     CSQLText,
-    CSQLBlob
+    CSQLBlob,
+    CSQLNull
 } CSQLBindValueType;
 
 @interface CSQLBindValue : NSObject {
@@ -44,11 +45,13 @@ typedef enum {
 + (id)bindValueWithDouble:(double)aValue;
 + (id)bindValueWithString:(NSString *)aValue;
 + (id)bindValueWithData:(NSData *)aValue;
++ (id)bindValueWithNull;
 
 - (id)initWithInt:(int)aValue;
 - (id)initWithDouble:(double)aValue;
 - (id)initWithString:(NSString *)aValue;
 - (id)initWithData:(NSData *)aValue;
+- (id)initWithNull;
 
 - (CSQLBindValueType)type;
 - (int)intValue;

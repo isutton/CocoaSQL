@@ -65,6 +65,24 @@
     return self;
 }
 
++ (id)bindValueWithNull
+{
+    CSQLBindValue *value = [[CSQLBindValue alloc] initWithNull];
+    return [value autorelease];
+}
+
+- (id)initWithNull
+{
+    self = [super init];
+    
+    if (self) {
+        value = nil;
+        type = CSQLNull;
+    }
+    
+    return self;
+}
+
 - (void)dealloc
 {
     [value release];
