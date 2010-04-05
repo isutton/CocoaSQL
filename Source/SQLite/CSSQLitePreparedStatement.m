@@ -21,62 +21,50 @@
 
 @end
 
+#pragma mark -
 
 @implementation CSSQLitePreparedStatement
 
+@synthesize database;
+@synthesize sqlitePreparedStatement;
 
-+ (id)preparedStatementWithDatabase:(id)aDatabase 
-                             andSQL:(NSString *)sql
-                              error:(NSError **)error
++ (id)preparedStatementWithDatabase:(id)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     CSSQLitePreparedStatement *preparedStatement;
-    preparedStatement = [[CSSQLitePreparedStatement alloc] initWithDatabase:aDatabase 
-                                                                     andSQL:sql 
-                                                                      error:error];
-    
+    preparedStatement = [[CSSQLitePreparedStatement alloc] initWithDatabase:aDatabase andSQL:sql error:error];
     if (preparedStatement) {
         return [preparedStatement autorelease];
     }
-    
     return nil;
 }
 
-- (id)initWithDatabase:(id)aDatabase 
-                andSQL:(NSString *)sql
-                 error:(NSError **)error
+- (id)initWithDatabase:(id)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
-    self = [super init];
-    
-    if (!self) {
-        return nil;
+    if (self = [super init]) {
+        self.database = aDatabase;
+        sqlite3_stmt *preparedStatement_;
+        int errorCode = sqlite3_prepare_v2(self.database.sqliteDatabase, [sql UTF8String], [sql length], &preparedStatement_, NULL);
+        if (errorCode != SQLITE_OK) {
+            NSMutableDictionary *errorDetail;
+            errorDetail = [NSMutableDictionary dictionary];
+            NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg([database sqliteDatabase])];
+            [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+            *error = [NSError errorWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
+            return nil;
+        }
+        self.sqlitePreparedStatement = preparedStatement_;
     }
-    
-    CSSQLiteDatabase *database = aDatabase;
-
-    int errorCode = sqlite3_prepare_v2([database sqliteDatabase], 
-                                       [sql UTF8String], 
-                                       [sql length], 
-                                       &sqlitePreparedStatement, 
-                                       NULL);
-    
-    if (errorCode != SQLITE_OK) {
-        NSMutableDictionary *errorDetail;
-        errorDetail = [NSMutableDictionary dictionary];
-        [errorDetail setObject:[NSString stringWithFormat:@"%s",
-                                sqlite3_errmsg([database sqliteDatabase])]
-                        forKey:@"errorMessage"];
-
-        *error = [NSError errorWithDomain:@"CSSQLite"
-                                     code:errorCode
-                                 userInfo:errorDetail];
-        return nil;
-    }
-    
     return self;
 }
 
-- (NSUInteger)executeWithValues:(NSArray *)values 
-                          error:(NSError **)error
+- (void)dealloc
+{
+    [super dealloc];
+}
+
+#pragma mark -
+#pragma mark Bind messages
+
 - (BOOL)bindIntValue:(int)aValue forColumn:(int)column
 {
     return sqlite3_bind_int(sqlitePreparedStatement, column, aValue) == SQLITE_OK;
@@ -102,6 +90,10 @@
     return SQLITE_OK == sqlite3_bind_null(sqlitePreparedStatement, column);
 }
 
+#pragma mark -
+#pragma mark Execute messages
+
+- (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
     int bindParameterCount = sqlite3_bind_parameter_count(sqlitePreparedStatement);
 
@@ -109,67 +101,78 @@
 
         if (!values || [values count] < bindParameterCount) {
             NSMutableDictionary *errorDetail;
-            errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                           [NSString stringWithFormat:
-                            @"Expected %i value(s), %i provided", 
-                            bindParameterCount, [values count]],
-                           @"errorMessage",
-                           nil];
-            *error = [NSError errorWithDomain:@"CSSQLite" code:100 
-                                     userInfo:errorDetail];
+            errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Expected %i value(s), %i provided", bindParameterCount, [values count]], @"errorMessage", nil];
+            *error = [NSError errorWithDomain:@"CSSQLite" code:100 userInfo:errorDetail];
             return NO;
         }
         
         for (int i = 1; i <= bindParameterCount; i++) {
             CSQLBindValue *value = [values objectAtIndex:i-1];
-            
-            int success;
-            
+            BOOL success;
             switch ([value type]) {
                 case CSQLInteger:
-                    success = sqlite3_bind_int(sqlitePreparedStatement, i, [value intValue]);
+                    success = [self bindIntValue:[value intValue] forColumn:i];
                     break;
                 case CSQLDouble:
-                    success = sqlite3_bind_double(sqlitePreparedStatement, i, [value doubleValue]);
+                    success = [self bindDoubleValue:[value doubleValue] forColumn:i];
+                    break;
+                case CSQLText:
+                    success = [self bindStringValue:[value stringValue] forColumn:i];
+                    break;
+                case CSQLBlob:
+                    success = [self bindDataValue:[value dataValue] forColumn:i];
                     break;
                 case CSQLNull:
-                    success = sqlite3_bind_null(sqlitePreparedStatement, i);
+                    success = [self bindNullValueForColumn:i];
                     break;
                 default:
                     break;
             }
             
-            if (success != SQLITE_OK) {
-                // FIXME: Check error and populate NSError.
+            if (!success) {
+                NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+                NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(self.database.sqliteDatabase)];
+                [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+                *error = [NSError errorWithDomain:@"CSQLite" code:101 userInfo:errorDetail];
+                return NO;
             }
         }
     }
 
-    int errorCode = sqlite3_step(sqlitePreparedStatement);
+    int errorCode = sqlite3_step(self.sqlitePreparedStatement);
     
     if (errorCode == SQLITE_ERROR) {
         *error = [NSError errorWithDomain:@"CSSQLite" code:102 userInfo:nil];
         return NO;
     }
 
-    canFetch = NO;
-    
     if (errorCode == SQLITE_ROW) {
         canFetch = YES;
     }
+    else {
+        canFetch = NO;
+    }
 
+    if (errorCode == SQLITE_DONE) {
+        sqlite3_reset(self.sqlitePreparedStatement);
+    }
+    
     return YES;
 }
 
-- (NSUInteger)execute:(NSError **)error
+- (BOOL)execute:(NSError **)error
 {
     return [self executeWithValues:nil error:error];
 }
 
+#pragma mark -
+#pragma mark Fetch messages
+
 - (NSArray *)fetchRowAsArray:(NSError **)error
 {
-    if (!canFetch) 
+    if (canFetch == NO) {
         return nil;
+    }
     
     int columnCount = sqlite3_column_count(sqlitePreparedStatement);
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
@@ -184,15 +187,22 @@
 
 - (NSDictionary *)fetchRowAsDictionary:(NSError **)error
 {
-    if (!canFetch)
+    int columnCount;
+    const char *columnName;
+    id value;
+    NSMutableDictionary *row;
+    
+    if (canFetch == NO) {
         return nil;
+    }
 
-    int columnCount = sqlite3_column_count(sqlitePreparedStatement);
-    NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
+    columnCount = sqlite3_column_count(sqlitePreparedStatement);
+    row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
+    
     for (int i = 0; i < columnCount; i++) {
-        id value = translate(sqlitePreparedStatement, i);
-        NSString *columnName = [NSString stringWithFormat:@"%s", sqlite3_column_name(sqlitePreparedStatement, i)];
-        [row setObject:value forKey:columnName];
+        value = translate(sqlitePreparedStatement, i);
+        columnName = sqlite3_column_name(sqlitePreparedStatement, i);
+        [row setObject:value forKey:[NSString stringWithFormat:@"%s", columnName]];
     }
 
     [self prepareNextFetch];
@@ -200,12 +210,9 @@
     return row;
 }
 
-- (void)dealloc
-{
-    [super dealloc];
-}
-
 @end
+
+#pragma mark -
 
 @implementation CSSQLitePreparedStatement (Private)
 

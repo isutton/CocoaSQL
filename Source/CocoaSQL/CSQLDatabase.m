@@ -10,9 +10,7 @@
 
 @implementation CSQLDatabase
 
-+ (id <CSQLDatabase>)databaseWithDriver:(NSString *)aDriver 
-                                options:(NSDictionary *)options
-                                  error:(NSError **)error
++ (id <CSQLDatabase>)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error
 {
     //
     // Build the class name. It will be like:
@@ -28,8 +26,7 @@
     return database;
 }
 
-+ (id <CSQLDatabase>)databaseWithDSN:(NSString *)aDSN 
-                               error:(NSError **)error
++ (id <CSQLDatabase>)databaseWithDSN:(NSString *)aDSN error:(NSError **)error
 {
     //
     // From the DSN we'll get:

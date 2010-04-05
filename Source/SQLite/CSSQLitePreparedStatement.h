@@ -15,22 +15,16 @@
 
 #include <sqlite3.h>
 
+@class CSSQLiteDatabase;
+
 @interface CSSQLitePreparedStatement : NSObject <CSQLPreparedStatement>  {
     sqlite3_stmt *sqlitePreparedStatement;
+    CSSQLiteDatabase *database;
     BOOL canFetch;
 }
 
-/**
- 
- @param database
- @param sql
- 
- @return <code>preparedStatement</code>
- 
- */
-+ (id)preparedStatementWithDatabase:(id)database
-                             andSQL:(NSString *)sql
-                              error:(NSError **)error;
+@property (retain) CSSQLiteDatabase *database;
+@property (assign) sqlite3_stmt *sqlitePreparedStatement;
 
 /**
  
@@ -40,10 +34,17 @@
  @return <code>preparedStatement</code>
  
  */
-- (id)initWithDatabase:(id)database
-                andSQL:(NSString *)sql
-                 error:(NSError **)error;
++ (id <CSQLPreparedStatement>)preparedStatementWithDatabase:(id <CSQLDatabase>)database andSQL:(NSString *)sql error:(NSError **)error;
 
+/**
+ 
+ @param database
+ @param sql
+ 
+ @return <code>preparedStatement</code>
+ 
+ */
+- (id <CSQLPreparedStatement>)initWithDatabase:(id <CSQLDatabase>)database andSQL:(NSString *)sql error:(NSError **)error;
 
 @end
 

@@ -7,7 +7,10 @@
  *
  */
 
-@protocol CSQLPreparedStatement
+@protocol CSQLPreparedStatement <NSObject>
+
+#pragma mark -
+#pragma mark Execute messages
 
 /**
  
@@ -18,7 +21,7 @@
  @param values
  @param error
  
- @return <code>success</code>
+ @return 
  
  */
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error;
@@ -31,10 +34,13 @@
  
  @param error
  
- @return <code>success</code>
+ @return 
  
  */
 - (BOOL)execute:(NSError **)error;
+
+#pragma mark -
+#pragma mark Fetch messages
 
 /**
  
@@ -65,6 +71,9 @@
  
  */
 - (NSArray *)fetchRowAsArray:(NSError **)error;
+
+#pragma mark -
+#pragma mark Bind messages
 
 /**
  

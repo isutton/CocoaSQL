@@ -31,9 +31,7 @@
  @return Number of rows affected by the SQL statement.
  
  */
-- (NSUInteger)executeSQL:(NSString *)sql 
-              withValues:(NSArray *)values
-                   error:(NSError **)error; 
+- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error; 
 
 /**
  
@@ -46,8 +44,7 @@
  @return Number of rows affected by the SQL statement.
  
  */
-- (NSUInteger)executeSQL:(NSString *)sql 
-                   error:(NSError **)error;
+- (NSUInteger)executeSQL:(NSString *)sql error:(NSError **)error;
 
 /**
  
@@ -63,9 +60,7 @@
  with the columns as keys.
  
  */
-- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql
-                                   withValues:(NSArray *)values
-                                        error:(NSError **)error; 
+- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error; 
 
 /**
  
@@ -80,8 +75,7 @@
  with the columns as keys.
  
  */
-- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql
-                                        error:(NSError **)error;
+- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error;
 
 /**
  
@@ -96,9 +90,7 @@
  @return <code>NSArray</code> The first row as a <code>NSArray</code>.
  
  */
-- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql 
-                         withValues:(NSArray *)values
-                              error:(NSError **)error; 
+- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error; 
 
 /**
  
@@ -112,8 +104,7 @@
  @return <code>NSArray</code> The first row as a <code>NSArray</code>.
  
  */
-- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql 
-                              error:(NSError **)error;
+- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error;
 
 /**
  
@@ -130,9 +121,7 @@
  as keys.
  
  */
-- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql 
-                                 withValues:(NSArray *)values
-                                      error:(NSError **)error; 
+- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error; 
 
 /**
  
@@ -149,8 +138,7 @@
  as keys.
  
  */
-- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql 
-                                      error:(NSError **)error;
+- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql error:(NSError **)error;
 
 /**
  
@@ -163,9 +151,7 @@
  @return <code>rows</code>
  
  */
-- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql 
-                           withValues:(NSArray *)values 
-                                error:(NSError **)error;
+- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error;
 
 /**
  
@@ -177,11 +163,17 @@
  @return <code>rows</code>
  
  */
-- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql 
-                                error:(NSError **)error;
+- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql error:(NSError **)error;
 
-- (id <CSQLPreparedStatement>)prepareStatement:(NSString *)sql 
-                                         error:(NSError **)error;
+/**
+ 
+ @param sql
+ @param error
+ 
+ @return statement
+ 
+ */
+- (id <CSQLPreparedStatement>)prepareStatement:(NSString *)sql error:(NSError **)error;
 
 @end
 
@@ -190,12 +182,9 @@
 
 }
 
-+ (id <CSQLDatabase>)databaseWithDriver:(NSString *)aDriver 
-                                options:(NSDictionary *)options
-                                  error:(NSError **)error;
++ (id <CSQLDatabase>)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;
 
-+ (id <CSQLDatabase>)databaseWithDSN:(NSString *)aDSN 
-                               error:(NSError **)error;
++ (id <CSQLDatabase>)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
 
 @end
 
