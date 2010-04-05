@@ -12,6 +12,7 @@
 @implementation CSSQLiteDatabase
 
 @synthesize path;
+@synthesize sqliteDatabase;
 
 #pragma mark -
 #pragma mark Initialization and dealloc related messages

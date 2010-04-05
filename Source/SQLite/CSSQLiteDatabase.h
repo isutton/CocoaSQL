@@ -21,6 +21,7 @@ typedef int (*CSQLiteCallback)(void *, int, char**, char**);
 }
 
 @property (copy) NSString *path;
+@property (assign) sqlite3 *sqliteDatabase;
 
 - (sqlite3 *)sqliteDatabase;
 
