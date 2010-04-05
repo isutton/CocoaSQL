@@ -11,7 +11,6 @@
 #import "CSQLDatabase.h"
 
 @interface CSQLDatabaseTests : SenTestCase {
-    id <CSQLDatabase> database;
 }
 
 @end
