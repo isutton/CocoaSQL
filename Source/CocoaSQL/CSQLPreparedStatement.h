@@ -66,5 +66,59 @@
  */
 - (NSArray *)fetchRowAsArray:(NSError **)error;
 
+/**
+ 
+ @param aValue
+ @param column
+ 
+ @return <code>YES</code> if the value could be properly binded, otherwise
+ <code>NO</code>.
+ 
+ */
+- (BOOL)bindIntValue:(int)aValue forColumn:(int)column;
+
+/**
+ 
+ @param aValue
+ @param column
+
+ @return <code>YES</code> if the value could be properly binded, otherwise
+ <code>NO</code>.
+
+ */
+- (BOOL)bindDoubleValue:(double)aValue forColumn:(int)column;
+
+/**
+ 
+ @param aValue
+ @param column
+
+ @return <code>YES</code> if the value could be properly binded, otherwise
+ <code>NO</code>.
+
+ */
+- (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column;
+
+/**
+ 
+ @param aValue
+ @param column
+
+ @return <code>YES</code> if the value could be properly binded, otherwise
+ <code>NO</code>.
+
+ */
+- (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column;
+
+/**
+ 
+ @param column
+
+ @return <code>YES</code> if the value could be properly binded, otherwise
+ <code>NO</code>.
+
+ */
+- (BOOL)bindNullValueForColumn:(int)column;
+
 @end
 

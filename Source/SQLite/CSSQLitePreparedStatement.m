@@ -77,6 +77,31 @@
 
 - (NSUInteger)executeWithValues:(NSArray *)values 
                           error:(NSError **)error
+- (BOOL)bindIntValue:(int)aValue forColumn:(int)column
+{
+    return sqlite3_bind_int(sqlitePreparedStatement, column, aValue) == SQLITE_OK;
+}
+
+- (BOOL)bindDoubleValue:(double)aValue forColumn:(int)column
+{
+    return sqlite3_bind_double(sqlitePreparedStatement, column, aValue) == SQLITE_OK;
+}
+
+- (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column
+{
+    return SQLITE_OK == sqlite3_bind_text(sqlitePreparedStatement, column, [aValue cStringUsingEncoding:NSUTF8StringEncoding], [aValue length], SQLITE_STATIC);
+}
+
+- (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column
+{
+    return SQLITE_OK == sqlite3_bind_blob(sqlitePreparedStatement, column, [aValue bytes], [aValue length], SQLITE_STATIC);
+}
+
+- (BOOL)bindNullValueForColumn:(int)column
+{
+    return SQLITE_OK == sqlite3_bind_null(sqlitePreparedStatement, column);
+}
+
 {
     int bindParameterCount = sqlite3_bind_parameter_count(sqlitePreparedStatement);
 
