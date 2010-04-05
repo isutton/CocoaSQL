@@ -95,6 +95,24 @@
     return [value_ intValue];
 }
 
+- (double)doubleValue
+{
+    NSNumber *value_ = value;
+    return [value_ doubleValue];
+}
+
+- (NSData *)dataValue
+{
+    NSData *value_ = value;
+    return value_;
+}
+
+- (NSString *)stringValue
+{
+    NSString *value_ = value;
+    return value_;
+}
+
 - (CSQLBindValueType)type
 {
     return type;

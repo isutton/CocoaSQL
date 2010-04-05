@@ -54,7 +54,10 @@ typedef enum {
 - (id)initWithNull;
 
 - (CSQLBindValueType)type;
+
 - (int)intValue;
 - (double)doubleValue;
+- (NSString *)stringValue;
+- (NSData *)dataValue;
 
 @end
