@@ -13,6 +13,7 @@
 		821DBC4211636C100073C988 /* CocoaSQL.h in Headers */ = {isa = PBXBuildFile; fileRef = 821DBC4111636C100073C988 /* CocoaSQL.h */; };
 		821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
 		821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
+		821E2706116B2A4100A0AFF7 /* CSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */; };
 		8223B8EF1161023F004108A1 /* CSQLBindValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 8223B8ED1161023F004108A1 /* CSQLBindValue.h */; };
 		8223B8F01161023F004108A1 /* CSQLBindValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 8223B8EE1161023F004108A1 /* CSQLBindValue.m */; };
 		823C7C8A115CCD210061ECAD /* CSQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 823C7C89115CCD210061ECAD /* CSQLPreparedStatement.h */; };
@@ -50,6 +51,7 @@
 		821DBC901163702E0073C988 /* Unit Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Unit Tests-Info.plist"; sourceTree = "<group>"; };
 		821DBC9D116370800073C988 /* CSQLDatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLDatabaseTests.h; sourceTree = "<group>"; };
 		821DBC9E116370800073C988 /* CSQLDatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLDatabaseTests.m; sourceTree = "<group>"; };
+		821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLPreparedStatement.m; sourceTree = "<group>"; };
 		8223B8ED1161023F004108A1 /* CSQLBindValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLBindValue.h; sourceTree = "<group>"; };
 		8223B8EE1161023F004108A1 /* CSQLBindValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLBindValue.m; sourceTree = "<group>"; };
 		823C7C89115CCD210061ECAD /* CSQLPreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLPreparedStatement.h; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 				824459F2115B742A00950BD9 /* CSQLDatabase.h */,
 				821DBBA811634CB30073C988 /* CSQLDatabase.m */,
 				823C7C89115CCD210061ECAD /* CSQLPreparedStatement.h */,
+				821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */,
 				8223B8ED1161023F004108A1 /* CSQLBindValue.h */,
 				8223B8EE1161023F004108A1 /* CSQLBindValue.m */,
 				821DBB7911633B4E0073C988 /* NSMutableArray+CocoaSQL.h */,
@@ -343,6 +346,7 @@
 				8223B8F01161023F004108A1 /* CSQLBindValue.m in Sources */,
 				821DBB7C11633B4E0073C988 /* NSMutableArray+CocoaSQL.m in Sources */,
 				821DBBA911634CB30073C988 /* CSQLDatabase.m in Sources */,
+				821E2706116B2A4100A0AFF7 /* CSQLPreparedStatement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
