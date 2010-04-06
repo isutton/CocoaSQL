@@ -7,10 +7,14 @@
  *
  */
 
-@protocol CSQLPreparedStatement <NSObject>
+@class CSQLDatabase;
+
+@protocol CSQLPreparedStatement
 
 #pragma mark -
 #pragma mark Execute messages
+
+@optional
 
 /**
  
@@ -131,3 +135,13 @@
 
 @end
 
+@interface CSQLPreparedStatement : NSObject <CSQLPreparedStatement>
+{
+    CSQLDatabase *database;
+    BOOL canFetch;
+}
+
+@property (retain) CSQLDatabase *database;
+@property (assign) BOOL canFetch;
+
+@end

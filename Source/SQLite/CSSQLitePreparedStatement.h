@@ -17,13 +17,10 @@
 
 @class CSSQLiteDatabase;
 
-@interface CSSQLitePreparedStatement : NSObject <CSQLPreparedStatement>  {
+@interface CSSQLitePreparedStatement : CSQLPreparedStatement  {
     sqlite3_stmt *sqlitePreparedStatement;
-    CSSQLiteDatabase *database;
-    BOOL canFetch;
 }
 
-@property (retain) CSSQLiteDatabase *database;
 @property (assign) sqlite3_stmt *sqlitePreparedStatement;
 
 /**
@@ -34,7 +31,7 @@
  @return <code>preparedStatement</code>
  
  */
-+ (id <CSQLPreparedStatement>)preparedStatementWithDatabase:(id <CSQLDatabase>)database andSQL:(NSString *)sql error:(NSError **)error;
++ (CSQLPreparedStatement *)preparedStatementWithDatabase:(CSQLDatabase *)database andSQL:(NSString *)sql error:(NSError **)error;
 
 /**
  
@@ -44,7 +41,7 @@
  @return <code>preparedStatement</code>
  
  */
-- (id <CSQLPreparedStatement>)initWithDatabase:(id <CSQLDatabase>)database andSQL:(NSString *)sql error:(NSError **)error;
+- (CSQLPreparedStatement *)initWithDatabase:(CSQLDatabase *)database andSQL:(NSString *)sql error:(NSError **)error;
 
 @end
 

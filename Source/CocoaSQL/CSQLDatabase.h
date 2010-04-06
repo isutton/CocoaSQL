@@ -8,13 +8,51 @@
 
 #import "CSQLPreparedStatement.h"
 
-@protocol CSQLDatabase <NSObject>
+@class CSQLDatabase;
+
+@protocol CSQLDatabase
 
 #pragma mark -
 #pragma mark Class methods
 
-+ (id)databaseWithOptions:(NSDictionary *)options 
-                    error:(NSError **)error;
+/**
+ 
+ Creates a CSQLDatabase object with the given driver and options.
+ 
+ @param aDriver
+ @param options
+ @param error
+ 
+ @return The CSQLDatabase object.
+ 
+ */
++ (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;
+
+/**
+ 
+ Creates a CSQLDatabase object with the given DSN.
+ 
+ @param aDSN
+ @param error
+ 
+ @return The CSQLDatabase object.
+ 
+ */
++ (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
+
+@optional
+
+/**
+ 
+ This method should be implemented by subclasses.
+ 
+ @param options
+ @param error
+ 
+ @return The CSQLDatabase object.
+ 
+ */
++ (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error;
 
 #pragma mark -
 #pragma mark Instance methods
@@ -131,7 +169,7 @@
  @param sql The SQL statement to be executed.
  @param error If an error occurs, upon return contains an instance of 
  <code>NSError</code> that describes the problem.
-
+ 
  
  @return <code>NSArray</code> <code>NSArray</code> containing all the rows 
  returned by the statement as <code>NSDictionary</code>, with the column names
@@ -146,7 +184,7 @@
  @param values An <code>NSArray</code> instance with values.
  @param error If an error occurs, upon return contains an instance of 
  <code>NSError</code> that describes the problem.
-
+ 
  
  @return <code>rows</code>
  
@@ -158,7 +196,7 @@
  @param sql The SQL statement to be executed.
  @param error If an error occurs, upon return contains an instance of 
  <code>NSError</code> that describes the problem.
-
+ 
  
  @return <code>rows</code>
  
@@ -173,18 +211,14 @@
  @return statement
  
  */
-- (id <CSQLPreparedStatement>)prepareStatement:(NSString *)sql error:(NSError **)error;
+- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error;
 
 @end
 
-@interface CSQLDatabase : NSObject
-{
 
-}
+@interface CSQLDatabase : NSObject <CSQLDatabase>
 
-+ (id <CSQLDatabase>)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;
-
-+ (id <CSQLDatabase>)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
++ (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
++ (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;
 
 @end
-

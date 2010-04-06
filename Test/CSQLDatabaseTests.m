@@ -28,7 +28,7 @@
 
 - (void)testDatabaseWithDriver
 {
-    id <CSQLDatabase> database_;
+    CSQLDatabase *database_;
     NSError *error;
     
     NSMutableDictionary *options = [NSMutableDictionary dictionary];
@@ -42,7 +42,7 @@
 
 - (void)testDatabaseWithDSN
 {
-    id <CSQLDatabase> database_;
+    CSQLDatabase *database_;
     NSError *error;
     
     NSString *DSN = [NSString stringWithFormat:@"SQLite:path=%@", TEST_DB];
@@ -55,7 +55,7 @@
 - (id) createDatabase:(NSError **)error
 {
     NSString *DSN = [NSString stringWithFormat:@"SQLite:path=%@", TEST_DB];
-    id <CSQLDatabase> database = [CSQLDatabase databaseWithDSN:DSN error:&(*error)];
+    CSQLDatabase *database = [CSQLDatabase databaseWithDSN:DSN error:&(*error)];
     return database;
 }
 
@@ -81,7 +81,7 @@
     NSError *error = nil;
     int affectedRows;
     
-    id database = [self createDatabase:&error];
+    CSQLDatabase *database = [self createDatabase:&error];
     
     [self createTable:database];
     

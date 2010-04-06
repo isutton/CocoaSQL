@@ -25,29 +25,28 @@
 
 @implementation CSSQLitePreparedStatement
 
-@synthesize database;
 @synthesize sqlitePreparedStatement;
 
 + (id)preparedStatementWithDatabase:(id)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     CSSQLitePreparedStatement *preparedStatement;
-    preparedStatement = [[CSSQLitePreparedStatement alloc] initWithDatabase:aDatabase andSQL:sql error:error];
+    preparedStatement = (CSSQLitePreparedStatement *) [[CSSQLitePreparedStatement alloc] initWithDatabase:aDatabase andSQL:sql error:error];
     if (preparedStatement) {
         return [preparedStatement autorelease];
     }
     return nil;
 }
 
-- (id)initWithDatabase:(id)aDatabase andSQL:(NSString *)sql error:(NSError **)error
+- (id)initWithDatabase:(CSSQLiteDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     if (self = [super init]) {
         self.database = aDatabase;
         sqlite3_stmt *preparedStatement_;
-        int errorCode = sqlite3_prepare_v2(self.database.sqliteDatabase, [sql UTF8String], [sql length], &preparedStatement_, NULL);
+        int errorCode = sqlite3_prepare_v2(aDatabase.sqliteDatabase, [sql UTF8String], [sql length], &preparedStatement_, NULL);
         if (errorCode != SQLITE_OK) {
             NSMutableDictionary *errorDetail;
             errorDetail = [NSMutableDictionary dictionary];
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg([database sqliteDatabase])];
+            NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg([aDatabase sqliteDatabase])];
             [errorDetail setObject:errorMessage forKey:@"errorMessage"];
             *error = [NSError errorWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
             return nil;
@@ -130,8 +129,9 @@
             }
             
             if (!success) {
+                CSSQLiteDatabase *database_ = (CSSQLiteDatabase *)self.database;
                 NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-                NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(self.database.sqliteDatabase)];
+                NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(database_.sqliteDatabase)];
                 [errorDetail setObject:errorMessage forKey:@"errorMessage"];
                 *error = [NSError errorWithDomain:@"CSQLite" code:101 userInfo:errorDetail];
                 return NO;

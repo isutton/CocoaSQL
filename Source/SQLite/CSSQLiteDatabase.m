@@ -17,7 +17,7 @@
 #pragma mark -
 #pragma mark Initialization and dealloc related messages
 
-+ (id <CSQLDatabase>)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
++ (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
 {
     CSSQLiteDatabase *database;
     database = [CSSQLiteDatabase databaseWithPath:[options objectForKey:@"path"] error:error];
@@ -70,7 +70,7 @@
     char *errorMessage;
     
     if (values && [values count] > 0) {
-        id <CSQLPreparedStatement> statement = [self prepareStatement:sql error:error];
+        CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
         if (!statement) {
             return 0;
         }
@@ -163,7 +163,7 @@
 #pragma mark -
 #pragma mark Prepared Statement messages
 
-- (id <CSQLPreparedStatement>)prepareStatement:(NSString *)sql error:(NSError **)error
+- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
 {
     return [CSSQLitePreparedStatement preparedStatementWithDatabase:self andSQL:sql error:error];
 }

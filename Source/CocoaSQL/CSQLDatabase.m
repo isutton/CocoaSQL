@@ -10,7 +10,7 @@
 
 @implementation CSQLDatabase
 
-+ (id <CSQLDatabase>)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error
++ (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error
 {
     //
     // Build the class name. It will be like:
@@ -21,12 +21,12 @@
     // * CSOracleDatabase
     //
     NSString *aClassName = [NSString stringWithFormat:@"CS%@Database", aDriver];
-    Class <CSQLDatabase> class = NSClassFromString(aClassName);
-    id <CSQLDatabase> database = [class databaseWithOptions:options error:error];
+    Class class = NSClassFromString(aClassName);
+    CSQLDatabase *database = [class databaseWithOptions:options error:error];
     return database;
 }
 
-+ (id <CSQLDatabase>)databaseWithDSN:(NSString *)aDSN error:(NSError **)error
++ (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error
 {
     //
     // From the DSN we'll get:
