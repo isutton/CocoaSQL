@@ -13,7 +13,6 @@
 static id translate(MYSQL_BIND *bind)
 {
     id value;
-    float v;
     switch(bind->buffer_type)
     {
         case MYSQL_TYPE_FLOAT:
@@ -170,7 +169,7 @@ static id translate(MYSQL_BIND *bind)
     for (int i = 0; i < columnCount; i++) {
         [row addObject:translate(&resultBindings[i])];
     }
-        
+    free(resultBindings);
     return row;
 }
 
@@ -190,12 +189,14 @@ static id translate(MYSQL_BIND *bind)
     MYSQL_BIND *resultBindings = calloc(columnCount, sizeof(MYSQL_BIND));
     mysql_stmt_bind_result(statement, resultBindings);
     mysql_stmt_fetch(statement);
+    MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
+
     for (int i = 0; i < columnCount; i++) {
         value = translate(&resultBindings[i]);
-        //[row setObject:value forKey:[NSString stringWithFormat:@"%s", columnName]];
+        [row setObject:value forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
         
     }
-        
+    free(resultBindings);
     return row;
 }
 
