@@ -23,10 +23,6 @@ typedef int (*CSMySQLCallback)(void *, int, char**, char**);
 
 #pragma mark -
 #pragma mark Initialization related messages
-/*
-+ (id)databaseWithDsn:(NSString *)aDsn 
-                 error:(NSError **)error;
-*/
 + (id)databaseWithOptions:(NSDictionary *)options 
                                    error:(NSError **)error;
 
