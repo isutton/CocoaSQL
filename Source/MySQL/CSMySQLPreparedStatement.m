@@ -83,11 +83,14 @@ static id translate(MYSQL_BIND *bind)
 {
     int errorCode = mysql_stmt_prepare(statement, [sql UTF8String], [sql length]);
     if (errorCode != 0) {
-        NSMutableDictionary *errorDetail;
-        errorDetail = [NSMutableDictionary dictionary];
-        NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error((MYSQL *)database.databaseHandle)];
-        [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-        *error = [NSError errorWithDomain:@"CSMySQL" code:errorCode userInfo:errorDetail];
+        if (error) {
+            NSMutableDictionary *errorDetail;
+            errorDetail = [NSMutableDictionary dictionary];
+            NSString *errorMessage = [NSString stringWithFormat:@"%s", 
+                                      mysql_error((MYSQL *)database.databaseHandle)];
+            [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+            *error = [NSError errorWithDomain:@"CSMySQL" code:errorCode userInfo:errorDetail];
+        }
         return NO;
     }
     return YES;
