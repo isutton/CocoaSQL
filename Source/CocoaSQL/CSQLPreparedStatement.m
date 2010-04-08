@@ -25,8 +25,10 @@
 
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
-    NSLog(@"ImplementMe!");
-    return self;
+    NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+    [errorDetail setObject:@"Driver needs to implement this message." forKey:@"errorMessage"];
+    *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:500 userInfo:errorDetail];
+    return nil;
 }
 
 @end
