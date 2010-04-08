@@ -10,3 +10,6 @@ profile
 # Doxygen
 html/
 latex/
+
+# shared objects
+*.dylib
