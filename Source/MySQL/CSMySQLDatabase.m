@@ -14,46 +14,45 @@
 #pragma mark Initialization and dealloc related messages
 
 + (id)databaseWithOptions:(NSDictionary *)options 
-                                   error:(NSError **)error
+                    error:(NSError **)error
 {
     CSMySQLDatabase *database;
-    NSString *dbName = (NSString *)[options objectForKey:@"db"];
-    NSString *dbHost = (NSString *)[options objectForKey:@"host"];
-    NSString *dbUser = (NSString *)[options objectForKey:@"user"];
-    NSString *dbPass = (NSString *)[options objectForKey:@"password"];
-    database = [CSMySQLDatabase databaseWithName:dbName
-                                            User:dbUser
-                                        Password:dbPass
-                                            Host:dbHost ];
+    NSString *databaseName = (NSString *)[options objectForKey:@"db"];
+    NSString *hostname = (NSString *)[options objectForKey:@"host"];
+    NSString *user = (NSString *)[options objectForKey:@"user"];
+    NSString *password = (NSString *)[options objectForKey:@"password"];
+    database = [CSMySQLDatabase databaseWithName:databaseName
+                                            user:user
+                                        password:password
+                                            host:hostname
+                                           error:error];
     return database;
 }
 
-+ (id)databaseWithName:(NSString *)dbName User:(NSString *)dbUser Password:(NSString *)dbPass Host:(NSString *)dbHost
++ (id)databaseWithName:(NSString *)databaseName user:(NSString *)user password:(NSString *)password host:(NSString *)host error:(NSError **)error
 {
-    CSMySQLDatabase *database = [[CSMySQLDatabase alloc] initWithName:dbName
-                                                                 Host:dbHost
-                                                                 User:dbUser
-                                                                 Pass:dbPass];
+    CSMySQLDatabase *database = [[CSMySQLDatabase alloc] initWithName:databaseName
+                                                                 host:host
+                                                                 user:user
+                                                             password:password
+                                                                error:error];
 
     return [database autorelease];
     
 }
 
-- (id)initWithName:(NSString *)dbName Host:(NSString *)dbHost User:(NSString *)dbUser Pass:(NSString *)dbPass
+- (id)initWithName:(NSString *)databaseName host:(NSString *)host user:(NSString *)user password:(NSString *)password error:(NSError **)error
 {
 
-    mysql_init(&dbh);
-    MYSQL *connected = mysql_real_connect(&dbh, 
-                                          [dbHost UTF8String],
-                                          [dbUser UTF8String],
-                                          [dbPass UTF8String],
-                                          [dbName UTF8String],
+    mysql_init(&mysqlDatabase);
+    MYSQL *connected = mysql_real_connect(&mysqlDatabase, 
+                                          [host UTF8String],
+                                          [user UTF8String],
+                                          [password UTF8String],
+                                          [databaseName UTF8String],
                                           0,
                                           NULL,
                                           0);
-    if(!connected && mysql_ping(&dbh) != 0)
-    {
-        fprintf(stderr, "Error: Can't connect do mysql database: %s\n", mysql_error(&dbh));
     if (!connected && mysql_ping(&mysqlDatabase) != 0) {
         NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
         NSString *errorMessage = [NSString stringWithFormat:@"Can't connect to database: %s", mysql_error(&mysqlDatabase)];
@@ -66,13 +65,13 @@
 
 - (void)dealloc
 {
-    mysql_close(&dbh);
+    mysql_close(&mysqlDatabase);
     [super dealloc];
 }
 
 - (MYSQL *)mysqlDatabase
 {
-    return &dbh;
+    return &mysqlDatabase;
 }
 
 #pragma mark -
@@ -98,14 +97,14 @@
         return [statement executeWithValues:values error:error];
     }
     else {
-        if (mysql_real_query(&dbh, [sql UTF8String], [sql length]) != 0) {
+        if (mysql_real_query(&mysqlDatabase, [sql UTF8String], [sql length]) != 0) {
             // TODO - Error messages here
             return NO;
         }
         
-        affectedRows = mysql_affected_rows(&dbh);
+        affectedRows = mysql_affected_rows(&mysqlDatabase);
 
-        res = mysql_use_result(&dbh);
+        res = mysql_use_result(&mysqlDatabase);
         if (res && callbackFunction) {
             MYSQL_FIELD *fields = mysql_fetch_fields(res);
             int nFields = mysql_num_fields(res);
@@ -256,7 +255,7 @@
 
 - (MYSQL *)MySQLDatabase
 {
-    return &dbh;
+    return &mysqlDatabase;
 }
 
 #pragma mark -

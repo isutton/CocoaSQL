@@ -16,15 +16,16 @@
 typedef int (*CSMySQLCallback)(void *, int, char**, char**);
 
 @interface CSMySQLDatabase : CSQLDatabase {
-    MYSQL     dbh;
+    MYSQL mysqlDatabase;
 }
 
 - (MYSQL *)MySQLDatabase;
 
 #pragma mark -
 #pragma mark Initialization related messages
+
 + (id)databaseWithOptions:(NSDictionary *)options 
-                                   error:(NSError **)error;
+                    error:(NSError **)error;
 
 + (id)databaseWithName:(NSString *)dbName
                   User:(NSString *)dbUser
