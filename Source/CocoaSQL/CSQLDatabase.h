@@ -12,6 +12,11 @@
 @class CSQLDatabase;
 
 @interface CSQLDatabase : NSObject <CSQLDatabase>
+{
+    voidPtr databaseHandle;
+}
+
+@property (readonly,assign) voidPtr databaseHandle;
 
 + (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;

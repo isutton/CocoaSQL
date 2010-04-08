@@ -10,6 +10,8 @@
 
 @implementation CSQLDatabase
 
+@synthesize databaseHandle;
+
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error
 {
     NSString *aClassName = [NSString stringWithFormat:@"CS%@Database", aDriver];
