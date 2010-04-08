@@ -15,4 +15,6 @@
     MYSQL_STMT *statement;
 }
 
+- (int)affectedRows;
+
 @end

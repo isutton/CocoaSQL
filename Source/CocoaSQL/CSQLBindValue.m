@@ -89,28 +89,29 @@
     [super dealloc];
 }
 
+- (long)longValue
+{
+    return [value longValue];
+}
+
 - (int)intValue
 {
-    NSNumber *value_ = value;
-    return [value_ intValue];
+    return [value intValue];
 }
 
 - (double)doubleValue
 {
-    NSNumber *value_ = value;
-    return [value_ doubleValue];
+    return [value doubleValue];
 }
 
 - (NSData *)dataValue
 {
-    NSData *value_ = value;
-    return value_;
+    return (NSData *)value; // XXX - ?
 }
 
 - (NSString *)stringValue
 {
-    NSString *value_ = value;
-    return value_;
+    return (NSString *)value; // XXX - ? 
 }
 
 - (CSQLBindValueType)type
