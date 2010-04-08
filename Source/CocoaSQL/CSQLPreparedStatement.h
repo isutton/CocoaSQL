@@ -150,8 +150,19 @@
  @return <code>preparedStatement</code>
  
  */
-+ (id)preparedStatementWithDatabase:(CSQLDatabase *)database andSQL:(NSString *)sql error:(NSError **)error;
++ (id)preparedStatementWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error;
+
+/**
+ 
+ @param aDatabase
+ @param sql
+ @param error
+ 
+ @return 
+ 
+ */
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error;
+
 @property (retain) CSQLDatabase *database;
 @property (assign) BOOL canFetch;
 
