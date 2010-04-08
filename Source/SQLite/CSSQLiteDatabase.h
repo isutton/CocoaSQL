@@ -22,8 +22,6 @@ typedef int (*CSQLiteCallback)(void *, int, char**, char**);
 @property (copy) NSString *path;
 @property (readwrite,assign) voidPtr databaseHandle;
 
-- (sqlite3 *)sqliteDatabase;
-
 #pragma mark -
 #pragma mark Initialization related messages
 
