@@ -48,19 +48,23 @@ static id translate(MYSQL_BIND *bind)
 
 - (id)initWithDatabase:(CSMySQLDatabase *)aDatabase
 {
-    self.database = aDatabase;
-    statement = mysql_stmt_init([aDatabase MySQLDatabase]);
+    if (self = [super init]) {
+        self.database = aDatabase;
+        statement = mysql_stmt_init(aDatabase.databaseHandle);
+    }
+    return self;
 }
+
 - (id)initWithDatabase:(CSMySQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     [super init];
     self.database = aDatabase;
-    statement = mysql_stmt_init([aDatabase MySQLDatabase]);
+    statement = mysql_stmt_init(aDatabase.databaseHandle);
     int errorCode = mysql_stmt_prepare(statement, [sql UTF8String], [sql length]);
     if (errorCode != 0) {
         NSMutableDictionary *errorDetail;
         errorDetail = [NSMutableDictionary dictionary];
-        NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error([aDatabase MySQLDatabase])];
+        NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(aDatabase.databaseHandle)];
         [errorDetail setObject:errorMessage forKey:@"errorMessage"];
         *error = [NSError errorWithDomain:@"CSMySQL" code:errorCode userInfo:errorDetail];
         return nil;
@@ -144,7 +148,7 @@ static id translate(MYSQL_BIND *bind)
         free(params);
         if (!success) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error([(CSMySQLDatabase *)database MySQLDatabase])];
+            NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)];
             [errorDetail setObject:errorMessage forKey:@"errorMessage"];
             *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
             return NO;

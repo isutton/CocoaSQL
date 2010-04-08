@@ -16,10 +16,9 @@
 typedef int (*CSMySQLCallback)(void *, int, char**, char**);
 
 @interface CSMySQLDatabase : CSQLDatabase {
-    MYSQL mysqlDatabase;
 }
 
-- (MYSQL *)MySQLDatabase;
+@property (readwrite,assign) voidPtr databaseHandle;
 
 #pragma mark -
 #pragma mark Initialization related messages
