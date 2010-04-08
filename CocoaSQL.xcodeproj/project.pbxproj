@@ -23,6 +23,7 @@
 		824459FB115B750B00950BD9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 824459FA115B750B00950BD9 /* Cocoa.framework */; };
 		82445A55115B9A6400950BD9 /* CSSQLiteDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 82445A53115B9A6400950BD9 /* CSSQLiteDatabase.h */; };
 		82445A56115B9A6400950BD9 /* CSSQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */; };
+		824F86F7116DD57D00075D6F /* CSQLDatabase+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F86F6116DD57D00075D6F /* CSQLDatabase+Protocol.h */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */; };
 		AA2B20E01165CDD600F4DC57 /* CSMySQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */; };
@@ -67,6 +68,7 @@
 		824459FA115B750B00950BD9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		82445A53115B9A6400950BD9 /* CSSQLiteDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSQLiteDatabase.h; sourceTree = "<group>"; };
 		82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSQLiteDatabase.m; sourceTree = "<group>"; };
+		824F86F6116DD57D00075D6F /* CSQLDatabase+Protocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CSQLDatabase+Protocol.h"; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaSQL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSMySQLDatabase.h; path = Source/MySQL/CSMySQLDatabase.h; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				821DBB7911633B4E0073C988 /* NSMutableArray+CocoaSQL.h */,
 				821DBB7A11633B4E0073C988 /* NSMutableArray+CocoaSQL.m */,
 				821DBC4111636C100073C988 /* CocoaSQL.h */,
+				824F86F6116DD57D00075D6F /* CSQLDatabase+Protocol.h */,
 			);
 			name = CocoaSQL;
 			path = Source/CocoaSQL;
@@ -241,6 +244,7 @@
 				821DBC4211636C100073C988 /* CocoaSQL.h in Headers */,
 				AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */,
 				AA3698AC116B1C060073A0EB /* CSMySQLPreparedStatement.h in Headers */,
+				824F86F7116DD57D00075D6F /* CSQLDatabase+Protocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
