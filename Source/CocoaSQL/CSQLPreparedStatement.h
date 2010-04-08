@@ -36,7 +36,10 @@
  @return 
  
  */
+- (id)initWithDatabase:(CSQLDatabase *)aDatabase;
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error;
+- (id)initWithDatabase:(CSQLDatabase *)aDatabase error:(NSError **)error;
+- (BOOL)setSql:(NSString *)sql;
 
 @property (retain) CSQLDatabase *database;
 @property (assign) BOOL canFetch;

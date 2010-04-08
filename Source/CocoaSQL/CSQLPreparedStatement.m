@@ -23,12 +23,24 @@
     return nil;
 }
 
+- (id)initWithDatabase:(CSQLDatabase *)aDatabase
+{
+    return [self initWithDatabase:aDatabase error:nil];
+}
+
+- (id)initWithDatabase:(CSQLDatabase *)aDatabase error:(NSError **)error
+{
+    if (error) {
+        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+        [errorDetail setObject:@"Driver needs to implement this message." forKey:@"errorMessage"];
+        *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:500 userInfo:errorDetail];
+    }
+    return nil;
+}
+
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
-    NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-    [errorDetail setObject:@"Driver needs to implement this message." forKey:@"errorMessage"];
-    *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:500 userInfo:errorDetail];
-    return nil;
+    return [self initWithDatabase:aDatabase error:error];
 }
 
 @end

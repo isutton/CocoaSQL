@@ -46,32 +46,52 @@ static id translate(MYSQL_BIND *bind)
 @implementation CSMySQLPreparedStatement
 
 
-- (id)initWithDatabase:(CSMySQLDatabase *)aDatabase
+- (id)initWithDatabase:(CSMySQLDatabase *)aDatabase error:(NSError **)error
 {
-    if (self = [super init]) {
-        self.database = aDatabase;
-        statement = mysql_stmt_init(aDatabase.databaseHandle);
+    [super init];
+    self.database = aDatabase;
+    statement = mysql_stmt_init((MYSQL *)aDatabase.databaseHandle);
+    if (!statement)
+    {
+        if (error) {
+            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+            [errorDetail setObject:[NSString stringWithFormat:@"%s", mysql_error((MYSQL *)database.databaseHandle)] 
+                            forKey:@"errorMessage"];
+            // XXX - which errorcode should be used here?
+            *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:501 userInfo:errorDetail];
+        }
+        return nil;
     }
     return self;
 }
 
 - (id)initWithDatabase:(CSMySQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
-    [super init];
-    self.database = aDatabase;
-    statement = mysql_stmt_init(aDatabase.databaseHandle);
-    int errorCode = mysql_stmt_prepare(statement, [sql UTF8String], [sql length]);
-    if (errorCode != 0) {
-        NSMutableDictionary *errorDetail;
-        errorDetail = [NSMutableDictionary dictionary];
-        NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(aDatabase.databaseHandle)];
-        [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-        *error = [NSError errorWithDomain:@"CSMySQL" code:errorCode userInfo:errorDetail];
+
+    [self initWithDatabase:aDatabase];
+    if (![self setSql:sql error:error]) {
+        mysql_stmt_close(statement);
+        statement = nil;
+        // XXX - I'm unsure that returning nil here is safe, 
+        //       since an instance has been already alloc'd 
         return nil;
     }
     return self;
 }
 
+- (bool)setSql:(NSString *)sql error:(NSError **)error
+{
+    int errorCode = mysql_stmt_prepare(statement, [sql UTF8String], [sql length]);
+    if (errorCode != 0) {
+        NSMutableDictionary *errorDetail;
+        errorDetail = [NSMutableDictionary dictionary];
+        NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error((MYSQL *)database.databaseHandle)];
+        [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+        *error = [NSError errorWithDomain:@"CSMySQL" code:errorCode userInfo:errorDetail];
+        return NO;
+    }
+    return YES;
+}
 
 - (void)dealloc
 {
@@ -148,7 +168,7 @@ static id translate(MYSQL_BIND *bind)
         free(params);
         if (!success) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)];
+            NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error([(CSMySQLDatabase *)database MySQLDatabase])];
             [errorDetail setObject:errorMessage forKey:@"errorMessage"];
             *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
             return NO;

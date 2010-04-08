@@ -11,8 +11,6 @@
 
 @implementation CSMySQLDatabase
 
-@synthesize databaseHandle;
-
 #pragma mark -
 #pragma mark Initialization and dealloc related messages
 
@@ -46,35 +44,32 @@
 
 - (id)initWithName:(NSString *)databaseName Host:(NSString *)host User:(NSString *)user Password:(NSString *)password error:(NSError **)error
 {
-
-    if (self = [super init]) {
-        MYSQL *databaseHandle_;
-        mysql_init(databaseHandle_);
-        MYSQL *connected = mysql_real_connect(databaseHandle_, 
-                                              [host UTF8String],
-                                              [user UTF8String],
-                                              [password UTF8String],
-                                              [databaseName UTF8String],
-                                              0,
-                                              NULL,
-                                              0);
-        if (!connected && mysql_ping(databaseHandle_) != 0) {
-            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-            NSString *errorMessage = [NSString stringWithFormat:@"Can't connect to database: %s", mysql_error(databaseHandle_)];
-            [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-            *error = [NSError errorWithDomain:@"CSMySQLDatabase" code:500 userInfo:errorDetail];
-            return nil;
-        }
-        
-        self.databaseHandle = databaseHandle_;
+    databaseHandle = calloc(1, sizeof(MYSQL));
+    mysql_init((MYSQL *)databaseHandle);
+    MYSQL *connected = mysql_real_connect((MYSQL *)databaseHandle, 
+                                          [host UTF8String],
+                                          [user UTF8String],
+                                          [password UTF8String],
+                                          [databaseName UTF8String],
+                                          0,
+                                          NULL,
+                                          0);
+    if (!connected && mysql_ping((MYSQL *)databaseHandle) != 0) {
+        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+        NSString *errorMessage = [NSString stringWithFormat:@"Can't connect to database: %s", mysql_error((MYSQL *)databaseHandle)];
+        [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+        *error = [NSError errorWithDomain:@"CSMySQLDatabase" code:500 userInfo:errorDetail];
+        return nil;
     }
-    
     return self;
 }
 
 - (void)dealloc
 {
-    mysql_close(self.databaseHandle);
+    if (databaseHandle) {
+        mysql_close((MYSQL *)databaseHandle);
+        free(databaseHandle);
+    }
     [super dealloc];
 }
 
@@ -101,14 +96,14 @@
             affectedRows = [(CSMySQLPreparedStatement *)statement affectedRows];
     }
     else {
-        if (mysql_real_query(self.databaseHandle, [sql UTF8String], [sql length]) != 0) {
+        if (mysql_real_query((MYSQL *)databaseHandle, [sql UTF8String], [sql length]) != 0) {
             // TODO - Error messages here
             return 0;
         }
         
-        affectedRows = mysql_affected_rows(self.databaseHandle);
+        affectedRows = mysql_affected_rows((MYSQL *)databaseHandle);
 
-        res = mysql_use_result(self.databaseHandle);
+        res = mysql_use_result((MYSQL *)databaseHandle);
         if (res && callbackFunction) {
             MYSQL_FIELD *fields = mysql_fetch_fields(res);
             int nFields = mysql_num_fields(res);
