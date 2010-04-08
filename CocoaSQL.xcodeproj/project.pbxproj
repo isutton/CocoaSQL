@@ -32,7 +32,6 @@
 		AA3698A7116B1A710073A0EB /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3698A5116B1A700073A0EB /* libmysqlclient.dylib */; };
 		AA3698AC116B1C060073A0EB /* CSMySQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */; };
 		AA3698AD116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */; };
-		AA3698AE116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */; };
 		AA62F97E116C7B3200C4FE4A /* CSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */; };
 /* End PBXBuildFile section */
 
@@ -355,7 +354,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */,
-				AA3698AE116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
