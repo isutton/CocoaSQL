@@ -25,7 +25,7 @@ static id translate(MYSQL_BIND *bind)
             value = [NSNumber numberWithLong:*((long *)bind->buffer)];
             break;
         case MYSQL_TYPE_INT24:
-            value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)>>8];
+            value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)<<8];
             break;
         case MYSQL_TYPE_LONGLONG:
             value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
@@ -46,6 +46,11 @@ static id translate(MYSQL_BIND *bind)
 @implementation CSMySQLPreparedStatement
 
 
+- (id)initWithDatabase:(CSMySQLDatabase *)aDatabase
+{
+    self.database = aDatabase;
+    statement = mysql_stmt_init([aDatabase MySQLDatabase]);
+}
 - (id)initWithDatabase:(CSMySQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     [super init];
@@ -62,6 +67,7 @@ static id translate(MYSQL_BIND *bind)
     }
     return self;
 }
+
 
 - (void)dealloc
 {
