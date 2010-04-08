@@ -43,4 +43,19 @@
     return [self initWithDatabase:aDatabase error:error];
 }
 
+- (BOOL)setSql:(NSString *)sql error:(NSError **)error
+{
+    if (error) {
+        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+        [errorDetail setObject:@"Driver needs to implement this message." forKey:@"errorMessage"];
+        *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:500 userInfo:errorDetail];
+    }
+    return NO;
+}
+
+- (BOOL)setSql:(NSString *)sql
+{
+    return [self setSql:sql error:nil];
+}
+
 @end

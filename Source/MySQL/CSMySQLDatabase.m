@@ -169,10 +169,7 @@
                             context:row
                               error:error];
     
-    if (!success) 
-        return nil;
-    
-    return row;
+    return success ? row : nil;
 }
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql 
@@ -196,10 +193,7 @@
                            callback:rowAsDictionaryCallback 
                             context:row error:error];
     
-    if (!success)
-        return nil;
-    
-    return row;
+    return success ? row : nil;
 }
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql 
@@ -223,10 +217,7 @@
                             context:rows
                               error:error];
     
-    if (!success)
-        return nil;
-    
-    return rows;
+    return success ? rows : nil;
 }
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql 
@@ -249,10 +240,7 @@
                             context:rows 
                               error:error];
     
-    if (!success)
-        return nil;
-    
-    return rows;
+    return success ? rows : nil;
 }
 
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql 

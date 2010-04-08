@@ -79,7 +79,7 @@ static id translate(MYSQL_BIND *bind)
     return self;
 }
 
-- (bool)setSql:(NSString *)sql error:(NSError **)error
+- (BOOL)setSql:(NSString *)sql error:(NSError **)error
 {
     int errorCode = mysql_stmt_prepare(statement, [sql UTF8String], [sql length]);
     if (errorCode != 0) {
@@ -168,7 +168,7 @@ static id translate(MYSQL_BIND *bind)
         free(params);
         if (!success) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error([(CSMySQLDatabase *)database MySQLDatabase])];
+            NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)];
             [errorDetail setObject:errorMessage forKey:@"errorMessage"];
             *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
             return NO;
