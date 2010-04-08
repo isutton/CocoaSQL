@@ -170,10 +170,12 @@ static id translate(MYSQL_BIND *bind)
         free(dStorage);
         free(params);
         if (!success) {
-            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)];
-            [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-            *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
+            if (error) {
+                NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+                NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)];
+                [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+                *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
+            }
             return NO;
         }
     }

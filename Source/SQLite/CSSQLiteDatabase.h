@@ -28,9 +28,4 @@
 
 - (id)initWithPath:(NSString *)aPath error:(NSError **)error;
 
-#pragma mark -
-#pragma mark CSSQLiteDatabase related messages
-
-- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values callback:(CSQLCallback)callbackFunction context:(void *)context error:(NSError **)error;
-
 @end

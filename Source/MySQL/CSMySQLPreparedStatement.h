@@ -16,6 +16,5 @@
 }
 
 - (int)affectedRows;
-- (BOOL)setSql:(NSString *)sql error:(NSError **)error;
 
 @end

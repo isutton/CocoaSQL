@@ -21,9 +21,6 @@
 #pragma mark -
 #pragma mark Initialization related messages
 
-+ (id)databaseWithOptions:(NSDictionary *)options 
-                    error:(NSError **)error;
-
 + (id)databaseWithName:(NSString *)dbName
                   Host:(NSString *)dbHost
                   User:(NSString *)dbUser
@@ -34,15 +31,6 @@
               Host:(NSString *)dbHost
               User:(NSString *)dbUser 
           Password:(NSString *)dbPass
-             error:(NSError **)error;
-
-#pragma mark -
-#pragma mark CSMySQLDatabase related messages
-
-- (BOOL)executeSQL:(NSString *)sql
-        withValues:(NSArray *)values
-          callback:(CSQLCallback)callbackFunction 
-           context:(void *)context
              error:(NSError **)error;
 
 @end
