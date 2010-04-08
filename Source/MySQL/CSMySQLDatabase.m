@@ -8,6 +8,7 @@
 
 #import "CSMySQLDatabase.h"
 #import "CSMySQLPreparedStatement.h"
+
 @implementation CSMySQLDatabase
 
 #pragma mark -
@@ -22,26 +23,26 @@
     NSString *user = (NSString *)[options objectForKey:@"user"];
     NSString *password = (NSString *)[options objectForKey:@"password"];
     database = [CSMySQLDatabase databaseWithName:databaseName
-                                            user:user
-                                        password:password
-                                            host:hostname
+                                            Host:hostname
+                                            User:user
+                                        Password:password
                                            error:error];
     return database;
 }
 
-+ (id)databaseWithName:(NSString *)databaseName user:(NSString *)user password:(NSString *)password host:(NSString *)host error:(NSError **)error
++ (id)databaseWithName:(NSString *)databaseName Host:(NSString *)host User:(NSString *)user Password:(NSString *)password error:(NSError **)error
 {
     CSMySQLDatabase *database = [[CSMySQLDatabase alloc] initWithName:databaseName
-                                                                 host:host
-                                                                 user:user
-                                                             password:password
+                                                                 Host:host
+                                                                 User:user
+                                                             Password:password
                                                                 error:error];
 
     return [database autorelease];
     
 }
 
-- (id)initWithName:(NSString *)databaseName host:(NSString *)host user:(NSString *)user password:(NSString *)password error:(NSError **)error
+- (id)initWithName:(NSString *)databaseName Host:(NSString *)host User:(NSString *)user Password:(NSString *)password error:(NSError **)error
 {
 
     mysql_init(&mysqlDatabase);
@@ -94,7 +95,7 @@
         if (!statement)
             return 0;
         if ([statement executeWithValues:values error:error])
-            affectedRows = [statement affectedRows];
+            affectedRows = [(CSMySQLPreparedStatement *)statement affectedRows];
     }
     else {
         if (mysql_real_query(&mysqlDatabase, [sql UTF8String], [sql length]) != 0) {

@@ -28,14 +28,16 @@ typedef int (*CSMySQLCallback)(void *, int, char**, char**);
                     error:(NSError **)error;
 
 + (id)databaseWithName:(NSString *)dbName
+                  Host:(NSString *)dbHost
                   User:(NSString *)dbUser
               Password:(NSString *)dbPassword
-                  Host:(NSString *)dbHost;
+                 error:(NSError **)error;
 
 - (id)initWithName:(NSString *)dbName
               Host:(NSString *)dbHost
               User:(NSString *)dbUser 
-              Pass:(NSString *)dbPass;
+          Password:(NSString *)dbPass
+             error:(NSError **)error;
 
 #pragma mark -
 #pragma mark CSMySQLDatabase related messages
