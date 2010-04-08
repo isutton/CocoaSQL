@@ -19,15 +19,32 @@
 
 - (id)initWithInt:(int)aValue
 {
-    self = [super init];
-
-    if (self) {
+    if ([super init]) {
         value = [[NSNumber numberWithInt:aValue] retain];
         type = CSQLInteger;
+        return self;
     }
 
-    return self;
+    return nil;
 }
+
++ (id)bindValueWithLong:(long)aValue
+{
+    CSQLBindValue *value = [[CSQLBindValue alloc] initWithLong:aValue];
+    return [value autorelease];
+}
+
+- (id)initWithLong:(long)aValue
+{
+    if ([super init]) {
+        value = [[NSNumber numberWithLong:aValue] retain];
+        type = CSQLInteger;
+        return self;
+    }
+    
+    return nil;
+}
+
 
 + (id)bindValueWithDouble:(double)aValue
 {
@@ -37,14 +54,13 @@
 
 - (id)initWithDouble:(double)aValue
 {
-    self = [super init];
-
-    if (self) {
+    if ([super init]) {
         value = [[NSNumber numberWithDouble:aValue] retain];
         type = CSQLDouble;
+        return self;
     }
 
-    return self;
+    return nil;
 }
 
 + (id)bindValueWithString:(NSString *)aValue
@@ -55,14 +71,13 @@
 
 - (id)initWithString:(NSString *)aValue
 {
-    self = [super init];
-
-    if (self) {
+    if ([super init]) {
         value = [aValue copy];
         type = CSQLText;
+        return self;
     }
 
-    return self;
+    return nil;
 }
 
 + (id)bindValueWithNull
@@ -73,14 +88,13 @@
 
 - (id)initWithNull
 {
-    self = [super init];
-    
-    if (self) {
+    if ([super init]) {
         value = nil;
         type = CSQLNull;
+        return self;
     }
     
-    return self;
+    return nil;
 }
 
 - (void)dealloc
@@ -91,27 +105,40 @@
 
 - (long)longValue
 {
-    return [value longValue];
+    if (type == CSQLInteger)
+        return [value longValue];
+    /* TODO - output a warning message */
+    return 0;
 }
 
 - (int)intValue
 {
-    return [value intValue];
+    if (type == CSQLInteger)
+        return [value intValue];
+    /* TODO - output a warning message */
+    return 0;
 }
 
 - (double)doubleValue
 {
-    return [value doubleValue];
+    if (type == CSQLDouble)
+        return [value doubleValue];
+    /* TODO - output a warning message */
+    return 0;
 }
 
 - (NSData *)dataValue
 {
-    return (NSData *)value; // XXX - ?
+    if (type == CSQLBlob)
+        return (NSData *)value;
+    return nil;
 }
 
 - (NSString *)stringValue
 {
-    return (NSString *)value; // XXX - ? 
+    if (type == CSQLText)
+        return (NSString *)value;
+    return nil;
 }
 
 - (CSQLBindValueType)type
