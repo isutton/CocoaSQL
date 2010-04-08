@@ -25,34 +25,26 @@
     NSString *user = (NSString *)[options objectForKey:@"user"];
     NSString *password = (NSString *)[options objectForKey:@"password"];
     database = [CSMySQLDatabase databaseWithName:databaseName
-                                            Host:hostname
-                                            User:user
-                                        Password:password
+                                            host:hostname
+                                            user:user
+                                        password:password
                                            error:error];
     return database;
 }
 
-+ (id)databaseWithName:(NSString *)databaseName
-                  Host:(NSString *)host
-                  User:(NSString *)user
-              Password:(NSString *)password
-                 error:(NSError **)error
++ (id)databaseWithName:(NSString *)databaseName host:(NSString *)host user:(NSString *)user password:(NSString *)password error:(NSError **)error
 {
     CSMySQLDatabase *database = [[CSMySQLDatabase alloc] initWithName:databaseName
-                                                                 Host:host
-                                                                 User:user
-                                                             Password:password
+                                                                 host:host
+                                                                 user:user
+                                                             password:password
                                                                 error:error];
 
     return [database autorelease];
     
 }
 
-- (id)initWithName:(NSString *)databaseName
-              Host:(NSString *)host
-              User:(NSString *)user
-          Password:(NSString *)password
-             error:(NSError **)error
+- (id)initWithName:(NSString *)databaseName host:(NSString *)host user:(NSString *)user password:(NSString *)password error:(NSError **)error
 {
     databaseHandle = calloc(1, sizeof(MYSQL));
     mysql_init((MYSQL *)databaseHandle);

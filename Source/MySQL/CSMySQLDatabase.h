@@ -21,16 +21,19 @@
 #pragma mark -
 #pragma mark Initialization related messages
 
-+ (id)databaseWithName:(NSString *)dbName
-                  Host:(NSString *)dbHost
-                  User:(NSString *)dbUser
-              Password:(NSString *)dbPassword
++ (id)databaseWithOptions:(NSDictionary *)options 
+                    error:(NSError **)error;
+
++ (id)databaseWithName:(NSString *)databaseName
+                  host:(NSString *)host
+                  user:(NSString *)user
+              password:(NSString *)password
                  error:(NSError **)error;
 
-- (id)initWithName:(NSString *)dbName
-              Host:(NSString *)dbHost
-              User:(NSString *)dbUser 
-          Password:(NSString *)dbPass
+- (id)initWithName:(NSString *)databaseName
+              host:(NSString *)host
+              user:(NSString *)user
+          password:(NSString *)password
              error:(NSError **)error;
 
 @end
