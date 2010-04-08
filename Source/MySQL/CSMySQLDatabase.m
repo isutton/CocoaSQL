@@ -70,6 +70,10 @@
                                                             mysql_error((MYSQL *)databaseHandle)];
         [errorDetail setObject:errorMessage forKey:@"errorMessage"];
         *error = [NSError errorWithDomain:@"CSMySQLDatabase" code:500 userInfo:errorDetail];
+        // XXX - I'm unsure if returning nil here is safe, 
+        //       since an instance has been already alloc'd
+        //       so if used with the idiom [[class alloc] init]
+        //       the alloc'd pointer will be leaked
         return nil;
     }
     return self;

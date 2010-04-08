@@ -60,6 +60,10 @@ static id translate(MYSQL_BIND *bind)
             // XXX - which errorcode should be used here?
             *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:501 userInfo:errorDetail];
         }
+        // XXX - I'm unsure if returning nil here is safe, 
+        //       since an instance has been already alloc'd
+        //       so if used with the idiom [[class alloc] init]
+        //       the alloc'd pointer will be leaked
         return nil;
     }
     return self;
@@ -72,8 +76,10 @@ static id translate(MYSQL_BIND *bind)
     if (![self setSql:sql error:error]) {
         mysql_stmt_close(statement);
         statement = nil;
-        // XXX - I'm unsure that returning nil here is safe, 
-        //       since an instance has been already alloc'd 
+        // XXX - I'm unsure if returning nil here is safe, 
+        //       since an instance has been already alloc'd
+        //       so if used with the idiom [[class alloc] init]
+        //       the alloc'd pointer will be leaked
         return nil;
     }
     return self;
