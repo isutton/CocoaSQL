@@ -89,7 +89,7 @@
 
 - (BOOL)executeSQL:(NSString *)sql
         withValues:(NSArray *)values
-          callback:(CSMySQLCallback)callbackFunction 
+          callback:(CSQLCallback)callbackFunction
            context:(void *)context
              error:(NSError **)error;
 {
@@ -165,7 +165,7 @@
     
     BOOL success = [self executeSQL:sql
                          withValues:values
-                           callback:(CSMySQLCallback)mysqlRowAsArrayCallback 
+                           callback:rowAsArrayCallback 
                             context:row
                               error:error];
     
@@ -193,7 +193,7 @@
     NSMutableDictionary *row = [NSMutableDictionary dictionary];
     
     BOOL success = [self executeSQL:sql withValues:values 
-                           callback:(CSMySQLCallback)mysqlRowAsDictionaryCallback 
+                           callback:rowAsDictionaryCallback 
                             context:row error:error];
     
     if (!success)
@@ -219,7 +219,7 @@
     
     BOOL success = [self executeSQL:sql
                          withValues:values
-                           callback:(CSMySQLCallback)mysqlRowsAsDictionariesCallback
+                           callback:rowsAsDictionariesCallback
                             context:rows
                               error:error];
     
@@ -245,7 +245,7 @@
     
     BOOL success = [self executeSQL:sql
                          withValues:values
-                           callback:(CSMySQLCallback)mysqlRowsAsArraysCallback
+                           callback:rowsAsArraysCallback
                             context:rows 
                               error:error];
     
@@ -272,72 +272,3 @@
 }
 
 @end
-
-#pragma mark -
-#pragma mark MySQL callbacks
-
-int mysqlRowAsArrayCallback(void *callbackContext,
-                       int columnCount,
-                       char **columnValues,
-                       char **columnNames)
-{
-    NSMutableArray *row = callbackContext;
-    
-    for (int i = 0; i < columnCount; i++) {
-        [row addObject:[NSString stringWithFormat:@"%s", columnValues[i]]];
-    }
-    
-    return 0;
-}
-
-int mysqlRowAsDictionaryCallback(void *callbackContext,
-                            int columnCount,
-                            char **columnValues,
-                            char **columnNames)
-{
-    NSMutableDictionary *row = callbackContext;
-    
-    for (int i = 0; i < columnCount; i++) {
-        [row setObject:[NSString stringWithFormat:@"%s", columnValues[i]]
-                forKey:[NSString stringWithFormat:@"%s", columnNames[i]]];
-    }
-    
-    return 0;
-}
-
-int mysqlRowsAsDictionariesCallback(void *callbackContext,
-                               int columnCount,
-                               char **columnValues,
-                               char **columnNames)
-{
-    NSMutableArray *rows = callbackContext;
-    
-    NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
-    
-    for (int i = 0; i < columnCount; i++) {
-        [row setObject:[NSString stringWithFormat:@"%s", columnValues[i]]
-                forKey:[NSString stringWithFormat:@"%s", columnNames[i]]];
-    }
-    
-    [rows addObject:row];
-    
-    return 0;
-}
-
-int mysqlRowsAsArraysCallback(void *callbackContext,
-                         int columnCount,
-                         char **columnValues,
-                         char **columnNames)
-{
-    NSMutableArray *rows = callbackContext;
-    
-    NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
-    
-    for (int i = 0; i < columnCount; i++) {
-        [row addObject:[NSString stringWithFormat:@"%s", columnValues[i]]];
-    }
-    
-    [rows addObject:row];
-    
-    return 0;
-}

@@ -13,8 +13,6 @@
 
 #include <sqlite3.h>
 
-typedef int (*CSQLiteCallback)(void *, int, char**, char**);
-
 @interface CSSQLiteDatabase : CSQLDatabase {
     NSString *path;
 }
@@ -33,17 +31,6 @@ typedef int (*CSQLiteCallback)(void *, int, char**, char**);
 #pragma mark -
 #pragma mark CSSQLiteDatabase related messages
 
-- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values callback:(CSQLiteCallback)callbackFunction context:(void *)context error:(NSError **)error;
+- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values callback:(CSQLCallback)callbackFunction context:(void *)context error:(NSError **)error;
 
 @end
-
-#pragma mark -
-#pragma mark SQLite callbacks
-
-int rowAsArrayCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);
-
-int rowAsDictionaryCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);
-
-int rowsAsDictionariesCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);
-
-int rowsAsArraysCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);

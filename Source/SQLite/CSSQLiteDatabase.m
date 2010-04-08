@@ -65,7 +65,7 @@
 #pragma mark -
 #pragma mark CSSQLiteDatabase related messages
 
-- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values callback:(CSQLiteCallback)callbackFunction context:(void *)context error:(NSError **)error;
+- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values callback:(CSQLCallback)callbackFunction context:(void *)context error:(NSError **)error;
 {
     int affectedRows = 0;
     int errorCode;
@@ -111,7 +111,7 @@
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
     NSMutableArray *row = [NSMutableArray array];
-    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLiteCallback)rowAsArrayCallback context:row error:error];
+    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLCallback)rowAsArrayCallback context:row error:error];
     return success ? row : nil;
 }
 
@@ -126,7 +126,7 @@
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
     NSMutableDictionary *row = [NSMutableDictionary dictionary];
-    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLiteCallback)rowAsDictionaryCallback context:row error:error];
+    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLCallback)rowAsDictionaryCallback context:row error:error];
     return success ? row : nil;
 }
 
@@ -141,7 +141,7 @@
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
     NSMutableArray *rows = [NSMutableArray array];
-    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLiteCallback)rowsAsDictionariesCallback context:rows error:error];
+    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLCallback)rowsAsDictionariesCallback context:rows error:error];
     return success ? rows : nil;
 }
 
@@ -153,7 +153,7 @@
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
     NSMutableArray *rows = [NSMutableArray array];
-    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLiteCallback)rowsAsArraysCallback context:rows error:error];
+    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLCallback)rowsAsArraysCallback context:rows error:error];
     return success ? rows : nil;
 }
 
@@ -171,48 +171,3 @@
 }
 
 @end
-
-#pragma mark -
-#pragma mark SQLite callbacks
-
-int rowAsArrayCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames)
-{
-    NSMutableArray *row = callbackContext;
-    for (int i = 0; i < columnCount; i++) {
-        [row addObject:[NSString stringWithFormat:@"%s", columnValues[i]]];
-    }
-    return SQLITE_DONE;
-}
-
-int rowAsDictionaryCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames)
-{
-    NSMutableDictionary *row = callbackContext;
-    for (int i = 0; i < columnCount; i++) {
-        [row setObject:[NSString stringWithFormat:@"%s", columnValues[i]]
-                forKey:[NSString stringWithFormat:@"%s", columnNames[i]]];
-    }
-    return SQLITE_DONE;
-}
-
-int rowsAsDictionariesCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames)
-{
-    NSMutableArray *rows = callbackContext;
-    NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
-    for (int i = 0; i < columnCount; i++) {
-        [row setObject:[NSString stringWithFormat:@"%s", columnValues[i]]
-                forKey:[NSString stringWithFormat:@"%s", columnNames[i]]];
-    }
-    [rows addObject:row];
-    return SQLITE_OK;
-}
-
-int rowsAsArraysCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames)
-{
-    NSMutableArray *rows = callbackContext;
-    NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
-    for (int i = 0; i < columnCount; i++) {
-        [row addObject:[NSString stringWithFormat:@"%s", columnValues[i]]];
-    }
-    [rows addObject:row];
-    return SQLITE_OK;
-}

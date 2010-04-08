@@ -22,3 +22,17 @@
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;
 
 @end
+
+#pragma mark -
+#pragma mark callbacks
+
+
+typedef int (*CSQLCallback)(void *, int, char**, char**);
+
+int rowAsArrayCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);
+
+int rowAsDictionaryCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);
+
+int rowsAsDictionariesCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);
+
+int rowsAsArraysCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);

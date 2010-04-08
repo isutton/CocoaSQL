@@ -13,8 +13,6 @@
 
 #include <mysql.h>
 
-typedef int (*CSMySQLCallback)(void *, int, char**, char**);
-
 @interface CSMySQLDatabase : CSQLDatabase {
 }
 
@@ -43,31 +41,8 @@ typedef int (*CSMySQLCallback)(void *, int, char**, char**);
 
 - (BOOL)executeSQL:(NSString *)sql
         withValues:(NSArray *)values
-          callback:(CSMySQLCallback)callbackFunction 
+          callback:(CSQLCallback)callbackFunction 
            context:(void *)context
              error:(NSError **)error;
 
 @end
-
-#pragma mark -
-#pragma mark MySQL callbacks
-
-int mysqlRowAsArrayCallback(void *callbackContext,
-                            int columnCount,
-                            char **columnValues,
-                            char **columnNames);
-
-int mysqlRowAsDictionaryCallback(void *callbackContext,
-                                 int columnCount,
-                                 char **columnValues,
-                                 char **columnNames);
-
-int mysqlRowsAsDictionariesCallback(void *callbackContext,
-                                    int columnCount,
-                                    char **columnValues,
-                                    char **columnNames);
-
-int mysqlRowsAsArraysCallback(void *callbackContext,
-                              int columnCount,
-                              char **columnValues,
-                              char **columnNames);
