@@ -141,6 +141,17 @@
     BOOL canFetch;
 }
 
+
+/**
+ 
+ @param database
+ @param sql
+ 
+ @return <code>preparedStatement</code>
+ 
+ */
++ (id)preparedStatementWithDatabase:(CSQLDatabase *)database andSQL:(NSString *)sql error:(NSError **)error;
+- (id)initWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error;
 @property (retain) CSQLDatabase *database;
 @property (assign) BOOL canFetch;
 

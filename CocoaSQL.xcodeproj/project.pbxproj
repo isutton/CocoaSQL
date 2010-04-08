@@ -13,7 +13,6 @@
 		821DBC4211636C100073C988 /* CocoaSQL.h in Headers */ = {isa = PBXBuildFile; fileRef = 821DBC4111636C100073C988 /* CocoaSQL.h */; };
 		821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
 		821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
-		821E2706116B2A4100A0AFF7 /* CSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */; };
 		8223B8EF1161023F004108A1 /* CSQLBindValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 8223B8ED1161023F004108A1 /* CSQLBindValue.h */; };
 		8223B8F01161023F004108A1 /* CSQLBindValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 8223B8EE1161023F004108A1 /* CSQLBindValue.m */; };
 		823C7C8A115CCD210061ECAD /* CSQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 823C7C89115CCD210061ECAD /* CSQLPreparedStatement.h */; };
@@ -25,6 +24,14 @@
 		82445A55115B9A6400950BD9 /* CSSQLiteDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 82445A53115B9A6400950BD9 /* CSSQLiteDatabase.h */; };
 		82445A56115B9A6400950BD9 /* CSSQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
+		AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */; };
+		AA2B20E01165CDD600F4DC57 /* CSMySQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */; };
+		AA3698A6116B1A700073A0EB /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3698A5116B1A700073A0EB /* libmysqlclient.dylib */; };
+		AA3698A7116B1A710073A0EB /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3698A5116B1A700073A0EB /* libmysqlclient.dylib */; };
+		AA3698AC116B1C060073A0EB /* CSMySQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */; };
+		AA3698AD116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */; };
+		AA3698AE116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */; };
+		AA62F97E116C7B3200C4FE4A /* CSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +69,11 @@
 		82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSQLiteDatabase.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaSQL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSMySQLDatabase.h; path = Source/MySQL/CSMySQLDatabase.h; sourceTree = "<group>"; };
+		AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSMySQLDatabase.m; path = Source/MySQL/CSMySQLDatabase.m; sourceTree = "<group>"; };
+		AA3698A5116B1A700073A0EB /* libmysqlclient.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmysqlclient.dylib; path = /opt/local/lib/mysql5/mysql/libmysqlclient.dylib; sourceTree = "<absolute>"; };
+		AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSMySQLPreparedStatement.h; path = Source/MySQL/CSMySQLPreparedStatement.h; sourceTree = "<group>"; };
+		AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSMySQLPreparedStatement.m; path = Source/MySQL/CSMySQLPreparedStatement.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +82,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */,
+				AA3698A7116B1A710073A0EB /* libmysqlclient.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +92,7 @@
 			files = (
 				823FCBB6115C1CE800F3E4E2 /* libsqlite3.0.dylib in Frameworks */,
 				824459FB115B750B00950BD9 /* Cocoa.framework in Frameworks */,
+				AA3698A6116B1A700073A0EB /* libmysqlclient.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +128,7 @@
 				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
 				824459FA115B750B00950BD9 /* Cocoa.framework */,
 				823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */,
+				AA3698A5116B1A700073A0EB /* libmysqlclient.dylib */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -202,6 +217,10 @@
 		82445A43115B93F900950BD9 /* MySQL */ = {
 			isa = PBXGroup;
 			children = (
+				AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */,
+				AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */,
+				AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */,
+				AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */,
 			);
 			name = MySQL;
 			sourceTree = "<group>";
@@ -220,6 +239,8 @@
 				8223B8EF1161023F004108A1 /* CSQLBindValue.h in Headers */,
 				821DBB7B11633B4E0073C988 /* NSMutableArray+CocoaSQL.h in Headers */,
 				821DBC4211636C100073C988 /* CocoaSQL.h in Headers */,
+				AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */,
+				AA3698AC116B1C060073A0EB /* CSMySQLPreparedStatement.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +347,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */,
+				AA3698AE116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,12 +355,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				821DBBA911634CB30073C988 /* CSQLDatabase.m in Sources */,
+				AA62F97E116C7B3200C4FE4A /* CSQLPreparedStatement.m in Sources */,
 				82445A56115B9A6400950BD9 /* CSSQLiteDatabase.m in Sources */,
 				823C7CC7115CE4DA0061ECAD /* CSSQLitePreparedStatement.m in Sources */,
 				8223B8F01161023F004108A1 /* CSQLBindValue.m in Sources */,
 				821DBB7C11633B4E0073C988 /* NSMutableArray+CocoaSQL.m in Sources */,
-				821DBBA911634CB30073C988 /* CSQLDatabase.m in Sources */,
-				821E2706116B2A4100A0AFF7 /* CSQLPreparedStatement.m in Sources */,
+				AA2B20E01165CDD600F4DC57 /* CSMySQLDatabase.m in Sources */,
+				AA3698AD116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +407,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					/opt/local/lib/mysql5/mysql,
 				);
 				PRODUCT_NAME = CocoaSQL;
 				WRAPPER_EXTENSION = framework;
@@ -405,6 +430,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					/opt/local/lib/mysql5/mysql,
 				);
 				PRODUCT_NAME = CocoaSQL;
 				WRAPPER_EXTENSION = framework;
@@ -419,6 +445,8 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/opt/local/include/**";
+				LIBRARY_SEARCH_PATHS = "/opt/local/lib/**";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
@@ -432,6 +460,8 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/opt/local/include/**";
+				LIBRARY_SEARCH_PATHS = "/opt/local/lib/**";
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 			};
@@ -452,6 +482,10 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
 				INFOPLIST_FILE = "Unit Tests-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/mysql5/mysql,
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Cocoa,
@@ -478,6 +512,10 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
 				INFOPLIST_FILE = "Unit Tests-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/mysql5/mysql,
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Cocoa,

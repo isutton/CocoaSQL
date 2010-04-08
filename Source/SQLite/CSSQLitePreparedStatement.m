@@ -27,15 +27,6 @@
 
 @synthesize sqlitePreparedStatement;
 
-+ (id)preparedStatementWithDatabase:(id)aDatabase andSQL:(NSString *)sql error:(NSError **)error
-{
-    CSSQLitePreparedStatement *preparedStatement;
-    preparedStatement = (CSSQLitePreparedStatement *) [[CSSQLitePreparedStatement alloc] initWithDatabase:aDatabase andSQL:sql error:error];
-    if (preparedStatement) {
-        return [preparedStatement autorelease];
-    }
-    return nil;
-}
 
 - (id)initWithDatabase:(CSSQLiteDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {

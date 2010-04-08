@@ -31,16 +31,6 @@
  @return <code>preparedStatement</code>
  
  */
-+ (CSQLPreparedStatement *)preparedStatementWithDatabase:(CSQLDatabase *)database andSQL:(NSString *)sql error:(NSError **)error;
-
-/**
- 
- @param database
- @param sql
- 
- @return <code>preparedStatement</code>
- 
- */
 - (CSQLPreparedStatement *)initWithDatabase:(CSQLDatabase *)database andSQL:(NSString *)sql error:(NSError **)error;
 
 @end
