@@ -17,11 +17,10 @@ typedef int (*CSQLiteCallback)(void *, int, char**, char**);
 
 @interface CSSQLiteDatabase : CSQLDatabase {
     NSString *path;
-    sqlite3 *sqliteDatabase;
 }
 
 @property (copy) NSString *path;
-@property (assign) sqlite3 *sqliteDatabase;
+@property (readwrite,assign) voidPtr databaseHandle;
 
 - (sqlite3 *)sqliteDatabase;
 

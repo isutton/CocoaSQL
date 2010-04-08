@@ -12,7 +12,6 @@
 @implementation CSSQLiteDatabase
 
 @synthesize path;
-@synthesize sqliteDatabase;
 
 #pragma mark -
 #pragma mark Initialization and dealloc related messages
@@ -34,6 +33,7 @@
 {
     if (self = [super init]) {
         self.path = [aPath stringByExpandingTildeInPath];
+        sqlite3 *sqliteDatabase;
         int errorCode = sqlite3_open_v2([self.path UTF8String], &sqliteDatabase, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE, 0);
         if (errorCode != SQLITE_OK) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
@@ -41,19 +41,20 @@
             *error = [[NSError alloc] initWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
             return nil;
         }
+        self.databaseHandle = (voidPtr)sqliteDatabase;
     }
     return self;
 }
 
 - (void)dealloc
 {
-    int errorCode = sqlite3_close(sqliteDatabase);
+    int errorCode = sqlite3_close(self.databaseHandle);
     
     if (errorCode != SQLITE_OK) {
         NSLog(@"Couldn't close database handle.");
     }
     else {
-        sqliteDatabase = NULL;
+        self.databaseHandle = NULL;
     }
 
     [path release];
@@ -77,14 +78,14 @@
         return [statement executeWithValues:values error:error];
     }
     else {
-        errorCode = sqlite3_exec(sqliteDatabase, [sql UTF8String], callbackFunction, context, &errorMessage);
+        errorCode = sqlite3_exec(self.databaseHandle, [sql UTF8String], callbackFunction, context, &errorMessage);
         if (errorCode != SQLITE_OK && errorCode != SQLITE_ABORT) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
             [errorDetail setObject:[NSString stringWithFormat:@"%s", errorMessage] forKey:@"errorMessage"];
             *error = [[NSError alloc] initWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
         }
         else {
-            affectedRows = sqlite3_changes(sqliteDatabase);
+            affectedRows = sqlite3_changes(self.databaseHandle);
         }        
     }
     return affectedRows;
