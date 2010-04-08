@@ -111,7 +111,7 @@
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
     NSMutableArray *row = [NSMutableArray array];
-    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLCallback)rowAsArrayCallback context:row error:error];
+    BOOL success = [self executeSQL:sql withValues:values callback:rowAsArrayCallback context:row error:error];
     return success ? row : nil;
 }
 
@@ -126,7 +126,7 @@
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
     NSMutableDictionary *row = [NSMutableDictionary dictionary];
-    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLCallback)rowAsDictionaryCallback context:row error:error];
+    BOOL success = [self executeSQL:sql withValues:values callback:rowAsDictionaryCallback context:row error:error];
     return success ? row : nil;
 }
 
@@ -141,7 +141,7 @@
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
     NSMutableArray *rows = [NSMutableArray array];
-    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLCallback)rowsAsDictionariesCallback context:rows error:error];
+    BOOL success = [self executeSQL:sql withValues:values callback:rowsAsDictionariesCallback context:rows error:error];
     return success ? rows : nil;
 }
 
@@ -153,7 +153,7 @@
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
     NSMutableArray *rows = [NSMutableArray array];
-    BOOL success = [self executeSQL:sql withValues:values callback:(CSQLCallback)rowsAsArraysCallback context:rows error:error];
+    BOOL success = [self executeSQL:sql withValues:values callback:rowsAsArraysCallback context:rows error:error];
     return success ? rows : nil;
 }
 
