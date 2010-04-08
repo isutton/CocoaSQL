@@ -12,14 +12,6 @@
 
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error
 {
-    //
-    // Build the class name. It will be like:
-    //
-    // * CSSQLiteDatabase
-    // * CSMySQLDatabase
-    // * CSPostgreSQLDatabase
-    // * CSOracleDatabase
-    //
     NSString *aClassName = [NSString stringWithFormat:@"CS%@Database", aDriver];
     Class class = NSClassFromString(aClassName);
     CSQLDatabase *database = [class databaseWithOptions:options error:error];

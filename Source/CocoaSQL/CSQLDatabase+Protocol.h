@@ -14,6 +14,8 @@
 /**
  
  Creates a CSQLDatabase object with the given driver and options.
+
+ The driver class is built from the following format: "CS%@Database".
  
  @param aDriver
  @param options
