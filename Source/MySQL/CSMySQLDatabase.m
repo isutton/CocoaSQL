@@ -54,6 +54,11 @@
     if(!connected && mysql_ping(&dbh) != 0)
     {
         fprintf(stderr, "Error: Can't connect do mysql database: %s\n", mysql_error(&dbh));
+    if (!connected && mysql_ping(&mysqlDatabase) != 0) {
+        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+        NSString *errorMessage = [NSString stringWithFormat:@"Can't connect to database: %s", mysql_error(&mysqlDatabase)];
+        [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+        *error = [NSError errorWithDomain:@"CSMySQLDatabase" code:500 userInfo:errorDetail];
         return nil;
     }
     return self;
