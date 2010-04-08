@@ -32,7 +32,11 @@
     return database;
 }
 
-+ (id)databaseWithName:(NSString *)databaseName Host:(NSString *)host User:(NSString *)user Password:(NSString *)password error:(NSError **)error
++ (id)databaseWithName:(NSString *)databaseName
+                  Host:(NSString *)host
+                  User:(NSString *)user
+              Password:(NSString *)password
+                 error:(NSError **)error
 {
     CSMySQLDatabase *database = [[CSMySQLDatabase alloc] initWithName:databaseName
                                                                  Host:host
@@ -44,7 +48,11 @@
     
 }
 
-- (id)initWithName:(NSString *)databaseName Host:(NSString *)host User:(NSString *)user Password:(NSString *)password error:(NSError **)error
+- (id)initWithName:(NSString *)databaseName
+              Host:(NSString *)host
+              User:(NSString *)user
+          Password:(NSString *)password
+             error:(NSError **)error
 {
     databaseHandle = calloc(1, sizeof(MYSQL));
     mysql_init((MYSQL *)databaseHandle);
@@ -58,7 +66,8 @@
                                           0);
     if (!connected && mysql_ping((MYSQL *)databaseHandle) != 0) {
         NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-        NSString *errorMessage = [NSString stringWithFormat:@"Can't connect to database: %s", mysql_error((MYSQL *)databaseHandle)];
+        NSString *errorMessage = [NSString stringWithFormat:@"Can't connect to database: %s", 
+                                                            mysql_error((MYSQL *)databaseHandle)];
         [errorDetail setObject:errorMessage forKey:@"errorMessage"];
         *error = [NSError errorWithDomain:@"CSMySQLDatabase" code:500 userInfo:errorDetail];
         return nil;
