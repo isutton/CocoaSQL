@@ -34,7 +34,7 @@
     NSMutableDictionary *options = [NSMutableDictionary dictionary];
     [options setObject:TEST_DB forKey:@"path"];
     
-    database_ = [[CSQLDatabase databaseWithDriver:@"MySQL" options:options error:&error] retain];
+    database_ = [[CSQLDatabase databaseWithDriver:@"SQLite" options:options error:&error] retain];
     
     STAssertNil(error, @"We shouldn't have an error here: %@", error);
     STAssertNotNil(database_, @"Database should not be nil.");    
@@ -45,15 +45,16 @@
     CSQLDatabase *database_;
     NSError *error;
     
-    NSString *DSN = [NSString stringWithFormat:@"MySQL:db=test;host=localhost;user=root", TEST_DB];
+    NSString *DSN = [NSString stringWithFormat:@"SQLite:path=%@", TEST_DB];
     database_ = [CSQLDatabase databaseWithDSN:DSN error:&error];
+
     STAssertNil(error, @"We shouldn't have an error here: %@", error);
     STAssertNotNil(database_, @"Database should not be nil.");    
 }
 
 - (id) createDatabase:(NSError **)error
 {
-    NSString *DSN = [NSString stringWithFormat:@"MySQL:db=test;host=localhost;user=root", TEST_DB];
+    NSString *DSN = [NSString stringWithFormat:@"SQLite:path=%@", TEST_DB];
     CSQLDatabase *database = [CSQLDatabase databaseWithDSN:DSN error:&(*error)];
     return database;
 }
@@ -63,7 +64,7 @@
     NSError *error = nil;
     int affectedRows;
     
-    affectedRows = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR(10))" error:&error];
+    affectedRows = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR)" error:&error];
     
     STAssertNil(error, @"Error.");
     STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
@@ -117,8 +118,6 @@
     STAssertEquals(affectedRows, 1, @"DROP TABLE.");
 }
 
-/*
-
 - (void)testInsertionWithPreparedStatement
 {
     NSError *error = nil;
@@ -142,6 +141,5 @@
     
     STAssertNil(error, @"Insertion failed.");
 }
-*/
 
 @end
