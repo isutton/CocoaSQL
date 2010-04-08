@@ -30,7 +30,13 @@
 
 /**
  
- Creates a CSQLDatabase object with the given DSN.
+ Creates a CSQLDatabase object with the given DSN. The DSN has the following
+ syntax:
+ 
+ <code>DRIVER:OPT1=VAL1;OPT2=VAL2</code>
+ 
+ The options are parsed and stored in a NSDictionary. Both driver and options
+ are then used with databaseWithDriver:options:error:.
  
  @param aDSN
  @param error
