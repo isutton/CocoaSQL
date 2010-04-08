@@ -16,7 +16,7 @@
     voidPtr databaseHandle;
 }
 
-@property (readonly,assign) voidPtr databaseHandle;
+@property (readonly) voidPtr databaseHandle;
 
 + (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;
