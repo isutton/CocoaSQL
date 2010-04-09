@@ -56,17 +56,20 @@
                                           0,
                                           NULL,
                                           0);
+
     if (!connected && mysql_ping((MYSQL *)databaseHandle) != 0) {
-        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-        NSString *errorMessage = [NSString stringWithFormat:@"Can't connect to database: %s", 
-                                                            mysql_error((MYSQL *)databaseHandle)];
-        [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-        *error = [NSError errorWithDomain:@"CSMySQLDatabase" code:500 userInfo:errorDetail];
-        // XXX - I'm unsure if returning nil here is safe, 
-        //       since an instance has been already alloc'd
-        //       so if used with the idiom [[class alloc] init]
-        //       the alloc'd pointer will be leaked
-        return nil;
+        if (error) {
+            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+            NSString *errorMessage = [NSString stringWithFormat:@"Can't connect to database: %s", 
+                                      mysql_error((MYSQL *)databaseHandle)];
+            [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+            *error = [NSError errorWithDomain:@"CSMySQLDatabase" code:500 userInfo:errorDetail];
+            // XXX - I'm unsure if returning nil here is safe, 
+            //       since an instance has been already alloc'd
+            //       so if used with the idiom [[class alloc] init]
+            //       the alloc'd pointer will be leaked
+            return nil;            
+        }
     }
     return self;
 }
