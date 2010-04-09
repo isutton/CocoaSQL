@@ -53,8 +53,7 @@ static id translate(MYSQL_BIND *bind)
     [super init];
     self.database = aDatabase;
     self.statement = mysql_stmt_init((MYSQL *)aDatabase.databaseHandle);
-    if (!self.statement)
-    {
+    if (!self.statement) {
         if (error) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
             [errorDetail setObject:[NSString stringWithFormat:@"%s", mysql_error((MYSQL *)database.databaseHandle)] 
@@ -81,7 +80,8 @@ static id translate(MYSQL_BIND *bind)
             //       since an instance has been already alloc'd
             //       so if used with the idiom [[class alloc] init]
             //       the alloc'd pointer will be leaked
-            return nil;            
+            return nil;
+        }
     }
     return self;
 }
