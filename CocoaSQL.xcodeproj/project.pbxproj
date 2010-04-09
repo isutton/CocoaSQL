@@ -26,6 +26,8 @@
 		824F86F7116DD57D00075D6F /* CSQLDatabase+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F86F6116DD57D00075D6F /* CSQLDatabase+Protocol.h */; };
 		824F8704116DD65100075D6F /* CSQLPreparedStatement+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */; };
 		824F8815116E146700075D6F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
+		82EE6F3C116F278800885118 /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
+		82EE6F4A116F284300885118 /* otest.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EE6F34116F273A00885118 /* otest.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */; };
 		AA2B20E01165CDD600F4DC57 /* CSMySQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */; };
@@ -42,6 +44,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = CocoaSQL;
+		};
+		82EE6F8A116F2B6800885118 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82EE6F44116F282000885118;
+			remoteInfo = otest;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -70,6 +79,8 @@
 		82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSQLiteDatabase.m; sourceTree = "<group>"; };
 		824F86F6116DD57D00075D6F /* CSQLDatabase+Protocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CSQLDatabase+Protocol.h"; sourceTree = "<group>"; };
 		824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CSQLPreparedStatement+Protocol.h"; sourceTree = "<group>"; };
+		82EE6F34116F273A00885118 /* otest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = otest.m; sourceTree = "<group>"; };
+		82EE6F45116F282000885118 /* otest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = otest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaSQL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSMySQLDatabase.h; path = Source/MySQL/CSMySQLDatabase.h; sourceTree = "<group>"; };
@@ -84,8 +95,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82EE6F3C116F278800885118 /* libmysqlclient.dylib in Frameworks */,
 				824F8815116E146700075D6F /* libsqlite3.0.dylib in Frameworks */,
 				821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EE6F43116F282000885118 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +126,7 @@
 			children = (
 				8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */,
 				821DBC8F1163702E0073C988 /* Unit Tests.octest */,
+				82EE6F45116F282000885118 /* otest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -175,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				32DBCF5E0370ADEE00C91783 /* CocoaSQL_Prefix.pch */,
+				82EE6F34116F273A00885118 /* otest.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -266,12 +287,29 @@
 			buildRules = (
 			);
 			dependencies = (
+				82EE6F8B116F2B6800885118 /* PBXTargetDependency */,
 				821DBC95116370380073C988 /* PBXTargetDependency */,
 			);
 			name = "Unit Tests";
 			productName = "Unit Tests";
 			productReference = 821DBC8F1163702E0073C988 /* Unit Tests.octest */;
 			productType = "com.apple.product-type.bundle";
+		};
+		82EE6F44116F282000885118 /* otest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82EE6F49116F283F00885118 /* Build configuration list for PBXNativeTarget "otest" */;
+			buildPhases = (
+				82EE6F42116F282000885118 /* Sources */,
+				82EE6F43116F282000885118 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = otest;
+			productName = otest;
+			productReference = 82EE6F45116F282000885118 /* otest */;
+			productType = "com.apple.product-type.tool";
 		};
 		8DC2EF4F0486A6940098B216 /* CocoaSQL */ = {
 			isa = PBXNativeTarget;
@@ -310,6 +348,7 @@
 			targets = (
 				8DC2EF4F0486A6940098B216 /* CocoaSQL */,
 				821DBC8E1163702E0073C988 /* Unit Tests */,
+				82EE6F44116F282000885118 /* otest */,
 			);
 		};
 /* End PBXProject section */
@@ -357,6 +396,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		82EE6F42116F282000885118 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EE6F4A116F284300885118 /* otest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DC2EF540486A6940098B216 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -379,6 +426,11 @@
 			isa = PBXTargetDependency;
 			target = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
 			targetProxy = 821DBC94116370380073C988 /* PBXContainerItemProxy */;
+		};
+		82EE6F8B116F2B6800885118 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 82EE6F44116F282000885118 /* otest */;
+			targetProxy = 82EE6F8A116F2B6800885118 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -453,6 +505,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -501,10 +554,12 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
 				INFOPLIST_FILE = "Unit Tests-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib/mysql5/mysql,
 					"\"$(SRCROOT)/../MySQL/lib\"",
+					"\"$(SRCROOT)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -514,6 +569,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "Unit Tests";
+				TEST_RIG = "${BUILT_PRODUCTS_DIR}/otest";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -536,6 +592,7 @@
 					"$(inherited)",
 					/opt/local/lib/mysql5/mysql,
 					"\"$(SRCROOT)/../MySQL/lib\"",
+					"\"$(SRCROOT)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -546,6 +603,58 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "Unit Tests";
 				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		82EE6F47116F282100885118 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				LD_RUNPATH_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = otest;
+			};
+			name = Debug;
+		};
+		82EE6F48116F282100885118 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = otest;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -576,6 +685,15 @@
 			buildConfigurations = (
 				821DBC911163702F0073C988 /* Debug */,
 				821DBC921163702F0073C988 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		82EE6F49116F283F00885118 /* Build configuration list for PBXNativeTarget "otest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82EE6F47116F282100885118 /* Debug */,
+				82EE6F48116F282100885118 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
