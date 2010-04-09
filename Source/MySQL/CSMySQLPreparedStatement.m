@@ -242,25 +242,49 @@ static id translate(MYSQL_BIND *bind)
 - (NSDictionary *)fetchRowAsDictionary:(NSError **)error
 {
     int columnCount;
-    //const char *columnName;
+    int i;
     id value;
-    NSMutableDictionary *row;
+    NSMutableDictionary *row = nil;
     
-    if (canFetch == NO) {
+    if (canFetch == NO)
         return nil;
-    }
     
     columnCount = mysql_stmt_field_count(statement);
-    row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
-    MYSQL_BIND *resultBindings = calloc(columnCount, sizeof(MYSQL_BIND));
-    mysql_stmt_bind_result(statement, resultBindings);
-    mysql_stmt_fetch(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
+    MYSQL_BIND *resultBindings = calloc(columnCount, sizeof(MYSQL_BIND));
+    for (i = 0; i < columnCount; i++) {
+        if (fields[i].type == MYSQL_TYPE_BLOB || fields[i].type == MYSQL_TYPE_LONG_BLOB
+            || fields[i].type == MYSQL_TYPE_TINY_BLOB)
+        {
+            resultBindings[i].buffer_type = MYSQL_TYPE_BLOB; //fields[i].type;
+            resultBindings[i].buffer = calloc(1, MAX_BLOB_WIDTH);
+            resultBindings[i].buffer_length = MAX_BLOB_WIDTH;
+        } else {
+            resultBindings[i].buffer_type = MYSQL_TYPE_STRING;
+            resultBindings[i].buffer = calloc(1, 1024); // XXX 
+            resultBindings[i].buffer_length = 1024;
+        }
+    }
+    if (mysql_stmt_bind_result(statement, resultBindings) != 0) {
+        canFetch = NO;
+        // TODO - Error Messages
+    }
 
-    for (int i = 0; i < columnCount; i++) {
-        value = translate(&resultBindings[i]);
-        [row setObject:value forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
-        
+    if (mysql_stmt_fetch(statement) != 0){
+        canFetch = NO;
+        // TODO - Error Messages
+    }
+    
+    if (canFetch) {
+        row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
+        for (i = 0; i < columnCount; i++) {
+            value = translate(&resultBindings[i]);
+            [row setObject:value forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
+            free(resultBindings[i].buffer);
+        }
+    } else {
+        for (i = 0; i < columnCount; i++)
+            free(resultBindings[i].buffer);
     }
     free(resultBindings);
     return row;

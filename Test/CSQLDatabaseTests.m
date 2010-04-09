@@ -132,8 +132,7 @@
     //STAssertEquals(affectedRows, 1, @"DROP TABLE."); // XXX - This doesn't seem to work with mysql connector, affectedRows is 0 when dropping a table :/
 }
 
-
-- (void)testInsertionWithPreparedStatement
+- (void)testPreparedStatement
 {
     NSError *error = nil;
     id database = [self createDatabase:&error];
@@ -142,20 +141,26 @@
     id statement = [database prepareStatement:@"INSERT INTO t (i, v) VALUES (?, ?)" error:&error];
  
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 100 && !error; i++) {
         [values bindIntValue:i];
         [values bindStringValue:[NSString stringWithFormat:@"v%i", i]];
         [statement executeWithValues:values error:&error];
-        
-        if (error) {
-            break;
-        }
-        
         [values removeAllObjects];
     }
+   
+    NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
+    id selectStatement = [database prepareStatement:@"SELECT * FROM t WHERE i=?" error:&error];
+    [params bindIntValue:2];
+    [selectStatement executeWithValues:params error:&error];
+    NSDictionary *resultDictionary;
+    while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
+        STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
+        STAssertEqualObjects([resultDictionary objectForKey:@"i"], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
+        STAssertEqualObjects([resultDictionary objectForKey:@"v"], @"v2" , @"fetchRowAsArrayWithSQL : resultElement2");
+        
+    }
     [database executeSQL:@"DROP TABLE t" error:&error];
-    
-    STAssertNil(error, @"Insertion failed.");
+    STAssertNil(error, @"preparedStatement failed.");
 }
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "CSQLPreparedStatement.h"
+#import "CocoaSQL.h"
 #include <mysql.h>
 
 
