@@ -17,7 +17,7 @@
     BOOL canFetch;
 }
 
-@property (readonly) CSQLDatabase *database;
+@property (readonly,retain) CSQLDatabase *database;
 @property (readonly) BOOL canFetch;
 
 /**
