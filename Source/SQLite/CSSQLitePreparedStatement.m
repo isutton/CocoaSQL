@@ -25,8 +25,8 @@
 
 @implementation CSSQLitePreparedStatement
 
-@synthesize sqlitePreparedStatement;
-
+@synthesize database;
+@synthesize statement;
 
 - (id)initWithDatabase:(CSSQLiteDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
@@ -42,7 +42,7 @@
             *error = [NSError errorWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
             return nil;
         }
-        self.sqlitePreparedStatement = preparedStatement_;
+        self.statement = preparedStatement_;
     }
     return self;
 }
@@ -57,27 +57,27 @@
 
 - (BOOL)bindIntValue:(int)aValue forColumn:(int)column
 {
-    return sqlite3_bind_int(sqlitePreparedStatement, column, aValue) == SQLITE_OK;
+    return sqlite3_bind_int(self.statement, column, aValue) == SQLITE_OK;
 }
 
 - (BOOL)bindDoubleValue:(double)aValue forColumn:(int)column
 {
-    return sqlite3_bind_double(sqlitePreparedStatement, column, aValue) == SQLITE_OK;
+    return sqlite3_bind_double(self.statement, column, aValue) == SQLITE_OK;
 }
 
 - (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column
 {
-    return SQLITE_OK == sqlite3_bind_text(sqlitePreparedStatement, column, [aValue cStringUsingEncoding:NSUTF8StringEncoding], [aValue length], SQLITE_STATIC);
+    return SQLITE_OK == sqlite3_bind_text(self.statement, column, [aValue cStringUsingEncoding:NSUTF8StringEncoding], [aValue length], SQLITE_STATIC);
 }
 
 - (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column
 {
-    return SQLITE_OK == sqlite3_bind_blob(sqlitePreparedStatement, column, [aValue bytes], [aValue length], SQLITE_STATIC);
+    return SQLITE_OK == sqlite3_bind_blob(self.statement, column, [aValue bytes], [aValue length], SQLITE_STATIC);
 }
 
 - (BOOL)bindNullValueForColumn:(int)column
 {
-    return SQLITE_OK == sqlite3_bind_null(sqlitePreparedStatement, column);
+    return SQLITE_OK == sqlite3_bind_null(self.statement, column);
 }
 
 #pragma mark -
@@ -85,7 +85,7 @@
 
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
-    int bindParameterCount = sqlite3_bind_parameter_count(sqlitePreparedStatement);
+    int bindParameterCount = sqlite3_bind_parameter_count(self.statement);
 
     if (bindParameterCount > 0) {
 
@@ -130,7 +130,7 @@
         }
     }
 
-    int errorCode = sqlite3_step(self.sqlitePreparedStatement);
+    int errorCode = sqlite3_step(self.statement);
     
     if (errorCode == SQLITE_ERROR) {
         *error = [NSError errorWithDomain:@"CSSQLite" code:102 userInfo:nil];
@@ -145,7 +145,7 @@
     }
 
     if (errorCode == SQLITE_DONE) {
-        sqlite3_reset(self.sqlitePreparedStatement);
+        sqlite3_reset(self.statement);
     }
     
     return YES;
@@ -165,10 +165,10 @@
         return nil;
     }
     
-    int columnCount = sqlite3_column_count(sqlitePreparedStatement);
+    int columnCount = sqlite3_column_count(self.statement);
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
     for (int i = 0; i < columnCount; i++) {
-        [row addObject:translate(sqlitePreparedStatement, i)];
+        [row addObject:translate(self.statement, i)];
     }
 
     [self prepareNextFetch];
@@ -187,12 +187,12 @@
         return nil;
     }
 
-    columnCount = sqlite3_column_count(sqlitePreparedStatement);
+    columnCount = sqlite3_column_count(self.statement);
     row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
     
     for (int i = 0; i < columnCount; i++) {
-        value = translate(sqlitePreparedStatement, i);
-        columnName = sqlite3_column_name(sqlitePreparedStatement, i);
+        value = translate(self.statement, i);
+        columnName = sqlite3_column_name(self.statement, i);
         [row setObject:value forKey:[NSString stringWithFormat:@"%s", columnName]];
     }
 
@@ -209,7 +209,7 @@
 
 - (void)prepareNextFetch
 {
-    int errorCode = sqlite3_step(sqlitePreparedStatement);
+    int errorCode = sqlite3_step(self.statement);
     
     if (errorCode != SQLITE_ERROR) {
         if (errorCode == SQLITE_ROW) {

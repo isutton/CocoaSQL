@@ -18,10 +18,11 @@
 @class CSSQLiteDatabase;
 
 @interface CSSQLitePreparedStatement : CSQLPreparedStatement  {
-    sqlite3_stmt *sqlitePreparedStatement;
+    voidPtr statement;
 }
 
-@property (assign) sqlite3_stmt *sqlitePreparedStatement;
+@property (readwrite,retain) CSQLDatabase *database;
+@property (readwrite,assign) voidPtr statement;
 
 /**
  
