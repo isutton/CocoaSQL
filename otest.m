@@ -11,10 +11,6 @@
 #import <Cocoa/Cocoa.h>
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface SenTestProbe (InternalMethods)
-- (void)runTests:(id)ignored;
-@end
-
 int main(int argc, char **argv) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
@@ -31,8 +27,8 @@ int main(int argc, char **argv) {
     
     // Run the tests based on the defaults set above.
     // It will invoke exit() with an appropriate value as well.
-    
-    [SenTestProbe runTests:nil];
+
+    SenSelfTestMain();
     
     [pool drain];
     return 0;
