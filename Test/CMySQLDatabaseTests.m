@@ -66,6 +66,7 @@
         STAssertEquals((int)[resultDictionary count], 3, @"fetchRowAsArrayWithSQL : resultCount");
         STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
         STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
+        //STAssertEqualObjects([[resultDictionary objectForKey:@"d"] className], @"NSDate", @"fetchRowAsArrayWithSQL : resultElement3");
         cnt++;
     }
     [database executeSQL:@"DROP TABLE mysql_test" error:&error];

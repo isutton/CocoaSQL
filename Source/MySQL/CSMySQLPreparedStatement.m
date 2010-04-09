@@ -219,74 +219,46 @@ static id translate(MYSQL_BIND *bind)
     return [self executeWithValues:nil error:error];
 }
 
-#pragma mark -
-#pragma mark Fetch messages
-
-- (NSArray *)fetchRowAsArray:(NSError **)error
+- (MYSQL_BIND *)createResultBindsForFields:(MYSQL_FIELD *)fields Count:(int)columnCount
 {
-    if (canFetch == NO) {
-        return nil;
-    }
-    int columnCount = mysql_stmt_field_count(statement);
-    MYSQL_BIND *resultBindings = calloc(columnCount, sizeof(MYSQL_BIND));
-    mysql_stmt_bind_result(statement, resultBindings);
-    mysql_stmt_fetch(statement);
-    NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
+    MYSQL_BIND *resultBinds = calloc(columnCount, sizeof(MYSQL_BIND));
     for (int i = 0; i < columnCount; i++) {
-        [row addObject:translate(&resultBindings[i])];
-    }
-    free(resultBindings);
-    return row;
-}
-
-- (NSDictionary *)fetchRowAsDictionary:(NSError **)error
-{
-    int columnCount;
-    int i;
-    id value;
-    NSMutableDictionary *row = nil;
-    
-    if (canFetch == NO)
-        return nil;
-    
-    columnCount = mysql_stmt_field_count(statement);
-    MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
-    MYSQL_BIND *resultBindings = calloc(columnCount, sizeof(MYSQL_BIND));
-    for (i = 0; i < columnCount; i++) {
 #if 0
+        // everything apart blobs will be stringified
         if (fields[i].type == MYSQL_TYPE_BLOB || fields[i].type == MYSQL_TYPE_LONG_BLOB
             || fields[i].type == MYSQL_TYPE_TINY_BLOB)
         {
-            resultBindings[i].buffer_type = MYSQL_TYPE_BLOB;
-            resultBindings[i].buffer = calloc(1, MAX_BLOB_WIDTH);
-            resultBindings[i].buffer_length = MAX_BLOB_WIDTH;
+            resultBinds[i].buffer_type = MYSQL_TYPE_BLOB;
+            resultBinds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
+            resultBinds[i].buffer_length = MAX_BLOB_WIDTH;
         } else {
-            resultBindings[i].buffer_type = MYSQL_TYPE_STRING;
-            resultBindings[i].buffer = calloc(1, 1024); // XXX 
-            resultBindings[i].buffer_length = 1024;
+            resultBinds[i].buffer_type = MYSQL_TYPE_STRING;
+            resultBinds[i].buffer = calloc(1, 1024); // XXX 
+            resultBinds[i].buffer_length = 1024;
         }
 #else
-        resultBindings[i].buffer_type = fields[i].type;
+        // more strict datatype mapping
+        resultBinds[i].buffer_type = fields[i].type;
         switch(fields[i].type) {
             case MYSQL_TYPE_FLOAT:
-                resultBindings[i].buffer = calloc(1, sizeof(float));
+                resultBinds[i].buffer = calloc(1, sizeof(float));
                 break;
             case MYSQL_TYPE_SHORT:
-                resultBindings[i].buffer = calloc(1, sizeof(short));
+                resultBinds[i].buffer = calloc(1, sizeof(short));
                 break;
             case MYSQL_TYPE_LONG:
-                resultBindings[i].buffer = calloc(1, sizeof(long));
+                resultBinds[i].buffer = calloc(1, sizeof(long));
                 break;
             case MYSQL_TYPE_INT24:
-                resultBindings[i].buffer = calloc(1, sizeof(long long));
+                resultBinds[i].buffer = calloc(1, sizeof(long long));
                 break;
             case MYSQL_TYPE_LONGLONG:
-                resultBindings[i].buffer = calloc(1, sizeof(long long));
+                resultBinds[i].buffer = calloc(1, sizeof(long long));
                 break;
             case MYSQL_TYPE_DOUBLE:
-                resultBindings[i].buffer = calloc(1, sizeof(double));
+                resultBinds[i].buffer = calloc(1, sizeof(double));
             case MYSQL_TYPE_TINY:
-                resultBindings[i].buffer = calloc(1, sizeof(char));
+                resultBinds[i].buffer = calloc(1, sizeof(char));
                 break;
             case MYSQL_TYPE_DECIMAL:
                 /* TODO - convert mysql type decimal */
@@ -295,16 +267,16 @@ static id translate(MYSQL_BIND *bind)
             case MYSQL_TYPE_VARCHAR:
             case MYSQL_TYPE_VAR_STRING:
             case MYSQL_TYPE_STRING:
-                resultBindings[i].buffer = calloc(1, 1024); // perhaps oversized (isn't 256 max_string_size?)
-                resultBindings[i].buffer_length = 1024;
+                resultBinds[i].buffer = calloc(1, 1024); // perhaps oversized (isn't 256 max_string_size?)
+                resultBinds[i].buffer_length = 1024;
                 break;
             case MYSQL_TYPE_BIT:
                 break;
             case MYSQL_TYPE_TINY_BLOB:
             case MYSQL_TYPE_BLOB:
             case MYSQL_TYPE_LONG_BLOB:
-                resultBindings[i].buffer = calloc(1, MAX_BLOB_WIDTH);
-                resultBindings[i].buffer_length = MAX_BLOB_WIDTH;
+                resultBinds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
+                resultBinds[i].buffer_length = MAX_BLOB_WIDTH;
                 break;
                 
             case MYSQL_TYPE_TIMESTAMP:
@@ -313,25 +285,40 @@ static id translate(MYSQL_BIND *bind)
             case MYSQL_TYPE_TIME:
             case MYSQL_TYPE_NEWDATE:
 #if 0
-                resultBindings[i].buffer = calloc(1, sizeof(MYSQL_TIME));
-                resultBindings[i].buffer_length = sizeof(MYSQL_TIME);
+                resultBinds[i].buffer = calloc(1, sizeof(MYSQL_TIME));
+                resultBinds[i].buffer_length = sizeof(MYSQL_TIME);
 #else
                 // handle dates as strings (it's too easier since we have to convert them to NSDate anyway)
-                resultBindings[i].buffer_type = MYSQL_TYPE_STRING;
-                resultBindings[i].buffer = calloc(1, 23);
-                resultBindings[i].buffer_length = 23;
+                resultBinds[i].buffer_type = MYSQL_TYPE_STRING;
+                resultBinds[i].buffer = calloc(1, 23);
+                resultBinds[i].buffer_length = 23;
 #endif
                 break;
         }
 #endif
     }
-    if (mysql_stmt_bind_result(statement, resultBindings) != 0) {
+    return resultBinds;
+}
+
+- (void)destroyResultBinds:(MYSQL_BIND *)binds Count:(int)columnCount
+{
+    for (int i = 0; i < columnCount; i++)
+        free(binds[i].buffer);
+    free(binds);
+}
+
+#pragma mark -
+#pragma mark Fetch messages
+
+- (void)fetchRowWithBinds:(MYSQL_BIND *)resultBinds error:(NSError **)error
+{
+    if (mysql_stmt_bind_result(statement, resultBinds) != 0) {
         canFetch = NO;
         if (error) {
             NSMutableDictionary *errorDetail;
             errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                            [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)], 
-                            @"errorMessage", nil];
+                           [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)], 
+                           @"errorMessage", nil];
             *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
         }
     }
@@ -348,18 +335,50 @@ static id translate(MYSQL_BIND *bind)
         }
     }
     
+}
+
+- (NSArray *)fetchRowAsArray:(NSError **)error
+{
+    if (canFetch == NO) {
+        return nil;
+    }
+    int columnCount = mysql_stmt_field_count(statement);
+    MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
+
+    MYSQL_BIND *resultBinds = [self createResultBindsForFields:fields Count:columnCount];
+    [self fetchRowWithBinds:resultBinds error:error];
+    NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
+    for (int i = 0; i < columnCount; i++) {
+        [row addObject:translate(&resultBinds[i])];
+    }
+    [self destroyResultBinds:resultBinds Count:columnCount];
+    return row;
+}
+
+- (NSDictionary *)fetchRowAsDictionary:(NSError **)error
+{
+    int columnCount;
+    int i;
+    id value;
+    NSMutableDictionary *row = nil;
+    
+    if (canFetch == NO)
+        return nil;
+    
+    columnCount = mysql_stmt_field_count(statement);
+    MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
+
+    MYSQL_BIND *resultBinds = [self createResultBindsForFields:fields Count:columnCount];
+    [self fetchRowWithBinds:resultBinds error:error];
     if (canFetch) {
         row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
         for (i = 0; i < columnCount; i++) {
-            value = translate(&resultBindings[i]);
+            value = translate(&resultBinds[i]);
             [row setObject:value forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
-            free(resultBindings[i].buffer);
         }
-    } else {
-        for (i = 0; i < columnCount; i++)
-            free(resultBindings[i].buffer);
-    }
-    free(resultBindings);
+    } 
+    [self destroyResultBinds:resultBinds Count:columnCount];
+
     return row;
 }
 
