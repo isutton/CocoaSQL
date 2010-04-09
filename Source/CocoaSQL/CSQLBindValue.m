@@ -11,6 +11,23 @@
 
 @implementation CSQLBindValue
 
++ (id)bindValueWithData:(NSData *)aValue
+{
+    CSQLBindValue *value = [[CSQLBindValue alloc] initWithData:aValue];
+    return [value autorelease];
+}
+
+- (id)initWithData:(NSData *)aValue
+{
+    if ([super init]) {
+        value = [aValue retain];
+        type = CSQLBlob;
+        return self;
+    }
+    
+    return nil;
+}
+
 + (id)bindValueWithInt:(int)aValue
 {
     CSQLBindValue *value = [[CSQLBindValue alloc] initWithInt:aValue];
@@ -72,7 +89,8 @@
 - (id)initWithString:(NSString *)aValue
 {
     if ([super init]) {
-        value = [aValue copy];
+        // better to retain it than the data than to make copies around
+        value = [aValue retain]; 
         type = CSQLText;
         return self;
     }
