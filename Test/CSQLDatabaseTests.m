@@ -39,7 +39,7 @@
     
     database_ = [[CSQLDatabase databaseWithDriver:TEST_DRIVER options:options error:&error] retain];
     
-    STAssertNil(error, @"We shouldn't have an error here: %@", error);
+    STAssertNil(error, @"We got an error.");
     STAssertNotNil(database_, @"Database should not be nil.");    
 }
 
@@ -50,7 +50,7 @@
     
     NSString *DSN = [NSString stringWithFormat:TEST_DSN, TEST_DB];
     database_ = [CSQLDatabase databaseWithDSN:DSN error:&error];
-    STAssertNil(error, @"We shouldn't have an error here: %@", error);
+    STAssertNil(error, @"We got an error");
     STAssertNotNil(database_, @"Database should not be nil.");    
 }
 
