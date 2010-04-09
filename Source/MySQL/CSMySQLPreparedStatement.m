@@ -52,8 +52,8 @@ static id translate(MYSQL_BIND *bind)
 {
     [super init];
     self.database = aDatabase;
-    statement = mysql_stmt_init((MYSQL *)aDatabase.databaseHandle);
-    if (!statement)
+    self.statement = mysql_stmt_init((MYSQL *)aDatabase.databaseHandle);
+    if (!self.statement)
     {
         if (error) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
@@ -73,16 +73,15 @@ static id translate(MYSQL_BIND *bind)
 
 - (id)initWithDatabase:(CSMySQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
-
-    [self initWithDatabase:aDatabase];
-    if (![self setSql:sql error:error]) {
-        mysql_stmt_close(statement);
-        statement = nil;
-        // XXX - I'm unsure if returning nil here is safe, 
-        //       since an instance has been already alloc'd
-        //       so if used with the idiom [[class alloc] init]
-        //       the alloc'd pointer will be leaked
-        return nil;
+    if (self = [self initWithDatabase:aDatabase]) {
+        if (![self setSql:sql error:error]) {
+            mysql_stmt_close(statement);
+            statement = nil;
+            // XXX - I'm unsure if returning nil here is safe, 
+            //       since an instance has been already alloc'd
+            //       so if used with the idiom [[class alloc] init]
+            //       the alloc'd pointer will be leaked
+            return nil;            
     }
     return self;
 }
@@ -106,8 +105,9 @@ static id translate(MYSQL_BIND *bind)
 
 - (void)dealloc
 {
-    if (statement)
+    if (self.statement) {
         mysql_stmt_close(statement);
+    }
     [super dealloc];
 }
 
@@ -116,7 +116,7 @@ static id translate(MYSQL_BIND *bind)
 
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
-    unsigned long bindParameterCount = mysql_stmt_param_count(statement);
+    unsigned long bindParameterCount = mysql_stmt_param_count(self.statement);
 
     if (bindParameterCount > 0) {
         MYSQL_BIND *params = calloc(bindParameterCount, sizeof(MYSQL_BIND));
@@ -168,8 +168,8 @@ static id translate(MYSQL_BIND *bind)
             }
         }
 
-        if (mysql_stmt_bind_param(statement, params) == 0) {
-            if (mysql_stmt_execute(statement) == 0) {
+        if (mysql_stmt_bind_param(self.statement, params) == 0) {
+            if (mysql_stmt_execute(self.statement) == 0) {
                 canFetch = YES;
                 success = YES;
             }
