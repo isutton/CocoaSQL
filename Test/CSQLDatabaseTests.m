@@ -99,6 +99,20 @@
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals(affectedRows, 1, @"INSERT.");
     
+    // test fetchRowAsArrayWithSQL
+    NSArray *resultArray = [database fetchRowAsArrayWithSQL:@"SELECT * FROM t WHERE i=2" error:&error];
+    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertEquals((int)[resultArray count], 2, @"fetchRowAsArrayWithSQL : resultArrayCount");
+    STAssertEqualObjects([resultArray objectAtIndex:0], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
+    STAssertEqualObjects([resultArray objectAtIndex:1], @"test" , @"fetchRowAsArrayWithSQL : resultElement2");
+
+    // test fetchRowAsDictionaryWithSQL
+    NSDictionary *resultDictionary = [database fetchRowAsDictionaryWithSQL:@"SELECT * FROM t WHERE i=2" error:&error];
+    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
+    STAssertEqualObjects([resultDictionary objectForKey:@"i"], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
+    STAssertEqualObjects([resultDictionary objectForKey:@"v"], @"test" , @"fetchRowAsArrayWithSQL : resultElement2");
+    
     error = nil;
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
     [values bindIntValue:1];
