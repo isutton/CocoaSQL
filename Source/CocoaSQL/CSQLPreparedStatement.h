@@ -17,6 +17,9 @@
     BOOL canFetch;
 }
 
+@property (readonly) CSQLDatabase *database;
+@property (readonly) BOOL canFetch;
+
 /**
  
  @param database
@@ -41,8 +44,5 @@
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase error:(NSError **)error;
 - (BOOL)setSql:(NSString *)sql;
 - (BOOL)setSql:(NSString *)sql error:(NSError **)error;
-
-@property (retain) CSQLDatabase *database;
-@property (assign) BOOL canFetch;
 
 @end
