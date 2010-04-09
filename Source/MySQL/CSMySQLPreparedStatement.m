@@ -45,7 +45,8 @@ static id translate(MYSQL_BIND *bind)
         case MYSQL_TYPE_TIME:
         case MYSQL_TYPE_YEAR:
         case MYSQL_TYPE_NEWDATE:
-            value = [NSDate dateWithString:*((char *)bind->buffer)];
+            // XXX - datetime datatypes are actualy taken out of mysql as strings and converted later to NSDate
+            //value = [NSDate dateWithString:*((char *)bind->buffer)];
             break;
         // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
         case MYSQL_TYPE_VARCHAR:
@@ -374,7 +375,18 @@ static id translate(MYSQL_BIND *bind)
         row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
         for (i = 0; i < columnCount; i++) {
             value = translate(&resultBinds[i]);
-            [row setObject:value forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
+            switch (fields[i].type) {
+                case MYSQL_TYPE_TIMESTAMP:
+                case MYSQL_TYPE_DATETIME:
+                case MYSQL_TYPE_DATE:
+                case MYSQL_TYPE_TIME:
+                case MYSQL_TYPE_NEWDATE:
+                    [row setObject:[NSDate dateWithString:value] forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
+                    break;
+                default:
+                    [row setObject:value forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
+            }
+            
         }
     } 
     [self destroyResultBinds:resultBinds Count:columnCount];
