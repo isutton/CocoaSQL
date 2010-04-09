@@ -94,7 +94,7 @@
     STAssertEquals(affectedRows, 1, @"INSERT.");
 
     error = nil;
-    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (2, 'test')" error:&error];
+    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (2, 'test2')" error:&error];
     
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals(affectedRows, 1, @"INSERT.");
@@ -104,13 +104,13 @@
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals((int)[resultArray count], 2, @"fetchRowAsArrayWithSQL : resultArrayCount");
     STAssertEqualObjects([resultArray objectAtIndex:0], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
-    STAssertEqualObjects([resultArray objectAtIndex:1], @"test" , @"fetchRowAsArrayWithSQL : resultElement2");
+    STAssertEqualObjects([resultArray objectAtIndex:1], @"test2" , @"fetchRowAsArrayWithSQL : resultElement2");
 
     // test fetchRowAsDictionaryWithSQL
-    NSDictionary *resultDictionary = [database fetchRowAsDictionaryWithSQL:@"SELECT * FROM t WHERE i=2" error:&error];
+    NSDictionary *resultDictionary = [database fetchRowAsDictionaryWithSQL:@"SELECT * FROM t WHERE i=1" error:&error];
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
-    STAssertEqualObjects([resultDictionary objectForKey:@"i"], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
+    STAssertEqualObjects([resultDictionary objectForKey:@"i"], @"1" , @"fetchRowAsArrayWithSQL : resultElement1");
     STAssertEqualObjects([resultDictionary objectForKey:@"v"], @"test" , @"fetchRowAsArrayWithSQL : resultElement2");
     
     error = nil;

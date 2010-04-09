@@ -33,9 +33,31 @@ static id translate(MYSQL_BIND *bind)
         case MYSQL_TYPE_DOUBLE:
             value = [NSNumber numberWithDouble:*((double *)bind->buffer)];
         case MYSQL_TYPE_TINY:
+            value = [NSNumber numberWithChar:*((char *)bind->buffer)];
             break;
+        case MYSQL_TYPE_DECIMAL:
+            /* TODO - convert mysql type decimal */
+             break;
+        case MYSQL_TYPE_TIMESTAMP:
+            break;
+        case MYSQL_TYPE_DATETIME:
+            break;
+        case MYSQL_TYPE_DATE:
+            break;
+        case MYSQL_TYPE_TIME:
+            break;
+        case MYSQL_TYPE_YEAR:
+            break;
+        case MYSQL_TYPE_NEWDATE:
+            break;
+        // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
+        case MYSQL_TYPE_VARCHAR:
+        case MYSQL_TYPE_VAR_STRING:
         case MYSQL_TYPE_STRING:
             value = [NSString stringWithUTF8String:(char *)bind->buffer];
+            break;
+        case MYSQL_TYPE_BIT:
+            value = [NSNumber numberWithChar:*((char *)bind->buffer) & 0x01];
             break;
         case MYSQL_TYPE_BLOB:
             break;
