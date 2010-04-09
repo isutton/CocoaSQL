@@ -17,19 +17,18 @@
     NSString *aClassName = [NSString stringWithFormat:@"CS%@Database", aDriver];
     Class class = NSClassFromString(aClassName);
     
-    if (!class && error) {
-        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
-        NSString *errorMessage = [NSString stringWithFormat:@"Couldn't find class %@.", aClassName];
-        [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-        *error = [NSError errorWithDomain:@"CSQLDatabase" code:500 userInfo:errorDetail];
+    if (!class) {
+        if (error) {
+            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
+            NSString *errorMessage = [NSString stringWithFormat:@"Couldn't find class %@.", aClassName];
+            [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+            *error = [NSError errorWithDomain:@"CSQLDatabase" code:500 userInfo:errorDetail];
+        }
+        return nil;
     }
     
-    if (class) {
-        CSQLDatabase *database = [class databaseWithOptions:options error:error];
-        return database;
-    }
-    
-    return nil;
+    CSQLDatabase *database = [class databaseWithOptions:options error:error];
+    return database;
 }
 
 + (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error
