@@ -149,15 +149,18 @@
     }
    
     NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
-    id selectStatement = [database prepareStatement:@"SELECT * FROM t WHERE i=?" error:&error];
-    [params bindIntValue:2];
+    id selectStatement = [database prepareStatement:@"SELECT * FROM t WHERE v like ?" error:&error];
+    [params bindStringValue:@"v%"];
     [selectStatement executeWithValues:params error:&error];
     NSDictionary *resultDictionary;
+    int cnt = 1;
     while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
+        NSString *i = [NSString stringWithFormat:@"%d", cnt];
+        NSString *v = [NSString stringWithFormat:@"v%d", cnt];
         STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
-        STAssertEqualObjects([resultDictionary objectForKey:@"i"], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
-        STAssertEqualObjects([resultDictionary objectForKey:@"v"], @"v2" , @"fetchRowAsArrayWithSQL : resultElement2");
-        
+        STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
+        STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
+        cnt++;
     }
     [database executeSQL:@"DROP TABLE t" error:&error];
     STAssertNil(error, @"preparedStatement failed.");
