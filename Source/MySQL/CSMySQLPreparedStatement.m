@@ -86,7 +86,7 @@ static id translate(MYSQL_BIND *bind)
     return self;
 }
 
-- (BOOL)setSql:(NSString *)sql error:(NSError **)error
+- (BOOL)setSQL:(NSString *)sql error:(NSError **)error
 {
     int errorCode = mysql_stmt_prepare(statement, [sql UTF8String], [sql length]);
     if (errorCode != 0) {

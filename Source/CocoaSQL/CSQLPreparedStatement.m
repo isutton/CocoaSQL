@@ -43,7 +43,7 @@
     return [self initWithDatabase:aDatabase error:error];
 }
 
-- (BOOL)setSql:(NSString *)sql error:(NSError **)error
+- (BOOL)setSQL:(NSString *)sql error:(NSError **)error
 {
     if (error) {
         NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
@@ -53,9 +53,9 @@
     return NO;
 }
 
-- (BOOL)setSql:(NSString *)sql
+- (BOOL)setSQL:(NSString *)sql
 {
-    return [self setSql:sql error:nil];
+    return [self setSQL:sql error:nil];
 }
 
 @end
