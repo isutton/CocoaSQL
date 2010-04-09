@@ -257,10 +257,11 @@ static id translate(MYSQL_BIND *bind)
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
     MYSQL_BIND *resultBindings = calloc(columnCount, sizeof(MYSQL_BIND));
     for (i = 0; i < columnCount; i++) {
+#if 0
         if (fields[i].type == MYSQL_TYPE_BLOB || fields[i].type == MYSQL_TYPE_LONG_BLOB
             || fields[i].type == MYSQL_TYPE_TINY_BLOB)
         {
-            resultBindings[i].buffer_type = MYSQL_TYPE_BLOB; //fields[i].type;
+            resultBindings[i].buffer_type = MYSQL_TYPE_BLOB;
             resultBindings[i].buffer = calloc(1, MAX_BLOB_WIDTH);
             resultBindings[i].buffer_length = MAX_BLOB_WIDTH;
         } else {
@@ -268,6 +269,11 @@ static id translate(MYSQL_BIND *bind)
             resultBindings[i].buffer = calloc(1, 1024); // XXX 
             resultBindings[i].buffer_length = 1024;
         }
+#else
+        resultBindings[i].buffer_type = fields[i].type;
+        resultBindings[i].buffer = calloc(1, fields[i].db_length);
+        resultBindings[i].buffer_length = fields[i].db_length;
+#endif
     }
     if (mysql_stmt_bind_result(statement, resultBindings) != 0) {
         canFetch = NO;

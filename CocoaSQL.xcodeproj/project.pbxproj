@@ -33,6 +33,8 @@
 		82B99973116F4A9C00378C70 /* libmysqlclient.dylib in Resources */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
 		82EE6F4A116F284300885118 /* otest.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EE6F34116F273A00885118 /* otest.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
+		AA022811116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA022810116FCD280005BF0A /* CMySQLDatabaseTests.m */; };
+		AA022812116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA022810116FCD280005BF0A /* CMySQLDatabaseTests.m */; };
 		AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */; };
 		AA2B20E01165CDD600F4DC57 /* CSMySQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */; };
 		AA3698AC116B1C060073A0EB /* CSMySQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */; };
@@ -91,6 +93,8 @@
 		82EE6F45116F282000885118 /* otest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = otest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaSQL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA02280F116FCD280005BF0A /* CMySQLDatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMySQLDatabaseTests.h; sourceTree = "<group>"; };
+		AA022810116FCD280005BF0A /* CMySQLDatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMySQLDatabaseTests.m; sourceTree = "<group>"; };
 		AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSMySQLDatabase.h; path = Source/MySQL/CSMySQLDatabase.h; sourceTree = "<group>"; };
 		AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSMySQLDatabase.m; path = Source/MySQL/CSMySQLDatabase.m; sourceTree = "<group>"; };
 		AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSMySQLPreparedStatement.h; path = Source/MySQL/CSMySQLPreparedStatement.h; sourceTree = "<group>"; };
@@ -214,6 +218,8 @@
 			children = (
 				821DBC9D116370800073C988 /* CSQLDatabaseTests.h */,
 				821DBC9E116370800073C988 /* CSQLDatabaseTests.m */,
+				AA02280F116FCD280005BF0A /* CMySQLDatabaseTests.h */,
+				AA022810116FCD280005BF0A /* CMySQLDatabaseTests.m */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -407,6 +413,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */,
+				AA022811116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,6 +423,7 @@
 			files = (
 				82EE6F4A116F284300885118 /* otest.m in Sources */,
 				82B99922116F47A400378C70 /* CSQLDatabaseTests.m in Sources */,
+				AA022812116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

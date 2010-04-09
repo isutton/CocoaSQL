@@ -155,7 +155,7 @@
     NSDictionary *resultDictionary;
     int cnt = 1;
     while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
-        NSString *i = [NSString stringWithFormat:@"%d", cnt];
+        NSNumber *i = [NSNumber numberWithInt:cnt];
         NSString *v = [NSString stringWithFormat:@"v%d", cnt];
         STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
         STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
