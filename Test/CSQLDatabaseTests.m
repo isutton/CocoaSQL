@@ -7,7 +7,6 @@
 //
 
 #import "CSQLDatabaseTests.h"
-
 @implementation CSQLDatabaseTests
 
 #define TEST_DB @"test.db"
@@ -32,7 +31,7 @@
 - (void)testDatabaseWithDriver
 {
     CSQLDatabase *database_;
-    NSError *error;
+    NSError *error = nil;
     
     NSMutableDictionary *options = [NSMutableDictionary dictionary];
     [options setObject:TEST_DB forKey:@"path"];
@@ -46,7 +45,7 @@
 - (void)testDatabaseWithDSN
 {
     CSQLDatabase *database_;
-    NSError *error;
+    NSError *error = nil;
     
     NSString *DSN = [NSString stringWithFormat:TEST_DSN, TEST_DB];
     database_ = [CSQLDatabase databaseWithDSN:DSN error:&error];

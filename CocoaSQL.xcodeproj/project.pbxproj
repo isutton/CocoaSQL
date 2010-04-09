@@ -27,7 +27,6 @@
 		824F8704116DD65100075D6F /* CSQLPreparedStatement+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */; };
 		82B99917116F478F00378C70 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 824459FA115B750B00950BD9 /* Cocoa.framework */; };
 		82B99922116F47A400378C70 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
-		82B99923116F47AB00378C70 /* CSQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBBA811634CB30073C988 /* CSQLDatabase.m */; };
 		82B99972116F4A9C00378C70 /* libsqlite3.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
 		82B99973116F4A9C00378C70 /* libmysqlclient.dylib in Resources */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
 		82EE6F4A116F284300885118 /* otest.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EE6F34116F273A00885118 /* otest.m */; };
@@ -38,6 +37,8 @@
 		AA3698AD116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */; };
 		AA62F97E116C7B3200C4FE4A /* CSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */; };
 		AA987E91116E5D420023E86F /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
+		AAC3325D116F5E830097879F /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
+		AAC3327A116F60FB0097879F /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAC3327A116F60FB0097879F /* libmysqlclient.dylib in Frameworks */,
 				821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -107,6 +109,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				82B99917116F478F00378C70 /* Cocoa.framework in Frameworks */,
+				AAC3325D116F5E830097879F /* CocoaSQL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,7 +409,6 @@
 			files = (
 				82EE6F4A116F284300885118 /* otest.m in Sources */,
 				82B99922116F47A400378C70 /* CSQLDatabaseTests.m in Sources */,
-				82B99923116F47AB00378C70 /* CSQLDatabase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
