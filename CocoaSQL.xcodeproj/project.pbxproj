@@ -25,8 +25,11 @@
 		82445A56115B9A6400950BD9 /* CSSQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */; };
 		824F86F7116DD57D00075D6F /* CSQLDatabase+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F86F6116DD57D00075D6F /* CSQLDatabase+Protocol.h */; };
 		824F8704116DD65100075D6F /* CSQLPreparedStatement+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */; };
-		824F8815116E146700075D6F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
-		82EE6F3C116F278800885118 /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
+		82B99917116F478F00378C70 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 824459FA115B750B00950BD9 /* Cocoa.framework */; };
+		82B99922116F47A400378C70 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
+		82B99923116F47AB00378C70 /* CSQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBBA811634CB30073C988 /* CSQLDatabase.m */; };
+		82B99972116F4A9C00378C70 /* libsqlite3.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
+		82B99973116F4A9C00378C70 /* libmysqlclient.dylib in Resources */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
 		82EE6F4A116F284300885118 /* otest.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EE6F34116F273A00885118 /* otest.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */; };
@@ -95,8 +98,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82EE6F3C116F278800885118 /* libmysqlclient.dylib in Frameworks */,
-				824F8815116E146700075D6F /* libsqlite3.0.dylib in Frameworks */,
 				821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -105,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82B99917116F478F00378C70 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,8 +289,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				82EE6F8B116F2B6800885118 /* PBXTargetDependency */,
 				821DBC95116370380073C988 /* PBXTargetDependency */,
+				82EE6F8B116F2B6800885118 /* PBXTargetDependency */,
 			);
 			name = "Unit Tests";
 			productName = "Unit Tests";
@@ -347,8 +349,8 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* CocoaSQL */,
-				821DBC8E1163702E0073C988 /* Unit Tests */,
 				82EE6F44116F282000885118 /* otest */,
+				821DBC8E1163702E0073C988 /* Unit Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -365,6 +367,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82B99972116F4A9C00378C70 /* libsqlite3.0.dylib in Resources */,
+				82B99973116F4A9C00378C70 /* libmysqlclient.dylib in Resources */,
 				8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -401,6 +405,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				82EE6F4A116F284300885118 /* otest.m in Sources */,
+				82B99922116F47A400378C70 /* CSQLDatabaseTests.m in Sources */,
+				82B99923116F47AB00378C70 /* CSQLDatabase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,6 +572,8 @@
 					Cocoa,
 					"-framework",
 					SenTestingKit,
+					"-framework",
+					CocoaSQL,
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "Unit Tests";
@@ -621,6 +629,10 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				INSTALL_PATH = /usr/local/bin;
 				LD_RUNPATH_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Cocoa,
@@ -647,6 +659,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
