@@ -13,6 +13,7 @@
 static id translate(MYSQL_BIND *bind)
 {
     id value;
+    // XXX - actual implementation uses only strings and blobs
     switch(bind->buffer_type)
     {
         case MYSQL_TYPE_FLOAT:
@@ -59,7 +60,10 @@ static id translate(MYSQL_BIND *bind)
         case MYSQL_TYPE_BIT:
             value = [NSNumber numberWithChar:*((char *)bind->buffer) & 0x01];
             break;
+        case MYSQL_TYPE_TINY_BLOB:
         case MYSQL_TYPE_BLOB:
+        case MYSQL_TYPE_LONG_BLOB:
+            value = [NSData dataWithBytes:bind->buffer length:bind->buffer_length];
             break;
     }
     return value;
@@ -267,12 +271,25 @@ static id translate(MYSQL_BIND *bind)
     }
     if (mysql_stmt_bind_result(statement, resultBindings) != 0) {
         canFetch = NO;
-        // TODO - Error Messages
+        if (error) {
+            NSMutableDictionary *errorDetail;
+            errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                            [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)], 
+                            @"errorMessage", nil];
+            *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
+        }
     }
-
-    if (mysql_stmt_fetch(statement) != 0){
+    int ret = mysql_stmt_fetch(statement);
+    if (ret != 0){
         canFetch = NO;
-        // TODO - Error Messages
+        // find a way to notify that data truncation happened
+        if (error && ret != MYSQL_NO_DATA && ret != MYSQL_DATA_TRUNCATED) {  
+            NSMutableDictionary *errorDetail;
+            errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                           [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)], 
+                           @"errorMessage", nil];
+            *error = [NSError errorWithDomain:@"CSMySQL" code:102 userInfo:errorDetail];
+        }
     }
     
     if (canFetch) {

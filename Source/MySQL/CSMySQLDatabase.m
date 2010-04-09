@@ -100,15 +100,22 @@
 
     if (values && [values count] > 0) {
         CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
-        if (!statement)
-            return 0;
+        if (!statement) {
+            return -1;
+        }
         if ([statement executeWithValues:values error:error])
             affectedRows = [(CSMySQLPreparedStatement *)statement affectedRows];
     }
     else {
         if (mysql_real_query((MYSQL *)databaseHandle, [sql UTF8String], [sql length]) != 0) {
-            // TODO - Error messages here
-            return 0;
+            if (error) {
+                NSMutableDictionary *errorDetail;
+                errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                               [NSString stringWithFormat:@"%s", mysql_error(databaseHandle)], 
+                               @"errorMessage", nil];
+                *error = [NSError errorWithDomain:@"CSMySQL" code:99 userInfo:errorDetail];
+            }
+            return -1;
         }
         
         affectedRows = mysql_affected_rows((MYSQL *)databaseHandle);
@@ -121,9 +128,9 @@
             while (row = mysql_fetch_row(res)) {
                 //unsigned long *fLengths = mysql_fetch_lengths(res);
                 // create a char ** which points to field names 
-                // (don't copy them... it's a waste of time)
                 for (int i = 0; i < (int)nFields; i++)
-                    fieldNames[i] = fields[i].name;
+                    fieldNames[i] = fields[i].name; // (don't copy them... it's a waste of time)
+
                 callbackFunction(context, nFields, row, fieldNames);
             }
             free(fieldNames);
