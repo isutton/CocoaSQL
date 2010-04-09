@@ -14,6 +14,9 @@
 int main(int argc, char **argv) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
+    NSBundle *bundle = [NSBundle bundleWithPath:@"CocoaSQL.framework"];
+    [bundle load];
+    
     // Tell SenTestingKit to use our last argument as the test bundle, to
     // run all the tests it can find, and that the executable is equivalent
     // to the otest test rig supplied with OCUnit.
