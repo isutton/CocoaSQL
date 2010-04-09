@@ -45,6 +45,8 @@ static id translate(MYSQL_BIND *bind)
 
 @implementation CSMySQLPreparedStatement
 
+@synthesize statement;
+@synthesize databaseHandle;
 
 - (id)initWithDatabase:(CSMySQLDatabase *)aDatabase error:(NSError **)error
 {

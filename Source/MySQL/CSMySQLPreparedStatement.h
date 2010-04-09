@@ -15,6 +15,9 @@
     MYSQL_STMT *statement;
 }
 
+@property (readwrite,retain) CSQLDatabase *databaseHandle;
+@property (readwrite,assign) MYSQL_STMT *statement;
+
 - (int)affectedRows;
 
 @end
