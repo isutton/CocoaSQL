@@ -6,8 +6,8 @@
 //  Copyright 2010 CocoaSQL.org. All rights reserved.
 //
 
+#import "CocoaSQL.h"
 #import "CSSQLiteDatabase.h"
-
 
 @implementation CSSQLiteDatabase
 
@@ -37,9 +37,8 @@
         sqlite3 *sqliteDatabase;
         int errorCode = sqlite3_open_v2([self.path UTF8String], &sqliteDatabase, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE, 0);
         if (errorCode != SQLITE_OK) {
-            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
-            [errorDetail setObject:[NSString stringWithFormat:@"%s", sqlite3_errmsg(sqliteDatabase)] forKey:@"errorMessage"];
-            *error = [[NSError alloc] initWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
+            NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(sqliteDatabase)];
+            *error = [NSError errorWithMessage:errorMessage andCode:500];
             return nil;
         }
         self.databaseHandle = (voidPtr)sqliteDatabase;
@@ -81,9 +80,8 @@
     else {
         errorCode = sqlite3_exec(self.databaseHandle, [sql UTF8String], callbackFunction, context, &errorMessage);
         if (errorCode != SQLITE_OK && errorCode != SQLITE_ABORT) {
-            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
-            [errorDetail setObject:[NSString stringWithFormat:@"%s", errorMessage] forKey:@"errorMessage"];
-            *error = [[NSError alloc] initWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
+            NSString *errorMessage = [NSString stringWithFormat:@"%s", errorMessage];
+            *error = [NSError errorWithMessage:errorMessage andCode:500];
         }
         else {
             affectedRows = sqlite3_changes(self.databaseHandle);

@@ -12,3 +12,4 @@
 #import "CSQLPreparedStatement.h"
 #import "CSQLBindValue.h"
 #import "NSMutableArray+CocoaSQL.h"
+#import "NSError+CocoaSQL.h"

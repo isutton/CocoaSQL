@@ -6,7 +6,7 @@
 //  Copyright 2010 CocoaSQL.org. All rights reserved.
 //
 
-#import "CSQLPreparedStatement.h"
+#import "CocoaSQL.h"
 
 @implementation CSQLPreparedStatement
 
@@ -31,9 +31,7 @@
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase error:(NSError **)error
 {
     if (error) {
-        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-        [errorDetail setObject:@"Driver needs to implement this message." forKey:@"errorMessage"];
-        *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:500 userInfo:errorDetail];
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
     }
     return nil;
 }
@@ -46,9 +44,7 @@
 - (BOOL)setSQL:(NSString *)sql error:(NSError **)error
 {
     if (error) {
-        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-        [errorDetail setObject:@"Driver needs to implement this message." forKey:@"errorMessage"];
-        *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:500 userInfo:errorDetail];
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
     }
     return NO;
 }

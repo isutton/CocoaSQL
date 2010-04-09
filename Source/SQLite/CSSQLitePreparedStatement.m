@@ -31,17 +31,19 @@
 {
     if (self = [super init]) {
         self.database = aDatabase;
-        sqlite3_stmt *preparedStatement_;
-        int errorCode = sqlite3_prepare_v2(aDatabase.databaseHandle, [sql UTF8String], [sql length], &preparedStatement_, NULL);
+        sqlite3_stmt *statement_;
+        int errorCode = sqlite3_prepare_v2(aDatabase.databaseHandle, [sql UTF8String], [sql length], &statement_, NULL);
         if (errorCode != SQLITE_OK) {
-            NSMutableDictionary *errorDetail;
-            errorDetail = [NSMutableDictionary dictionary];
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(aDatabase.databaseHandle)];
-            [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-            *error = [NSError errorWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
+            if (error) {
+                NSMutableDictionary *errorDetail;
+                errorDetail = [NSMutableDictionary dictionary];
+                NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(aDatabase.databaseHandle)];
+                [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+                *error = [NSError errorWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
+            }
             return nil;
         }
-        self.statement = preparedStatement_;
+        self.statement = statement_;
     }
     return self;
 }
@@ -120,10 +122,8 @@
             
             if (!success) {
                 CSSQLiteDatabase *database_ = (CSSQLiteDatabase *)self.database;
-                NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
                 NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(database_.databaseHandle)];
-                [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-                *error = [NSError errorWithDomain:@"CSQLite" code:101 userInfo:errorDetail];
+                *error = [NSError errorWithMessage:errorMessage andCode:500];
                 return NO;
             }
         }
@@ -132,7 +132,9 @@
     int errorCode = sqlite3_step(self.statement);
     
     if (errorCode == SQLITE_ERROR) {
-        *error = [NSError errorWithDomain:@"CSSQLite" code:102 userInfo:nil];
+        if (error) {
+            *error = [NSError errorWithMessage:@"An error happened." andCode:500];
+        }
         return NO;
     }
 

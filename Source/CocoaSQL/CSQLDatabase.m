@@ -6,7 +6,7 @@
 //  Copyright 2010 CocoaSQL.org. All rights reserved.
 //
 
-#import "CSQLDatabase.h"
+#import "CocoaSQL.h"
 
 @implementation CSQLDatabase
 
@@ -19,10 +19,7 @@
     
     if (!class) {
         if (error) {
-            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
-            NSString *errorMessage = [NSString stringWithFormat:@"Couldn't find class %@.", aClassName];
-            [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-            *error = [NSError errorWithDomain:@"CSQLDatabase" code:500 userInfo:errorDetail];
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"Couldn't find class %@.", aClassName] andCode:500];
         }
         return nil;
     }
