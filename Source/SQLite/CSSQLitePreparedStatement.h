@@ -21,7 +21,6 @@
     voidPtr statement;
 }
 
-@property (readwrite,retain) CSQLDatabase *database;
 @property (readwrite,assign) voidPtr statement;
 
 /**

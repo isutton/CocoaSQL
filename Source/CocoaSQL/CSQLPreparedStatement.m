@@ -10,8 +10,8 @@
 
 @implementation CSQLPreparedStatement
 
-@synthesize database;
 @synthesize canFetch;
+@synthesize database;
 
 + (id)preparedStatementWithDatabase:(id)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {

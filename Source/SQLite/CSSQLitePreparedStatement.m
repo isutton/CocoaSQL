@@ -25,7 +25,6 @@
 
 @implementation CSSQLitePreparedStatement
 
-@synthesize database;
 @synthesize statement;
 
 - (id)initWithDatabase:(CSSQLiteDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error

@@ -68,7 +68,6 @@ static id translate(MYSQL_BIND *bind)
 @implementation CSMySQLPreparedStatement
 
 @synthesize statement;
-@synthesize database;
 
 - (id)initWithDatabase:(CSMySQLDatabase *)aDatabase error:(NSError **)error
 {
@@ -94,8 +93,8 @@ static id translate(MYSQL_BIND *bind)
 
 - (id)initWithDatabase:(CSMySQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
-    if (self = [self initWithDatabase:aDatabase]) {
-        if (![self setSql:sql error:error]) {
+    if ([self initWithDatabase:aDatabase]) {
+        if (![self setSQL:sql error:error]) {
             mysql_stmt_close(statement);
             statement = nil;
             // XXX - I'm unsure if returning nil here is safe, 
@@ -104,8 +103,10 @@ static id translate(MYSQL_BIND *bind)
             //       the alloc'd pointer will be leaked
             return nil;
         }
+        return self;
     }
-    return self;
+    // same here
+    return nil;
 }
 
 - (BOOL)setSQL:(NSString *)sql error:(NSError **)error
