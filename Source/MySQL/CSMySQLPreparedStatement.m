@@ -40,16 +40,12 @@ static id translate(MYSQL_BIND *bind)
             /* TODO - convert mysql type decimal */
              break;
         case MYSQL_TYPE_TIMESTAMP:
-            break;
         case MYSQL_TYPE_DATETIME:
-            break;
         case MYSQL_TYPE_DATE:
-            break;
         case MYSQL_TYPE_TIME:
-            break;
         case MYSQL_TYPE_YEAR:
-            break;
         case MYSQL_TYPE_NEWDATE:
+            value = [NSDate dateWithString:*((char *)bind->buffer)];
             break;
         // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
         case MYSQL_TYPE_VARCHAR:
@@ -271,8 +267,62 @@ static id translate(MYSQL_BIND *bind)
         }
 #else
         resultBindings[i].buffer_type = fields[i].type;
-        resultBindings[i].buffer = calloc(1, fields[i].db_length);
-        resultBindings[i].buffer_length = fields[i].db_length;
+        switch(fields[i].type) {
+            case MYSQL_TYPE_FLOAT:
+                resultBindings[i].buffer = calloc(1, sizeof(float));
+                break;
+            case MYSQL_TYPE_SHORT:
+                resultBindings[i].buffer = calloc(1, sizeof(short));
+                break;
+            case MYSQL_TYPE_LONG:
+                resultBindings[i].buffer = calloc(1, sizeof(long));
+                break;
+            case MYSQL_TYPE_INT24:
+                resultBindings[i].buffer = calloc(1, sizeof(long long));
+                break;
+            case MYSQL_TYPE_LONGLONG:
+                resultBindings[i].buffer = calloc(1, sizeof(long long));
+                break;
+            case MYSQL_TYPE_DOUBLE:
+                resultBindings[i].buffer = calloc(1, sizeof(double));
+            case MYSQL_TYPE_TINY:
+                resultBindings[i].buffer = calloc(1, sizeof(char));
+                break;
+            case MYSQL_TYPE_DECIMAL:
+                /* TODO - convert mysql type decimal */
+                break;
+                // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
+            case MYSQL_TYPE_VARCHAR:
+            case MYSQL_TYPE_VAR_STRING:
+            case MYSQL_TYPE_STRING:
+                resultBindings[i].buffer = calloc(1, 1024); // perhaps oversized (isn't 256 max_string_size?)
+                resultBindings[i].buffer_length = 1024;
+                break;
+            case MYSQL_TYPE_BIT:
+                break;
+            case MYSQL_TYPE_TINY_BLOB:
+            case MYSQL_TYPE_BLOB:
+            case MYSQL_TYPE_LONG_BLOB:
+                resultBindings[i].buffer = calloc(1, MAX_BLOB_WIDTH);
+                resultBindings[i].buffer_length = MAX_BLOB_WIDTH;
+                break;
+                
+            case MYSQL_TYPE_TIMESTAMP:
+            case MYSQL_TYPE_DATETIME:
+            case MYSQL_TYPE_DATE:
+            case MYSQL_TYPE_TIME:
+            case MYSQL_TYPE_NEWDATE:
+#if 0
+                resultBindings[i].buffer = calloc(1, sizeof(MYSQL_TIME));
+                resultBindings[i].buffer_length = sizeof(MYSQL_TIME);
+#else
+                // handle dates as strings (it's too easier since we have to convert them to NSDate anyway)
+                resultBindings[i].buffer_type = MYSQL_TYPE_STRING;
+                resultBindings[i].buffer = calloc(1, 23);
+                resultBindings[i].buffer_length = 23;
+#endif
+                break;
+        }
 #endif
     }
     if (mysql_stmt_bind_result(statement, resultBindings) != 0) {
