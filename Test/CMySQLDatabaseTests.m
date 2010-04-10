@@ -72,4 +72,38 @@
     [database executeSQL:@"DROP TABLE mysql_test" error:&error];
 }
 
+- (void)testMysqlNoCSQLBindValue
+{
+    NSError *error = nil;
+    CSQLDatabase *database = [self createDatabase:&error];
+    [self createTable:database];
+    
+    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d) VALUES (?, ?, now())" error:&error];
+    
+    for (int i = 1; i <= 100 && !error; i++) {
+        NSArray *values = [NSArray arrayWithObjects:
+                           [NSNumber numberWithInt:i],
+                           [NSString stringWithFormat:@"v%d", i],
+                           nil
+                           ];
+        [statement executeWithValues:values error:&error];
+    }
+    
+    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM mysql_test WHERE v like ?" error:&error];
+    NSArray *params = [NSArray arrayWithObject:@"v%"];
+    [selectStatement executeWithValues:params error:&error];
+    NSDictionary *resultDictionary;
+    int cnt = 1;
+    while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
+        NSNumber *i = [NSNumber numberWithInt:cnt];
+        NSString *v = [NSString stringWithFormat:@"v%d", cnt];
+        STAssertEquals((int)[resultDictionary count], 3, @"fetchRowAsArrayWithSQL : resultCount");
+        STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
+        STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
+        STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
+        //NSLog(@"Row: %@\n", resultDictionary);
+        cnt++;
+    }
+    [database executeSQL:@"DROP TABLE mysql_test" error:&error];
+}
 @end
