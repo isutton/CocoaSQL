@@ -11,6 +11,9 @@
 #import "CSQLBindValue.h"
 #include <mysql_time.h>
 
+#pragma mark -
+#pragma mark Internal Binds storage management
+
 static id translate(MYSQL_BIND *bind)
 {
     id value = nil;
@@ -81,17 +84,10 @@ static id translate(MYSQL_BIND *bind)
     return value;
 }
 
-@implementation CSMySQLPreparedStatement
-
-@synthesize statement;
-
-#pragma mark -
-#pragma mark Internal Binds storage management
-- (MYSQL_BIND *)createResultBindsForFields:(MYSQL_FIELD *)fields Count:(int)columnCount
+static MYSQL_BIND *createResultBinds(MYSQL_FIELD *fields, int numFields)
 {
-    numFields = columnCount;
-    resultBinds = calloc(columnCount, sizeof(MYSQL_BIND));
-    for (int i = 0; i < columnCount; i++) {
+    MYSQL_BIND *resultBinds = calloc(numFields, sizeof(MYSQL_BIND));
+    for (int i = 0; i < numFields; i++) {
 #if 0
         // everything apart blobs will be stringified
         if (fields[i].type == MYSQL_TYPE_BLOB || fields[i].type == MYSQL_TYPE_LONG_BLOB
@@ -172,16 +168,19 @@ static id translate(MYSQL_BIND *bind)
 #endif
     }
     return resultBinds;
+    
 }
 
-- (void)destroyResultBinds
+static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 {
     for (int i = 0; i < numFields; i++)
         free(resultBinds[i].buffer);
     free(resultBinds);
-    resultBinds = nil;
-    numFields = 0;
 }
+
+@implementation CSMySQLPreparedStatement
+
+@synthesize statement;
 
 #pragma mark -
 #pragma mark Initializers
@@ -250,7 +249,7 @@ static id translate(MYSQL_BIND *bind)
     if (self.statement)
         mysql_stmt_close(statement);
     if (resultBinds)
-        [self destroyResultBinds];
+        destroyResultBinds(resultBinds, numFields);
     [super dealloc];
 }
 
@@ -375,11 +374,13 @@ static id translate(MYSQL_BIND *bind)
         return nil;
     }
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
-    if (!resultBinds)
-        resultBinds = [self createResultBindsForFields:fields Count:mysql_stmt_field_count(statement)];
+    if (!resultBinds) {
+        numFields = mysql_stmt_field_count(statement);
+        resultBinds = createResultBinds(fields, numFields);
+    }
     [self fetchRowWithBinds:resultBinds error:error];
     if (!canFetch) {
-        [self destroyResultBinds];
+        destroyResultBinds(resultBinds, numFields);
         resultBinds = nil;
         numFields = 0;
         return nil;
@@ -403,16 +404,17 @@ static id translate(MYSQL_BIND *bind)
     
     numFields = mysql_stmt_field_count(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
-    if (!resultBinds)
-        resultBinds = [self createResultBindsForFields:fields Count:mysql_stmt_field_count(statement)];
-
+    if (!resultBinds) {
+        numFields = mysql_stmt_field_count(statement);
+        resultBinds = createResultBinds(fields, numFields);
+    }
     [self fetchRowWithBinds:resultBinds error:error];
     if (canFetch) {
         row = [NSMutableDictionary dictionaryWithCapacity:numFields];
         for (i = 0; i < numFields; i++) 
             [row setObject:translate(&resultBinds[i]) forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
     } else {
-        [self destroyResultBinds];
+        destroyResultBinds(resultBinds, numFields);
         resultBinds = nil;
         numFields = 0;
         return nil;
