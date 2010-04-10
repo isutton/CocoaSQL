@@ -62,6 +62,22 @@
     return nil;
 }
 
++ (id)bindValueWithLongLong:(long long)aValue
+{
+    CSQLBindValue *value = [[CSQLBindValue alloc] initWithLongLong:aValue];
+    return [value autorelease];
+}
+
+- (id)initWithLongLong:(long long)aValue
+{
+    if ([super init]) {
+        value = [[NSNumber numberWithLongLong:aValue] retain];
+        type = CSQLInteger;
+        return self;
+    }
+    
+    return nil;
+}
 
 + (id)bindValueWithDouble:(double)aValue
 {
@@ -125,6 +141,14 @@
 {
     if (type == CSQLInteger)
         return [value longValue];
+    /* TODO - output a warning message */
+    return 0;
+}
+
+- (long long)longLongValue
+{
+    if (type == CSQLInteger)
+        return [value longLongValue];
     /* TODO - output a warning message */
     return 0;
 }

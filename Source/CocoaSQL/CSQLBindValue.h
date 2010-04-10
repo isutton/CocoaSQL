@@ -42,12 +42,16 @@ typedef enum {
  */
 
 + (id)bindValueWithInt:(int)aValue;
++ (id)bindValueWithLong:(long)aValue;
++ (id)bindValueWithLongLong:(long long)aValue;
 + (id)bindValueWithDouble:(double)aValue;
 + (id)bindValueWithString:(NSString *)aValue;
 + (id)bindValueWithData:(NSData *)aValue;
 + (id)bindValueWithNull;
 
 - (id)initWithInt:(int)aValue;
+- (id)initWithLong:(long)aValue;
+- (id)initWithLongLong:(long long)aValue;
 - (id)initWithDouble:(double)aValue;
 - (id)initWithString:(NSString *)aValue;
 - (id)initWithData:(NSData *)aValue;
@@ -57,6 +61,7 @@ typedef enum {
 
 - (int)intValue;
 - (long)longValue;
+- (long long)longLongValue;
 - (double)doubleValue;
 - (NSString *)stringValue;
 - (NSData *)dataValue;
