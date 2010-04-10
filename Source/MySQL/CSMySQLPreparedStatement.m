@@ -9,7 +9,6 @@
 #import "CSMySQLPreparedStatement.h"
 #import "CSMySQLDatabase.h"
 #import "CSQLBindValue.h"
-#include <mysql_time.h>
 
 #pragma mark -
 #pragma mark Internal Binds storage management
@@ -229,6 +228,14 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 
 - (BOOL)setSQL:(NSString *)sql error:(NSError **)error
 {
+    // ensure resetting the old statement if the caller 
+    // is reusing an our instance to execute another query
+    mysql_stmt_reset(statement);
+    if (resultBinds) {
+        destroyResultBinds(resultBinds, numFields);
+        resultBinds = nil;
+        numFields = 0;
+    }
     int errorCode = mysql_stmt_prepare(statement, [sql UTF8String], [sql length]);
     if (errorCode != 0) {
         if (error) {
