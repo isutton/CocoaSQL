@@ -271,9 +271,11 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
         MYSQL_BIND *params = calloc(bindParameterCount, sizeof(MYSQL_BIND));
 
         if (!values || [values count] < bindParameterCount) {
-            NSMutableDictionary *errorDetail;
-            errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Expected %i value(s), %i provided", bindParameterCount, [values count]], @"errorMessage", nil];
-            *error = [NSError errorWithDomain:@"CSMySQL" code:100 userInfo:errorDetail];
+            if (error) {
+                NSMutableDictionary *errorDetail;
+                errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Expected %i value(s), %i provided", bindParameterCount, [values count]], @"errorMessage", nil];
+                *error = [NSError errorWithDomain:@"CSMySQL" code:100 userInfo:errorDetail];
+            }
             return NO;
         }
         
@@ -281,39 +283,88 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
         int  lStorageCount = 0;
         double *dStorage = calloc(bindParameterCount, sizeof(double));
         int  dStorageCount = 0;
+        MYSQL_TIME *tStorage = calloc(bindParameterCount, sizeof(MYSQL_TIME));
+        int  tStorageCount = 0;
         BOOL success = NO;
 
         for (int i = 0; i < bindParameterCount; i++) {
-            CSQLBindValue *value = [values objectAtIndex:i];
-            switch ([value type]) {
-                case CSQLInteger:
-                    lStorage[lStorageCount] = [value longValue];
-                    params[i].buffer_type = MYSQL_TYPE_LONG;
-                    params[i].buffer = &lStorage[lStorageCount];
-                    params[i].param_number = i;
-                    lStorageCount++;
-                    break;
-                case CSQLDouble:
-                    dStorage[lStorageCount] = [value doubleValue];
-                    params[i].buffer_type = MYSQL_TYPE_DOUBLE;
-                    params[i].buffer = &dStorage[dStorageCount];
-                    dStorageCount++;
-                    break;
-                case CSQLText:
-                    params[i].buffer_type = MYSQL_TYPE_STRING;
-                    params[i].buffer = (void *)[[value stringValue] UTF8String]; // XXX
-                    params[i].buffer_length = [[value stringValue] length];  // XXX
-                    break;
-                case CSQLBlob:
-                    params[i].buffer_type = MYSQL_TYPE_BLOB;
-                    params[i].buffer = (void *)[[value dataValue] bytes];
-                    params[i].buffer_length = [[value dataValue] length];
-                    break;
-                case CSQLNull:
-                    params[i].buffer_type = MYSQL_TYPE_NULL;
-                    break;
-                default:
-                    break;
+            id encapsulatedValue = [values objectAtIndex:i];
+            Class valueClass = [encapsulatedValue class];
+            if ([valueClass isSubclassOfClass:[CSQLBindValue class]]) {
+                CSQLBindValue *value = (CSQLBindValue *)encapsulatedValue;
+                switch ([value type]) {
+                    case CSQLInteger:
+                        lStorage[lStorageCount] = [value longValue];
+                        params[i].buffer_type = MYSQL_TYPE_LONG;
+                        params[i].buffer = &lStorage[lStorageCount];
+                        params[i].param_number = i;
+                        lStorageCount++;
+                        break;
+                    case CSQLDouble:
+                        dStorage[lStorageCount] = [value doubleValue];
+                        params[i].buffer_type = MYSQL_TYPE_DOUBLE;
+                        params[i].buffer = &dStorage[dStorageCount];
+                        dStorageCount++;
+                        break;
+                    case CSQLText:
+                        params[i].buffer_type = MYSQL_TYPE_STRING;
+                        params[i].buffer = (void *)[[value stringValue] UTF8String]; // XXX
+                        params[i].buffer_length = [[value stringValue] length];  // XXX
+                        break;
+                    case CSQLBlob:
+                        params[i].buffer_type = MYSQL_TYPE_BLOB;
+                        params[i].buffer = (void *)[[value dataValue] bytes];
+                        params[i].buffer_length = [[value dataValue] length];
+                        break;
+                    case CSQLNull:
+                        params[i].buffer_type = MYSQL_TYPE_NULL;
+                        break;
+                    default:
+                        break;
+                }
+            } else if ([valueClass isSubclassOfClass:[NSNumber class]]) {
+                NSNumber *value = (NSNumber *)encapsulatedValue;
+                // get number as double so we will always have enough storage
+                dStorage[lStorageCount] = [value doubleValue];
+                params[i].buffer_type = MYSQL_TYPE_DOUBLE;
+                params[i].buffer = &dStorage[dStorageCount];
+                params[i].param_number = i;
+                dStorageCount++;
+            } else if ([valueClass isSubclassOfClass:[NSString class]]) {
+                NSString *value = (NSString *)encapsulatedValue;
+                params[i].buffer_type = MYSQL_TYPE_STRING;
+                params[i].buffer = (void *)[value UTF8String]; // XXX
+                params[i].buffer_length = [value length];  // XXX
+            } else if ([valueClass isSubclassOfClass:[NSDate class]]) {
+                NSDate *value = (NSDate *)encapsulatedValue;
+                params[i].buffer_type = MYSQL_TYPE_DATETIME;
+                time_t epoch = [value timeIntervalSince1970];
+                struct tm *time = localtime(&epoch);
+                tStorage[tStorageCount].year = time->tm_year+1900;
+                tStorage[tStorageCount].month = time->tm_mon+1;
+                tStorage[tStorageCount].day = time->tm_mday;
+                tStorage[tStorageCount].hour = time->tm_hour;
+                tStorage[tStorageCount].minute = time->tm_min;
+                tStorage[tStorageCount].second = time->tm_sec;
+                params[i].buffer = &tStorage[tStorageCount];
+                params[i].param_number = i;
+                tStorageCount++;
+            } else if ([valueClass isSubclassOfClass:[NSData class]]) {
+                NSData *value = (NSData *)encapsulatedValue;
+                params[i].buffer_type = MYSQL_TYPE_BLOB;
+                params[i].buffer = (void *)[value bytes];
+                params[i].buffer_length = [value length];
+            } else { // UNKNOWN DATATYPE
+                if (error) {
+                    NSMutableDictionary *errorDetail;
+                    errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Unknown datatatype %@", [valueClass className]], @"errorMessage", nil];
+                    *error = [NSError errorWithDomain:@"CSMySQL" code:666 userInfo:errorDetail];
+                }
+                free(lStorage);
+                free(dStorage);
+                free(tStorage);
+                free(params);                
+                return NO;
             }
         }
 
@@ -325,6 +376,7 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
         }
         free(lStorage);
         free(dStorage);
+        free(tStorage);
         free(params);
         if (!success) {
             if (error) {

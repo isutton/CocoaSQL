@@ -66,7 +66,7 @@
         STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
         STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
         STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
-        //NSLog(@"Date is: %@\n", [resultDictionary objectForKey:@"d"]);
+        //NSLog(@"Row: %@\n", resultDictionary);
         cnt++;
     }
     [database executeSQL:@"DROP TABLE mysql_test" error:&error];
