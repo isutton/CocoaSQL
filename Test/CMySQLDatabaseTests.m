@@ -41,10 +41,10 @@
 - (void)testMysqlDatatypes
 {
     NSError *error = nil;
-    id database = [self createDatabase:&error];
+    CSQLDatabase *database = [self createDatabase:&error];
     [self createTable:database];
     
-    id statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d) VALUES (?, ?, now())" error:&error];
+    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d) VALUES (?, ?, now())" error:&error];
     
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
     for (int i = 1; i <= 100 && !error; i++) {
@@ -54,9 +54,8 @@
         [values removeAllObjects];
     }
     
-    NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
-    id selectStatement = [database prepareStatement:@"SELECT * FROM mysql_test WHERE v like ?" error:&error];
-    [params bindStringValue:@"v%"];
+    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM mysql_test WHERE v like ?" error:&error];
+    NSArray *params = [NSArray arrayWithObject:[CSQLBindValue bindValueWithString:@"v%"]];
     [selectStatement executeWithValues:params error:&error];
     NSDictionary *resultDictionary;
     int cnt = 1;

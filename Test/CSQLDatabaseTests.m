@@ -135,10 +135,10 @@
 - (void)testPreparedStatement
 {
     NSError *error = nil;
-    id database = [self createDatabase:&error];
+    CSQLDatabase *database = [self createDatabase:&error];
     [self createTable:database];
     
-    id statement = [database prepareStatement:@"INSERT INTO t (i, v) VALUES (?, ?)" error:&error];
+    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO t (i, v) VALUES (?, ?)" error:&error];
  
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
     for (int i = 1; i <= 100 && !error; i++) {
@@ -149,7 +149,7 @@
     }
    
     NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
-    id selectStatement = [database prepareStatement:@"SELECT * FROM t WHERE v like ?" error:&error];
+    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM t WHERE v like ?" error:&error];
     [params bindStringValue:@"v%"];
     [selectStatement executeWithValues:params error:&error];
     NSDictionary *resultDictionary;
