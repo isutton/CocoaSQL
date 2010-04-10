@@ -37,8 +37,8 @@ Additionally, provides the following concrete classes:
 	NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
 	[values bindIntValue:1];
 
-        // or simply by creating/populating an NSArray (or a normal NSMutableArray) with CSQLBindValues
-        NSArray *values = [NSArray arrayWithObject:[CSQLBindValue bindValueWithInt:1]];
+	// or simply by creating/populating an NSArray (or a normal NSMutableArray) with CSQLBindValues
+	NSArray *values = [NSArray arrayWithObject:[CSQLBindValue bindValueWithInt:1]];
 
 	// Executes the prepared statement.
 	BOOL success = [statement executeWithValues:values error:&error];
