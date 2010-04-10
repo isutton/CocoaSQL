@@ -21,6 +21,9 @@
 + (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;
 
+- (NSInteger)affectedRows;
+- (voidPtr)lastInsertID;
+
 @end
 
 #pragma mark -
