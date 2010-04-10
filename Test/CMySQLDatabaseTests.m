@@ -78,15 +78,16 @@
     CSQLDatabase *database = [self createDatabase:&error];
     [self createTable:database];
     
-    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d) VALUES (?, ?, now())" error:&error];
+    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d) VALUES (?, ?, now())" 
+                                                            error:&error];
     
     for (int i = 1; i <= 100 && !error; i++) {
-        NSArray *values = [NSArray arrayWithObjects:
-                           [NSNumber numberWithInt:i],
-                           [NSString stringWithFormat:@"v%d", i],
-                           nil
-                           ];
-        [statement executeWithValues:values error:&error];
+        [statement executeWithValues:[NSArray arrayWithObjects:
+                                      [NSNumber numberWithInt:i],
+                                      [NSString stringWithFormat:@"v%d", i],
+                                      nil
+                                      ]
+                               error:&error];
     }
     
     CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM mysql_test WHERE v like ?" error:&error];

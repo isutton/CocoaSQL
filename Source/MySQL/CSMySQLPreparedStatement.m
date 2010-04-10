@@ -335,7 +335,9 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
                     default:
                         break;
                 }
-            } else if ([valueClass isSubclassOfClass:[NSNumber class]]) {
+            } 
+            else if ([valueClass isSubclassOfClass:[NSNumber class]])
+            {
                 NSNumber *value = (NSNumber *)encapsulatedValue;
                 // get number as double so we will always have enough storage
                 dStorage[lStorageCount] = [value doubleValue];
@@ -343,12 +345,16 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
                 params[i].buffer = &dStorage[dStorageCount];
                 params[i].param_number = i;
                 dStorageCount++;
-            } else if ([valueClass isSubclassOfClass:[NSString class]]) {
+            } 
+            else if ([valueClass isSubclassOfClass:[NSString class]])
+            {
                 NSString *value = (NSString *)encapsulatedValue;
                 params[i].buffer_type = MYSQL_TYPE_STRING;
                 params[i].buffer = (void *)[value UTF8String]; // XXX
                 params[i].buffer_length = [value length];  // XXX
-            } else if ([valueClass isSubclassOfClass:[NSDate class]]) {
+            } 
+            else if ([valueClass isSubclassOfClass:[NSDate class]])
+            {
                 NSDate *value = (NSDate *)encapsulatedValue;
                 params[i].buffer_type = MYSQL_TYPE_DATETIME;
                 time_t epoch = [value timeIntervalSince1970];
@@ -362,12 +368,16 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
                 params[i].buffer = &tStorage[tStorageCount];
                 params[i].param_number = i;
                 tStorageCount++;
-            } else if ([valueClass isSubclassOfClass:[NSData class]]) {
+            }
+            else if ([valueClass isSubclassOfClass:[NSData class]])
+            {
                 NSData *value = (NSData *)encapsulatedValue;
                 params[i].buffer_type = MYSQL_TYPE_BLOB;
                 params[i].buffer = (void *)[value bytes];
                 params[i].buffer_length = [value length];
-            } else { // UNKNOWN DATATYPE
+            }
+            else // UNKNOWN DATATYPE
+            {
                 if (error) {
                     NSMutableDictionary *errorDetail;
                     errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Unknown datatatype %@", [valueClass className]], @"errorMessage", nil];
