@@ -120,20 +120,23 @@
         
         affectedRows = mysql_affected_rows((MYSQL *)databaseHandle);
 
-        res = mysql_use_result((MYSQL *)databaseHandle);
-        if (res && callbackFunction) {
-            MYSQL_FIELD *fields = mysql_fetch_fields(res);
-            int nFields = mysql_num_fields(res);
-            char **fieldNames = malloc(sizeof(char *)*nFields);
-            while (row = mysql_fetch_row(res)) {
-                //unsigned long *fLengths = mysql_fetch_lengths(res);
-                // create a char ** which points to field names 
-                for (int i = 0; i < (int)nFields; i++)
-                    fieldNames[i] = fields[i].name; // (don't copy them... it's a waste of time)
+        if (callbackFunction) {
+            res = mysql_use_result((MYSQL *)databaseHandle);
+            if (res) {
+                MYSQL_FIELD *fields = mysql_fetch_fields(res);
+                int nFields = mysql_num_fields(res);
+                char **fieldNames = malloc(sizeof(char *)*nFields);
+                while (row = mysql_fetch_row(res)) {
+                    //unsigned long *fLengths = mysql_fetch_lengths(res);
+                    // create a char ** which points to field names 
+                    for (int i = 0; i < (int)nFields; i++)
+                        fieldNames[i] = fields[i].name; // (don't copy them... it's a waste of time)
 
-                callbackFunction(context, nFields, row, fieldNames);
+                    callbackFunction(context, nFields, row, fieldNames);
+                }
+                free(fieldNames);
+                mysql_free_result(res);
             }
-            free(fieldNames);
         }
     }
     return affectedRows;

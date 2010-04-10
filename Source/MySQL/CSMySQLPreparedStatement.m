@@ -442,9 +442,9 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 
 - (NSArray *)fetchRowAsArray:(NSError **)error
 {
-    if (canFetch == NO) {
+    if (canFetch == NO)
         return nil;
-    }
+
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
     if (!resultBinds) {
         numFields = mysql_stmt_field_count(statement);
@@ -459,9 +459,9 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
         return nil;
     }
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:numFields];
-    for (int i = 0; i < numFields; i++) {
+    for (int i = 0; i < numFields; i++) 
         [row addObject:translate(&resultBinds[i])];
-    }
+    
     return row;
 }
 
