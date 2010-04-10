@@ -54,4 +54,14 @@
     return [self setSQL:sql error:nil];
 }
 
+- (BOOL)isActive
+{
+    return [self isActive:nil];
+}
+
+- (BOOL)finish
+{
+    return [self finish:nil];
+}
+
 @end

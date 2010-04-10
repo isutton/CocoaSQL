@@ -8,6 +8,10 @@
 
 @protocol CSQLPreparedStatement
 
+- (BOOL)isActive;
+
+- (BOOL)finish;
+
 #pragma mark -
 #pragma mark Execute messages
 
@@ -129,5 +133,9 @@
  
  */
 - (BOOL)bindNullValueForColumn:(int)column;
+
+- (BOOL)isActive:(NSError **)error;
+
+- (BOOL)finish:(NSError **)error;
 
 @end

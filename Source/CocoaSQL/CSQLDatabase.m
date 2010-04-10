@@ -54,6 +54,16 @@
     return [self databaseWithDriver:aDriver options:options error:error];
 }
 
+- (BOOL)isActive
+{
+    return [self isActive:nil];
+}
+
+- (BOOL)disconnect
+{
+    return [self disconnect:nil];
+}
+
 @end
 
 

@@ -44,6 +44,10 @@
  */
 + (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
 
+- (BOOL)disconnect;
+
+- (BOOL)isActive;
+
 @optional
 
 /**
@@ -217,4 +221,7 @@
  */
 - (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error;
 
+- (BOOL)isActive:(NSError **)error;
+
+- (BOOL)disconnect:(NSError **)error;
 @end
