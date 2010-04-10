@@ -16,9 +16,10 @@
 static id translate(MYSQL_BIND *bind)
 {
     id value = nil;
-    MYSQL_TIME *dt = NULL;
+    MYSQL_TIME *dateTime = NULL;
     time_t time = 0;
-    struct tm ut;
+    struct tm unixTimeStorage;
+    double decimalStorage;
 
     // XXX - actual implementation uses only strings and blobs
     switch(bind->buffer_type)
@@ -44,8 +45,10 @@ static id translate(MYSQL_BIND *bind)
             value = [NSNumber numberWithChar:*((char *)bind->buffer)];
             break;
         case MYSQL_TYPE_DECIMAL:
-            /* TODO - convert mysql type decimal */
-             break;
+            // XXX - decimals are actually bound to either float or double
+            // so we will never hit this case
+            break;
+        // all mysql date/time datatypes are mapped to the MYSQL_TIME structure
         case MYSQL_TYPE_TIMESTAMP:
         case MYSQL_TYPE_DATETIME:
         case MYSQL_TYPE_DATE:
@@ -54,15 +57,15 @@ static id translate(MYSQL_BIND *bind)
         case MYSQL_TYPE_NEWDATE:
             // convert the MYSQL_TIME structure to epoch
             // so that we can than build an NSDate object on top of it
-            dt = (MYSQL_TIME *)bind->buffer;
-            memset(&ut, 0, sizeof(ut));
-            ut.tm_year = dt->year-1900;
-            ut.tm_mon = dt->month-1;
-            ut.tm_mday = dt->day;
-            ut.tm_hour = dt->hour;
-            ut.tm_min = dt->minute;
-            ut.tm_sec = dt->second;
-            time = mktime(&ut);
+            dateTime = (MYSQL_TIME *)bind->buffer;
+            memset(&unixTimeStorage, 0, sizeof(unixTimeStorage));
+            unixTimeStorage.tm_year = dateTime->year-1900;
+            unixTimeStorage.tm_mon = dateTime->month-1;
+            unixTimeStorage.tm_mday = dateTime->day;
+            unixTimeStorage.tm_hour = dateTime->hour;
+            unixTimeStorage.tm_min = dateTime->minute;
+            unixTimeStorage.tm_sec = dateTime->second;
+            time = mktime(&unixTimeStorage);
             value = [NSDate dateWithTimeIntervalSince1970:time];
             break;
         // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
