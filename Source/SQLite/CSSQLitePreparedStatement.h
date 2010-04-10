@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "CocoaSQL.h"
 #import "CSSQLiteDatabase.h"
 #import "CSQLDatabase.h"
 #import "CSQLPreparedStatement.h"
