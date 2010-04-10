@@ -18,8 +18,7 @@ static id translate(MYSQL_BIND *bind)
     id value = nil;
     MYSQL_TIME *dateTime = NULL;
     time_t time = 0;
-    struct tm unixTimeStorage;
-    double decimalStorage;
+    struct tm unixTime;
 
     // XXX - actual implementation uses only strings and blobs
     switch(bind->buffer_type)
@@ -58,14 +57,14 @@ static id translate(MYSQL_BIND *bind)
             // convert the MYSQL_TIME structure to epoch
             // so that we can than build an NSDate object on top of it
             dateTime = (MYSQL_TIME *)bind->buffer;
-            memset(&unixTimeStorage, 0, sizeof(unixTimeStorage));
-            unixTimeStorage.tm_year = dateTime->year-1900;
-            unixTimeStorage.tm_mon = dateTime->month-1;
-            unixTimeStorage.tm_mday = dateTime->day;
-            unixTimeStorage.tm_hour = dateTime->hour;
-            unixTimeStorage.tm_min = dateTime->minute;
-            unixTimeStorage.tm_sec = dateTime->second;
-            time = mktime(&unixTimeStorage);
+            memset(&unixTime, 0, sizeof(unixTime));
+            unixTime.tm_year = dateTime->year-1900;
+            unixTime.tm_mon = dateTime->month-1;
+            unixTime.tm_mday = dateTime->day;
+            unixTime.tm_hour = dateTime->hour;
+            unixTime.tm_min = dateTime->minute;
+            unixTime.tm_sec = dateTime->second;
+            time = mktime(&unixTime);
             value = [NSDate dateWithTimeIntervalSince1970:time];
             break;
         // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
@@ -282,17 +281,22 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
             return NO;
         }
         
-        // allocate memory to use as storage for bound parameters.
-        // worst case is all parameters of a certain type, so we allocate space
-        // to store enough items of each type (so bindParameterCount elements of each possible type)
-        // possible types are actually 'long long', 'double' and 'MYSQL_TIME', so we are not going 
-        // to waste that much memory. (considering also that the number of parameters will
-        // never be huge)
-        long *lStorage = calloc(bindParameterCount, sizeof(long long)); // integers will be stored in a long long
+        // allocate memory to use as binding-storage for parameters.
+        // worst case is when all parameters are of a certain type, 
+        // so we allocate space to store enough items of each type 
+        // (which means 'bindParameterCount' elements of each possible type)
+        // possible types are actually 'long long', 'double' and 'MYSQL_TIME', 
+        // so we are not going to waste that much memory. (considering also 
+        // that the number of parameters will never be so huge)
+        
+        // integers will be stored as long long [ XXX - perhaps double is a better choice? ]
+        long *lStorage = calloc(bindParameterCount, sizeof(long long));
         int  lStorageCount = 0;
-        double *dStorage = calloc(bindParameterCount, sizeof(double)); // doubles and floats will be both stored in a double
+        // doubles and floats will be both stored in a double
+        double *dStorage = calloc(bindParameterCount, sizeof(double));
         int  dStorageCount = 0;
-        MYSQL_TIME *tStorage = calloc(bindParameterCount, sizeof(MYSQL_TIME)); // all date/time types will be stored in a MYSQL_TIME
+        // all date/time types will be stored in a MYSQL_TIME
+        MYSQL_TIME *tStorage = calloc(bindParameterCount, sizeof(MYSQL_TIME));
         int  tStorageCount = 0;
         
         BOOL success = NO;
@@ -447,7 +451,8 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
         resultBinds = createResultBinds(fields, numFields);
     }
     [self fetchRowWithBinds:resultBinds error:error];
-    if (!canFetch) {
+    if (!canFetch) { // end of rows or error occurred
+        // we can release the row-storage now
         destroyResultBinds(resultBinds, numFields);
         resultBinds = nil;
         numFields = 0;
@@ -455,8 +460,6 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
     }
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:numFields];
     for (int i = 0; i < numFields; i++) {
-        // convert dates here (remember we are taking them out of mysql as strings, 
-        // since conversion to NSDate is easier)
         [row addObject:translate(&resultBinds[i])];
     }
     return row;
@@ -480,8 +483,10 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
     if (canFetch) {
         row = [NSMutableDictionary dictionaryWithCapacity:numFields];
         for (i = 0; i < numFields; i++) 
-            [row setObject:translate(&resultBinds[i]) forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
-    } else {
+            [row setObject:translate(&resultBinds[i]) 
+                    forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
+    } else { // end of rows or error occurred
+        // we can release the row-storage now
         destroyResultBinds(resultBinds, numFields);
         resultBinds = nil;
         numFields = 0;
