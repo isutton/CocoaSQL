@@ -13,10 +13,12 @@
 
 static id translate(MYSQL_BIND *bind)
 {
-    id value;
-    MYSQL_TIME *dt;
+    id value = nil;
+    int num = 0;
+    MYSQL_TIME *dt = NULL;
+    time_t time = 0;
     struct tm ut;
-    time_t time;
+
     // XXX - actual implementation uses only strings and blobs
     switch(bind->buffer_type)
     {
@@ -30,7 +32,7 @@ static id translate(MYSQL_BIND *bind)
             value = [NSNumber numberWithLong:*((long *)bind->buffer)];
             break;
         case MYSQL_TYPE_INT24:
-            value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)<<8];
+            value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
             break;
         case MYSQL_TYPE_LONGLONG:
             value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
@@ -305,7 +307,8 @@ static id translate(MYSQL_BIND *bind)
                 resultBinds[i].buffer = calloc(1, sizeof(MYSQL_TIME));
                 resultBinds[i].buffer_length = sizeof(MYSQL_TIME);
 #else
-                // handle dates as strings (it's too easier since we have to convert them to NSDate anyway)
+                // handle dates as strings (mysql will convert them for us if we provide
+                // a MYSQL_TYPE_STRING as buffer_type
                 resultBinds[i].buffer_type = MYSQL_TYPE_STRING; // override the type
                 // 23 characters for datetime strings of the type YYYY-MM-DD hh:mm:ss.xxx 
                 // (assuming that microseconds will be supported soon or later)

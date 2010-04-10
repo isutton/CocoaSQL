@@ -26,7 +26,7 @@
     NSError *error = nil;
     int affectedRows;
     
-    affectedRows = [database executeSQL:@"CREATE TABLE mysql_test (i INT, v VARCHAR(10), d DATETIME)" error:&error];
+    affectedRows = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME)" error:&error];
     
     STAssertNil(error, @"Error.");
     STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
