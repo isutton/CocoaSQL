@@ -14,7 +14,6 @@
 static id translate(MYSQL_BIND *bind)
 {
     id value = nil;
-    int num = 0;
     MYSQL_TIME *dt = NULL;
     time_t time = 0;
     struct tm ut;
@@ -32,7 +31,7 @@ static id translate(MYSQL_BIND *bind)
             value = [NSNumber numberWithLong:*((long *)bind->buffer)];
             break;
         case MYSQL_TYPE_INT24:
-            value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
+            value = [NSNumber numberWithLongLong:*((int *)bind->buffer)];
             break;
         case MYSQL_TYPE_LONGLONG:
             value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
@@ -86,9 +85,112 @@ static id translate(MYSQL_BIND *bind)
 
 @synthesize statement;
 
+#pragma mark -
+#pragma mark Internal Binds storage management
+- (MYSQL_BIND *)createResultBindsForFields:(MYSQL_FIELD *)fields Count:(int)columnCount
+{
+    numFields = columnCount;
+    resultBinds = calloc(columnCount, sizeof(MYSQL_BIND));
+    for (int i = 0; i < columnCount; i++) {
+#if 0
+        // everything apart blobs will be stringified
+        if (fields[i].type == MYSQL_TYPE_BLOB || fields[i].type == MYSQL_TYPE_LONG_BLOB
+            || fields[i].type == MYSQL_TYPE_TINY_BLOB)
+        {
+            resultBinds[i].buffer_type = MYSQL_TYPE_BLOB;
+            resultBinds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
+            resultBinds[i].buffer_length = MAX_BLOB_WIDTH;
+        } else {
+            resultBinds[i].buffer_type = MYSQL_TYPE_STRING;
+            resultBinds[i].buffer = calloc(1, 1024); // XXX 
+            resultBinds[i].buffer_length = 1024;
+        }
+#else
+        // more strict datatype mapping
+        resultBinds[i].buffer_type = fields[i].type;
+        switch(fields[i].type) {
+            case MYSQL_TYPE_FLOAT:
+                resultBinds[i].buffer = calloc(1, sizeof(float));
+                break;
+            case MYSQL_TYPE_SHORT:
+                resultBinds[i].buffer = calloc(1, sizeof(short));
+                break;
+            case MYSQL_TYPE_LONG:
+                resultBinds[i].buffer = calloc(1, sizeof(long));
+                break;
+            case MYSQL_TYPE_INT24:
+                resultBinds[i].buffer = calloc(1, sizeof(int));
+                break;
+            case MYSQL_TYPE_LONGLONG:
+                resultBinds[i].buffer = calloc(1, sizeof(long long));
+                break;
+            case MYSQL_TYPE_DOUBLE:
+                resultBinds[i].buffer = calloc(1, sizeof(double));
+            case MYSQL_TYPE_TINY:
+                resultBinds[i].buffer = calloc(1, sizeof(char));
+                break;
+            case MYSQL_TYPE_DECIMAL:
+                /* TODO - convert mysql type decimal */
+                break;
+                // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
+            case MYSQL_TYPE_VARCHAR:
+            case MYSQL_TYPE_VAR_STRING:
+            case MYSQL_TYPE_STRING:
+                resultBinds[i].buffer = calloc(1, 1024); // perhaps oversized (isn't 256 max_string_size?)
+                resultBinds[i].buffer_length = 1024;
+                break;
+            case MYSQL_TYPE_BIT:
+                resultBinds[i].buffer = calloc(1, 1);
+                break;
+            case MYSQL_TYPE_TINY_BLOB:
+            case MYSQL_TYPE_BLOB:
+            case MYSQL_TYPE_LONG_BLOB:
+                resultBinds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
+                resultBinds[i].buffer_length = MAX_BLOB_WIDTH;
+                break;
+                
+            case MYSQL_TYPE_TIMESTAMP:
+            case MYSQL_TYPE_DATETIME:
+            case MYSQL_TYPE_DATE:
+            case MYSQL_TYPE_TIME:
+            case MYSQL_TYPE_NEWDATE:
+#if 1
+                // handle datetime & friends using the MYSQL_TIME structure
+                resultBinds[i].buffer = calloc(1, sizeof(MYSQL_TIME));
+                resultBinds[i].buffer_length = sizeof(MYSQL_TIME);
+#else
+                // handle dates as strings (mysql will convert them for us if we provide
+                // a MYSQL_TYPE_STRING as buffer_type
+                resultBinds[i].buffer_type = MYSQL_TYPE_STRING; // override the type
+                // 23 characters for datetime strings of the type YYYY-MM-DD hh:mm:ss.xxx 
+                // (assuming that microseconds will be supported soon or later)
+                resultBinds[i].buffer = calloc(1, 23);
+                resultBinds[i].buffer_length = 23;
+#endif
+                break;
+        }
+#endif
+    }
+    return resultBinds;
+}
+
+- (void)destroyResultBinds
+{
+    for (int i = 0; i < numFields; i++)
+        free(resultBinds[i].buffer);
+    free(resultBinds);
+    resultBinds = nil;
+    numFields = 0;
+}
+
+#pragma mark -
+#pragma mark Initializers
+
 - (id)initWithDatabase:(CSMySQLDatabase *)aDatabase error:(NSError **)error
 {
     [super init];
+    resultBinds = nil;
+    numFields = 0;
     self.database = aDatabase;
     self.statement = mysql_stmt_init((MYSQL *)aDatabase.databaseHandle);
     if (!self.statement) {
@@ -145,9 +247,10 @@ static id translate(MYSQL_BIND *bind)
 
 - (void)dealloc
 {
-    if (self.statement) {
+    if (self.statement)
         mysql_stmt_close(statement);
-    }
+    if (resultBinds)
+        [self destroyResultBinds];
     [super dealloc];
 }
 
@@ -236,105 +339,12 @@ static id translate(MYSQL_BIND *bind)
     return [self executeWithValues:nil error:error];
 }
 
-- (MYSQL_BIND *)createResultBindsForFields:(MYSQL_FIELD *)fields Count:(int)columnCount
-{
-    MYSQL_BIND *resultBinds = calloc(columnCount, sizeof(MYSQL_BIND));
-    for (int i = 0; i < columnCount; i++) {
-#if 0
-        // everything apart blobs will be stringified
-        if (fields[i].type == MYSQL_TYPE_BLOB || fields[i].type == MYSQL_TYPE_LONG_BLOB
-            || fields[i].type == MYSQL_TYPE_TINY_BLOB)
-        {
-            resultBinds[i].buffer_type = MYSQL_TYPE_BLOB;
-            resultBinds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
-            resultBinds[i].buffer_length = MAX_BLOB_WIDTH;
-        } else {
-            resultBinds[i].buffer_type = MYSQL_TYPE_STRING;
-            resultBinds[i].buffer = calloc(1, 1024); // XXX 
-            resultBinds[i].buffer_length = 1024;
-        }
-#else
-        // more strict datatype mapping
-        resultBinds[i].buffer_type = fields[i].type;
-        switch(fields[i].type) {
-            case MYSQL_TYPE_FLOAT:
-                resultBinds[i].buffer = calloc(1, sizeof(float));
-                break;
-            case MYSQL_TYPE_SHORT:
-                resultBinds[i].buffer = calloc(1, sizeof(short));
-                break;
-            case MYSQL_TYPE_LONG:
-                resultBinds[i].buffer = calloc(1, sizeof(long));
-                break;
-            case MYSQL_TYPE_INT24:
-                resultBinds[i].buffer = calloc(1, sizeof(long long));
-                break;
-            case MYSQL_TYPE_LONGLONG:
-                resultBinds[i].buffer = calloc(1, sizeof(long long));
-                break;
-            case MYSQL_TYPE_DOUBLE:
-                resultBinds[i].buffer = calloc(1, sizeof(double));
-            case MYSQL_TYPE_TINY:
-                resultBinds[i].buffer = calloc(1, sizeof(char));
-                break;
-            case MYSQL_TYPE_DECIMAL:
-                /* TODO - convert mysql type decimal */
-                break;
-                // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
-            case MYSQL_TYPE_VARCHAR:
-            case MYSQL_TYPE_VAR_STRING:
-            case MYSQL_TYPE_STRING:
-                resultBinds[i].buffer = calloc(1, 1024); // perhaps oversized (isn't 256 max_string_size?)
-                resultBinds[i].buffer_length = 1024;
-                break;
-            case MYSQL_TYPE_BIT:
-                resultBinds[i].buffer = calloc(1, 1);
-                break;
-            case MYSQL_TYPE_TINY_BLOB:
-            case MYSQL_TYPE_BLOB:
-            case MYSQL_TYPE_LONG_BLOB:
-                resultBinds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
-                resultBinds[i].buffer_length = MAX_BLOB_WIDTH;
-                break;
-                
-            case MYSQL_TYPE_TIMESTAMP:
-            case MYSQL_TYPE_DATETIME:
-            case MYSQL_TYPE_DATE:
-            case MYSQL_TYPE_TIME:
-            case MYSQL_TYPE_NEWDATE:
-#if 1
-                // handle datetime & friends using the MYSQL_TIME structure
-                resultBinds[i].buffer = calloc(1, sizeof(MYSQL_TIME));
-                resultBinds[i].buffer_length = sizeof(MYSQL_TIME);
-#else
-                // handle dates as strings (mysql will convert them for us if we provide
-                // a MYSQL_TYPE_STRING as buffer_type
-                resultBinds[i].buffer_type = MYSQL_TYPE_STRING; // override the type
-                // 23 characters for datetime strings of the type YYYY-MM-DD hh:mm:ss.xxx 
-                // (assuming that microseconds will be supported soon or later)
-                resultBinds[i].buffer = calloc(1, 23);
-                resultBinds[i].buffer_length = 23;
-#endif
-                break;
-        }
-#endif
-    }
-    return resultBinds;
-}
-
-- (void)destroyResultBinds:(MYSQL_BIND *)binds Count:(int)columnCount
-{
-    for (int i = 0; i < columnCount; i++)
-        free(binds[i].buffer);
-    free(binds);
-}
-
 #pragma mark -
 #pragma mark Fetch messages
 
-- (void)fetchRowWithBinds:(MYSQL_BIND *)resultBinds error:(NSError **)error
+- (void)fetchRowWithBinds:(MYSQL_BIND *)binds error:(NSError **)error
 {
-    if (mysql_stmt_bind_result(statement, resultBinds) != 0) {
+    if (mysql_stmt_bind_result(statement, binds) != 0) {
         canFetch = NO;
         if (error) {
             NSMutableDictionary *errorDetail;
@@ -364,42 +374,49 @@ static id translate(MYSQL_BIND *bind)
     if (canFetch == NO) {
         return nil;
     }
-    int columnCount = mysql_stmt_field_count(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
-
-    MYSQL_BIND *resultBinds = [self createResultBindsForFields:fields Count:columnCount];
+    if (!resultBinds)
+        resultBinds = [self createResultBindsForFields:fields Count:mysql_stmt_field_count(statement)];
     [self fetchRowWithBinds:resultBinds error:error];
-    NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
-    for (int i = 0; i < columnCount; i++) {
+    if (!canFetch) {
+        [self destroyResultBinds];
+        resultBinds = nil;
+        numFields = 0;
+        return nil;
+    }
+    NSMutableArray *row = [NSMutableArray arrayWithCapacity:numFields];
+    for (int i = 0; i < numFields; i++) {
         // convert dates here (remember we are taking them out of mysql as strings, 
         // since conversion to NSDate is easier)
         [row addObject:translate(&resultBinds[i])];
     }
-    [self destroyResultBinds:resultBinds Count:columnCount];
     return row;
 }
 
 - (NSDictionary *)fetchRowAsDictionary:(NSError **)error
 {
-    int columnCount;
     int i;
     NSMutableDictionary *row = nil;
     
     if (canFetch == NO)
         return nil;
     
-    columnCount = mysql_stmt_field_count(statement);
+    numFields = mysql_stmt_field_count(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
+    if (!resultBinds)
+        resultBinds = [self createResultBindsForFields:fields Count:mysql_stmt_field_count(statement)];
 
-    MYSQL_BIND *resultBinds = [self createResultBindsForFields:fields Count:columnCount];
     [self fetchRowWithBinds:resultBinds error:error];
     if (canFetch) {
-        row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
-        for (i = 0; i < columnCount; i++) 
+        row = [NSMutableDictionary dictionaryWithCapacity:numFields];
+        for (i = 0; i < numFields; i++) 
             [row setObject:translate(&resultBinds[i]) forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
-    } 
-    [self destroyResultBinds:resultBinds Count:columnCount];
-
+    } else {
+        [self destroyResultBinds];
+        resultBinds = nil;
+        numFields = 0;
+        return nil;
+    }
     return row;
 }
 

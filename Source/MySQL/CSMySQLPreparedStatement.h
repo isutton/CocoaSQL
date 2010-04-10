@@ -13,6 +13,8 @@
 
 @interface CSMySQLPreparedStatement : CSQLPreparedStatement {
     MYSQL_STMT *statement;
+    MYSQL_BIND *resultBinds;
+    int         numFields;
 }
 
 @property (readwrite,assign) MYSQL_STMT *statement;
