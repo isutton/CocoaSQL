@@ -34,29 +34,43 @@
 {
     if (self = [super init]) {
         self.path = [aPath stringByExpandingTildeInPath];
-        sqlite3 *sqliteDatabase;
-        int errorCode = sqlite3_open_v2([self.path UTF8String], &sqliteDatabase, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE, 0);
+        sqlite3 *databaseHandle_;
+        int errorCode = sqlite3_open_v2([self.path UTF8String], &databaseHandle_, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE, 0);
         if (errorCode != SQLITE_OK) {
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(sqliteDatabase)];
+            NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(databaseHandle_)];
             *error = [NSError errorWithMessage:errorMessage andCode:500];
             return nil;
         }
-        self.databaseHandle = (voidPtr)sqliteDatabase;
+        self.databaseHandle = (voidPtr)databaseHandle_;
     }
     return self;
 }
 
-- (void)dealloc
+- (BOOL)disconnect:(NSError **)error
 {
     int errorCode = sqlite3_close(self.databaseHandle);
     
     if (errorCode != SQLITE_OK) {
-        NSLog(@"Couldn't close database handle.");
+        if (error) {
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", sqlite3_errmsg(self.databaseHandle)] andCode:500];
+        }
+        return NO;
     }
-    else {
-        self.databaseHandle = NULL;
-    }
+    
+    self.databaseHandle = NULL;
+    
+    return YES;
+}
 
+- (BOOL)isActive:(NSError **)error
+{
+    // Assume we are always connected for now.
+    return YES;
+}
+
+- (void)dealloc
+{
+    [self disconnect];
     [path release];
     [super dealloc];
 }
