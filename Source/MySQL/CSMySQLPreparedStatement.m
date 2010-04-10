@@ -279,14 +279,20 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
             return NO;
         }
         
-        long *lStorage = calloc(bindParameterCount, sizeof(long));
+        // allocate memory to use as storage for bound parameters.
+        // worst case is all parameters of a certain type, so we allocate space
+        // to store enough items of each type (so bindParameterCount elements of each possible type)
+        // possible types are actually 'long long', 'double' and 'MYSQL_TIME', so we are not going 
+        // to waste that much memory. (considering also that the number of parameters will
+        // never be huge)
+        long *lStorage = calloc(bindParameterCount, sizeof(long long)); // integers will be stored in a long long
         int  lStorageCount = 0;
-        double *dStorage = calloc(bindParameterCount, sizeof(double));
+        double *dStorage = calloc(bindParameterCount, sizeof(double)); // doubles and floats will be both stored in a double
         int  dStorageCount = 0;
-        MYSQL_TIME *tStorage = calloc(bindParameterCount, sizeof(MYSQL_TIME));
+        MYSQL_TIME *tStorage = calloc(bindParameterCount, sizeof(MYSQL_TIME)); // all date/time types will be stored in a MYSQL_TIME
         int  tStorageCount = 0;
+        
         BOOL success = NO;
-
         for (int i = 0; i < bindParameterCount; i++) {
             id encapsulatedValue = [values objectAtIndex:i];
             Class valueClass = [encapsulatedValue class];
@@ -295,7 +301,7 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
                 switch ([value type]) {
                     case CSQLInteger:
                         lStorage[lStorageCount] = [value longValue];
-                        params[i].buffer_type = MYSQL_TYPE_LONG;
+                        params[i].buffer_type = MYSQL_TYPE_LONGLONG;
                         params[i].buffer = &lStorage[lStorageCount];
                         params[i].param_number = i;
                         lStorageCount++;
