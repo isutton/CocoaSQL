@@ -33,7 +33,7 @@ static id translate(MYSQL_BIND *bind)
             value = [NSNumber numberWithLong:*((long *)bind->buffer)];
             break;
         case MYSQL_TYPE_INT24:
-            value = [NSNumber numberWithLongLong:*((int *)bind->buffer)];
+            value = [NSNumber numberWithInt:*((int *)bind->buffer)];
             break;
         case MYSQL_TYPE_LONGLONG:
             value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
