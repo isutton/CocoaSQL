@@ -49,6 +49,8 @@ static id translate(MYSQL_BIND *bind)
         case MYSQL_TYPE_TIME:
         case MYSQL_TYPE_YEAR:
         case MYSQL_TYPE_NEWDATE:
+            // convert the MYSQL_TIME structure to epoch
+            // so that we can than build an NSDate object on top of it
             dt = (MYSQL_TIME *)bind->buffer;
             memset(&ut, 0, sizeof(ut));
             ut.tm_year = dt->year-1900;
@@ -58,7 +60,6 @@ static id translate(MYSQL_BIND *bind)
             ut.tm_min = dt->minute;
             ut.tm_sec = dt->second;
             time = mktime(&ut);
-            // XXX - datetime datatypes are actualy taken out of mysql as strings and converted later to NSDate
             value = [NSDate dateWithTimeIntervalSince1970:time];
             break;
         // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
@@ -300,6 +301,7 @@ static id translate(MYSQL_BIND *bind)
             case MYSQL_TYPE_TIME:
             case MYSQL_TYPE_NEWDATE:
 #if 1
+                // handle datetime & friends using the MYSQL_TIME structure
                 resultBinds[i].buffer = calloc(1, sizeof(MYSQL_TIME));
                 resultBinds[i].buffer_length = sizeof(MYSQL_TIME);
 #else
@@ -368,17 +370,7 @@ static id translate(MYSQL_BIND *bind)
     for (int i = 0; i < columnCount; i++) {
         // convert dates here (remember we are taking them out of mysql as strings, 
         // since conversion to NSDate is easier)
-        switch (fields[i].type) {
-            case MYSQL_TYPE_TIMESTAMP:
-            case MYSQL_TYPE_DATETIME:
-            case MYSQL_TYPE_DATE:
-            case MYSQL_TYPE_TIME:
-            case MYSQL_TYPE_NEWDATE:
-                [row addObject:[NSDate dateWithString:translate(&resultBinds[i])]];
-                break;
-            default:
-                [row addObject:translate(&resultBinds[i])];
-        }
+        [row addObject:translate(&resultBinds[i])];
     }
     [self destroyResultBinds:resultBinds Count:columnCount];
     return row;
