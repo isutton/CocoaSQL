@@ -9,10 +9,14 @@
 #import "CSMySQLPreparedStatement.h"
 #import "CSMySQLDatabase.h"
 #import "CSQLBindValue.h"
+#include <mysql_time.h>
 
 static id translate(MYSQL_BIND *bind)
 {
     id value;
+    MYSQL_TIME *dt;
+    struct tm ut;
+    time_t time;
     // XXX - actual implementation uses only strings and blobs
     switch(bind->buffer_type)
     {
@@ -45,8 +49,17 @@ static id translate(MYSQL_BIND *bind)
         case MYSQL_TYPE_TIME:
         case MYSQL_TYPE_YEAR:
         case MYSQL_TYPE_NEWDATE:
+            dt = (MYSQL_TIME *)bind->buffer;
+            memset(&ut, 0, sizeof(ut));
+            ut.tm_year = dt->year-1900;
+            ut.tm_mon = dt->month-1;
+            ut.tm_mday = dt->day;
+            ut.tm_hour = dt->hour;
+            ut.tm_min = dt->minute;
+            ut.tm_sec = dt->second;
+            time = mktime(&ut);
             // XXX - datetime datatypes are actualy taken out of mysql as strings and converted later to NSDate
-            //value = [NSDate dateWithString:*((char *)bind->buffer)];
+            value = [NSDate dateWithTimeIntervalSince1970:time];
             break;
         // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
         case MYSQL_TYPE_VARCHAR:
@@ -272,6 +285,7 @@ static id translate(MYSQL_BIND *bind)
                 resultBinds[i].buffer_length = 1024;
                 break;
             case MYSQL_TYPE_BIT:
+                resultBinds[i].buffer = calloc(1, 1);
                 break;
             case MYSQL_TYPE_TINY_BLOB:
             case MYSQL_TYPE_BLOB:
@@ -285,12 +299,14 @@ static id translate(MYSQL_BIND *bind)
             case MYSQL_TYPE_DATE:
             case MYSQL_TYPE_TIME:
             case MYSQL_TYPE_NEWDATE:
-#if 0
+#if 1
                 resultBinds[i].buffer = calloc(1, sizeof(MYSQL_TIME));
                 resultBinds[i].buffer_length = sizeof(MYSQL_TIME);
 #else
                 // handle dates as strings (it's too easier since we have to convert them to NSDate anyway)
-                resultBinds[i].buffer_type = MYSQL_TYPE_STRING;
+                resultBinds[i].buffer_type = MYSQL_TYPE_STRING; // override the type
+                // 23 characters for datetime strings of the type YYYY-MM-DD hh:mm:ss.xxx 
+                // (assuming that microseconds will be supported soon or later)
                 resultBinds[i].buffer = calloc(1, 23);
                 resultBinds[i].buffer_length = 23;
 #endif
@@ -350,7 +366,19 @@ static id translate(MYSQL_BIND *bind)
     [self fetchRowWithBinds:resultBinds error:error];
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
     for (int i = 0; i < columnCount; i++) {
-        [row addObject:translate(&resultBinds[i])];
+        // convert dates here (remember we are taking them out of mysql as strings, 
+        // since conversion to NSDate is easier)
+        switch (fields[i].type) {
+            case MYSQL_TYPE_TIMESTAMP:
+            case MYSQL_TYPE_DATETIME:
+            case MYSQL_TYPE_DATE:
+            case MYSQL_TYPE_TIME:
+            case MYSQL_TYPE_NEWDATE:
+                [row addObject:[NSDate dateWithString:translate(&resultBinds[i])]];
+                break;
+            default:
+                [row addObject:translate(&resultBinds[i])];
+        }
     }
     [self destroyResultBinds:resultBinds Count:columnCount];
     return row;
@@ -360,7 +388,6 @@ static id translate(MYSQL_BIND *bind)
 {
     int columnCount;
     int i;
-    id value;
     NSMutableDictionary *row = nil;
     
     if (canFetch == NO)
@@ -373,21 +400,8 @@ static id translate(MYSQL_BIND *bind)
     [self fetchRowWithBinds:resultBinds error:error];
     if (canFetch) {
         row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
-        for (i = 0; i < columnCount; i++) {
-            value = translate(&resultBinds[i]);
-            switch (fields[i].type) {
-                case MYSQL_TYPE_TIMESTAMP:
-                case MYSQL_TYPE_DATETIME:
-                case MYSQL_TYPE_DATE:
-                case MYSQL_TYPE_TIME:
-                case MYSQL_TYPE_NEWDATE:
-                    [row setObject:[NSDate dateWithString:value] forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
-                    break;
-                default:
-                    [row setObject:value forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
-            }
-            
-        }
+        for (i = 0; i < columnCount; i++) 
+            [row setObject:translate(&resultBinds[i]) forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
     } 
     [self destroyResultBinds:resultBinds Count:columnCount];
 

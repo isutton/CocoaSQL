@@ -66,7 +66,8 @@
         STAssertEquals((int)[resultDictionary count], 3, @"fetchRowAsArrayWithSQL : resultCount");
         STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
         STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
-        STAssertEqualObjects([[resultDictionary objectForKey:@"d"] className], @"NSDate", @"fetchRowAsArrayWithSQL : resultElement3");
+        STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
+        //NSLog(@"Date is: %@\n", [resultDictionary objectForKey:@"d"]);
         cnt++;
     }
     [database executeSQL:@"DROP TABLE mysql_test" error:&error];
