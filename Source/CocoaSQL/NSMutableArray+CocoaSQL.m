@@ -12,26 +12,22 @@
 
 - (void)bindDoubleValue:(double)aValue
 {
-    CSQLBindValue *value = [CSQLBindValue bindValueWithDouble:aValue];
-    [self addObject:value];
+    [self addObject:[NSNumber numberWithDouble:aValue]];
 }
 
 - (void)bindIntValue:(int)aValue
 {
-    CSQLBindValue *value = [CSQLBindValue bindValueWithInt:aValue];
-    [self addObject:value];
+    [self addObject:[NSNumber numberWithInt:aValue]];
 }
 
 - (void)bindStringValue:(NSString *)aValue
 {
-    CSQLBindValue *value = [CSQLBindValue bindValueWithString:aValue];
-    [self addObject:value];
+    [self addObject:aValue];
 }
 
 - (void)bindDataValue:(NSData *)aValue
 {
-    CSQLBindValue *value = [CSQLBindValue bindValueWithData:aValue];
-    [self addObject:value];
+    [self addObject:aValue];
 }
 
 @end
