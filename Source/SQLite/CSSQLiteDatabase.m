@@ -78,23 +78,15 @@
 }
 
 #pragma mark -
-#pragma mark CSSQLiteDatabase related messages
-
-- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values callback:(CSQLCallback)callbackFunction context:(void *)context error:(NSError **)error;
-{
-    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
-    if (!statement) {
-        return 0;
-    }
-    return [statement executeWithValues:values error:error];
-}
-
-#pragma mark -
 #pragma mark CSQLDatabase related messages
 
 - (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
 {
-    return [self executeSQL:sql withValues:values callback:nil context:nil error:error];
+    statement = [self prepareStatement:sql error:error];
+    if (!statement) {
+        return 0;
+    }
+    return [statement executeWithValues:values error:error];
 }
 
 - (NSUInteger)executeSQL:(NSString *)sql error:(NSError **)error
@@ -107,12 +99,14 @@
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
-    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    statement = [[self prepareStatement:sql error:error] retain];
     if (!statement) {
         return nil;
     }
     [statement executeWithValues:values error:error];
-    return [statement fetchRowAsArray:error];
+    NSArray *row = [statement fetchRowAsArray:error];
+    [statement release];
+    return row;
 }
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
@@ -125,12 +119,14 @@
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
-    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    statement = [[self prepareStatement:sql error:error] retain];
     if (!statement) {
         return nil;
     }
     [statement executeWithValues:values error:error];
-    return [statement fetchRowAsDictionary:error];
+    NSDictionary *row = [statement fetchRowAsDictionary:error];
+    [statement release];
+    return row;
 }
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
@@ -143,9 +139,19 @@
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
+    statement = [[self prepareStatement:sql error:error] retain];
+    if (!statement) {
+        return nil;
+    }
+    NSDictionary *row;
     NSMutableArray *rows = [NSMutableArray array];
-    BOOL success = [self executeSQL:sql withValues:values callback:rowsAsDictionariesCallback context:rows error:error];
-    return success ? rows : nil;
+    if ([statement executeWithValues:values error:error]) {
+        while (row = [statement fetchRowAsDictionary:error]) {
+            [rows addObject:row];
+        }
+    }
+    [statement release];
+    return rows;
 }
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql error:(NSError **)error
@@ -155,9 +161,19 @@
 
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
+    statement = [[self prepareStatement:sql error:error] retain];
+    if (!statement) {
+        return nil;
+    }
+    NSArray *row;
     NSMutableArray *rows = [NSMutableArray array];
-    BOOL success = [self executeSQL:sql withValues:values callback:rowsAsArraysCallback context:rows error:error];
-    return success ? rows : nil;
+    if ([statement executeWithValues:values error:error]) {
+        while (row = [statement fetchRowAsArray:error]) {
+            [rows addObject:row];
+        }
+    }
+    [statement release];
+    return rows;
 }
 
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql error:(NSError **)error
