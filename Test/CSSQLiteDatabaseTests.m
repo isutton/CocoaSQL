@@ -26,7 +26,11 @@
 
 - (void)tearDown
 {
+    NSFileManager *fm = [NSFileManager defaultManager];
     
+    if ([fm fileExistsAtPath:[TEST_DB stringByExpandingTildeInPath]]) {
+        [fm removeItemAtPath:[TEST_DB stringByExpandingTildeInPath] error:nil];
+    }    
 }
 
 - (void)testDatabaseWithDriver
