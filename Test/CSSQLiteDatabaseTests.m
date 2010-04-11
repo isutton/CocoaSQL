@@ -65,7 +65,9 @@
     int affectedRows = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR(10))" error:&error];
     
     STAssertNil(error, @"Error.");
-    STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
+    // FIXME: In SQLite, CREATE and DROP commands return the number of rows affected whilst MySQL 
+    //        returns 0.
+    STAssertEquals(affectedRows, 1, @"CREATE TABLE.");
     
     return error ? NO : YES;
 }
