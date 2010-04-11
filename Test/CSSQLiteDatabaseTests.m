@@ -175,7 +175,7 @@
     NSError *error = nil;
     CSQLDatabase *database = (CSQLDatabase *)[self createDatabase:nil];
     
-    [database executeSQL:@"CREATE TABLE CocoaSQL_test_datatypes (i INTEGER, t TEXT, b BLOB, r REAL, n NUMERIC)" error:nil];
+    [database executeSQL:@"CREATE TABLE CocoaSQL_test_datatypes (i INTEGER, t TEXT, b BLOB, r REAL, n NUMERIC, nu INTEGER)" error:nil];
     
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:5];
     [values addObject:[NSNumber numberWithInt:65535]];
@@ -183,12 +183,13 @@
     [values addObject:[NSData dataWithData:[@"this is a blob" dataUsingEncoding:NSUTF8StringEncoding]]];
     [values addObject:[NSNumber numberWithFloat:2.0]];
     [values addObject:[NSDecimalNumber numberWithInt:128]];
+    [values addObject:[NSNull null]];
     
-    [database executeSQL:@"INSERT INTO CocoaSQL_test_datatypes VALUES (?, ?, ?, ?, ?)" withValues:values error:&error];
+    [database executeSQL:@"INSERT INTO CocoaSQL_test_datatypes VALUES (?, ?, ?, ?, ?, ?)" withValues:values error:&error];
     
     if (error) STFail(@"%@", error);
     
-    NSArray *row = [database fetchRowAsArrayWithSQL:@"SELECT i, t, b, r, n FROM CocoaSQL_test_datatypes LIMIT 1" error:&error];
+    NSArray *row = [database fetchRowAsArrayWithSQL:@"SELECT i, t, b, r, n, nu FROM CocoaSQL_test_datatypes LIMIT 1" error:&error];
 
     if (error) STFail(@"%@", error);
 
