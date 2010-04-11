@@ -232,12 +232,7 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 {
     // ensure resetting the old statement if the caller 
     // is reusing an our instance to execute another query
-    mysql_stmt_reset(statement);
-    if (resultBinds) {
-        destroyResultBinds(resultBinds, numFields);
-        resultBinds = nil;
-        numFields = 0;
-    }
+    [self finish];
     int errorCode = mysql_stmt_prepare(statement, [sql UTF8String], [sql length]);
     if (errorCode != 0) {
         if (error) {
@@ -508,6 +503,22 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 - (int)affectedRows
 {
     return mysql_stmt_affected_rows(statement);
+}
+
+- (BOOL)isActive
+{
+    return canFetch;
+}
+
+- (BOOL)finish
+{
+    mysql_stmt_reset(statement);
+    if (resultBinds) {
+        destroyResultBinds(resultBinds, numFields);
+        resultBinds = nil;
+        numFields = 0;
+    }
+    return YES;
 }
 
 @end

@@ -57,16 +57,12 @@
 - (BOOL)isActive
 {
     // MUST be overridden by subclasses
-    // XXX - infinite recursion here !!!!, 
-    // better to just return NO in the baseclass implementation
-    //return [self isActive:nil];
     return NO;
 }
 
 - (BOOL)finish
 {
-    // XXX - infinite recursion here !!!!
-    //return [self finish:nil];
+    // MUST be overridden by subclasses
     return NO;
 }
 

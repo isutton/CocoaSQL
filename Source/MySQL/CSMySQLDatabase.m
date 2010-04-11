@@ -273,6 +273,20 @@
     return [NSNumber numberWithLongLong:numRows];
 }
 
+- (BOOL)isActive
+{
+    if (databaseHandle)
+        return mysql_ping(databaseHandle)?YES:NO;
+    return NO;
+}
+
+- (BOOL)disconnect
+{
+    mysql_close(databaseHandle);
+    databaseHandle = nil;
+    return YES;
+}
+
 #pragma mark -
 #pragma mark Prepared Statement messages
 
