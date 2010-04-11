@@ -12,15 +12,12 @@
 #include <mysql.h>
 
 @interface CSMySQLPreparedStatementBinds : NSObject {
-/**
- */
     MYSQL_BIND *binds;
     int         numFields;
 }
 
 - (MYSQL_BIND *)binds;
 - (id)getBoundColumn:(int)index;
-- (id)init;
 - (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;
 - (id)initWithValues:(NSArray *)values;
 - (BOOL)bindObject:(id)object ToColumn:(int)index;
@@ -51,6 +48,17 @@
 - (MYSQL_BIND *)binds
 {
     return binds;
+}
+
+- (id)initWithValues:(NSArray *)values
+{
+    for (int i = 0; i < [values count]; i++) {
+        if (![self bindObject:[values objectAtIndex:i] ToColumn:i]) {
+            [self reset];
+            return nil; // XXX
+        }
+    }
+    return self;
 }
 
 - (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;

@@ -50,20 +50,10 @@
     
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
     for (int i = 1; i <= 100 && !error; i++) {
-
-        /*
-
         [values bindIntValue:i];
         [values bindStringValue:[NSString stringWithFormat:@"v%i", i]];
         [statement executeWithValues:values error:&error];
         [values removeAllObjects];
-         */
-        [statement executeWithValues:[NSArray arrayWithObjects:
-                                      [NSNumber numberWithInt:i],
-                                      [NSString stringWithFormat:@"v%d", i],
-                                      nil
-                                      ]
-                               error:&error];
     }
 
     CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM mysql_test WHERE v like ?" error:&error];
