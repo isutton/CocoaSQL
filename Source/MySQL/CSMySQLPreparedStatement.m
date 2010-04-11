@@ -9,104 +9,52 @@
 #import "CSMySQLPreparedStatement.h"
 #import "CSMySQLDatabase.h"
 #import "CSQLBindValue.h"
-
-#pragma mark -
-#pragma mark Internal Binds storage management
-
-static id translate(MYSQL_BIND *bind)
-{
-    id value = nil;
-    MYSQL_TIME *dateTime = NULL;
-    time_t time = 0;
-    struct tm unixTime;
-
-    if (bind->is_null_value) { // mysql returned a NULL value
-        value = [NSNull null];
-    } else {
-        switch(bind->buffer_type)
-        {
-            case MYSQL_TYPE_FLOAT:
-                value = [NSNumber numberWithFloat:*((float *)bind->buffer)];
-                break;
-            case MYSQL_TYPE_SHORT:
-                if (bind->is_unsigned)
-                    value = [NSNumber numberWithUnsignedShort:*((unsigned short *)bind->buffer)];
-                else
-                    value = [NSNumber numberWithShort:*((short *)bind->buffer)];
-                break;
-            case MYSQL_TYPE_LONG:
-                if (bind->is_unsigned)
-                    value = [NSNumber numberWithUnsignedLong:*((unsigned long *)bind->buffer)];
-                else
-                    value = [NSNumber numberWithLong:*((long *)bind->buffer)];
-                break;
-            case MYSQL_TYPE_INT24:
-                if (bind->is_unsigned)
-                    value = [NSNumber numberWithUnsignedInt:*((unsigned int *)bind->buffer)];
-                else
-                    value = [NSNumber numberWithInt:*((int *)bind->buffer)];
-                break;
-            case MYSQL_TYPE_LONGLONG:
-                if (bind->is_unsigned)
-                    value = [NSNumber numberWithUnsignedLongLong:*((unsigned long long *)bind->buffer)];
-                else
-                    value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
-                break;
-            case MYSQL_TYPE_DOUBLE:
-                value = [NSNumber numberWithDouble:*((double *)bind->buffer)];
-            case MYSQL_TYPE_TINY:
-                value = [NSNumber numberWithChar:*((char *)bind->buffer)];
-                break;
-            case MYSQL_TYPE_DECIMAL:
-                // XXX - decimals are actually bound to either float or double
-                // so we will never hit this case
-                break;
-            // all mysql date/time datatypes are mapped to the MYSQL_TIME structure
-            case MYSQL_TYPE_TIMESTAMP:
-            case MYSQL_TYPE_DATETIME:
-            case MYSQL_TYPE_DATE:
-            case MYSQL_TYPE_TIME:
-            case MYSQL_TYPE_YEAR:
-            case MYSQL_TYPE_NEWDATE:
-                // convert the MYSQL_TIME structure to epoch
-                // so that we can than build an NSDate object on top of it
-                dateTime = (MYSQL_TIME *)bind->buffer;
-                memset(&unixTime, 0, sizeof(unixTime));
-                unixTime.tm_year = dateTime->year-1900;
-                unixTime.tm_mon = dateTime->month-1;
-                unixTime.tm_mday = dateTime->day;
-                unixTime.tm_hour = dateTime->hour;
-                unixTime.tm_min = dateTime->minute;
-                unixTime.tm_sec = dateTime->second;
-                time = mktime(&unixTime);
-                value = [NSDate dateWithTimeIntervalSince1970:time];
-                break;
-            // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
-            case MYSQL_TYPE_VARCHAR:
-            case MYSQL_TYPE_VAR_STRING:
-            case MYSQL_TYPE_STRING:
-                value = [NSString stringWithUTF8String:(char *)bind->buffer];
-                break;
-            case MYSQL_TYPE_BIT:
-                value = [NSNumber numberWithChar:*((char *)bind->buffer) & 0x01];
-                break;
-            case MYSQL_TYPE_TINY_BLOB:
-            case MYSQL_TYPE_BLOB:
-            case MYSQL_TYPE_LONG_BLOB:
-                value = [NSData dataWithBytes:bind->buffer length:bind->buffer_length];
-                break;
-            case MYSQL_TYPE_NULL:
-            default: // unknown datatype will be null-ed
-                value = [NSNull null];
-                break;
-        }
-    }
-    return value;
+#include <mysql.h>
+@interface CSMySQLPreparedStatementBinds : NSObject {
+/**
+ */
+    MYSQL_BIND *resultBinds;
+    int         numFields; 
 }
 
-static MYSQL_BIND *createResultBinds(MYSQL_FIELD *fields, int numFields)
+- (MYSQL_BIND *)binds;
+- (id)getBoundColumn:(int)index;
+- (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;
+- (void)reset;
+
+@end
+
+@implementation CSMySQLPreparedStatementBinds
+
+- (void)dealloc
 {
-    MYSQL_BIND *resultBinds = calloc(numFields, sizeof(MYSQL_BIND));
+    [self reset];
+    [super dealloc];
+}
+
+- (void)reset
+{
+    if (resultBinds) {
+        for (int i = 0; i < numFields; i++)
+            if (resultBinds[i].buffer)
+                free(resultBinds[i].buffer);
+        free(resultBinds);
+        resultBinds = NULL;
+        numFields = 0;
+    }
+}
+
+- (MYSQL_BIND *)binds
+{
+    return resultBinds;
+}
+
+- (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;
+{
+    if (resultBinds)
+        [self reset];
+    numFields = count;
+    resultBinds = calloc(numFields, sizeof(MYSQL_BIND));
     for (int i = 0; i < numFields; i++) {
 #if 0
         // everything apart blobs will be stringified
@@ -200,17 +148,109 @@ static MYSQL_BIND *createResultBinds(MYSQL_FIELD *fields, int numFields)
         }
 #endif
     }
-    return resultBinds;
-    
+    return self;
 }
 
-static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
+- (id)getBoundColumn:(int)index
 {
-    for (int i = 0; i < numFields; i++)
-        if (resultBinds[i].buffer)
-            free(resultBinds[i].buffer);
-    free(resultBinds);
+    id value = nil;
+    MYSQL_TIME *dateTime = NULL;
+    time_t time = 0;
+    struct tm unixTime;
+    
+    if (index >= numFields) { // safety belts
+        // TODO - Erorr messages
+        return nil;
+    }
+    MYSQL_BIND *bind = &resultBinds[index];
+    if (bind->is_null_value) { // mysql returned a NULL value
+        value = [NSNull null];
+    } else {
+        switch(bind->buffer_type)
+        {
+            case MYSQL_TYPE_FLOAT:
+                value = [NSNumber numberWithFloat:*((float *)bind->buffer)];
+                break;
+            case MYSQL_TYPE_SHORT:
+                if (bind->is_unsigned)
+                    value = [NSNumber numberWithUnsignedShort:*((unsigned short *)bind->buffer)];
+                else
+                    value = [NSNumber numberWithShort:*((short *)bind->buffer)];
+                break;
+            case MYSQL_TYPE_LONG:
+                if (bind->is_unsigned)
+                    value = [NSNumber numberWithUnsignedLong:*((unsigned long *)bind->buffer)];
+                else
+                    value = [NSNumber numberWithLong:*((long *)bind->buffer)];
+                break;
+            case MYSQL_TYPE_INT24:
+                if (bind->is_unsigned)
+                    value = [NSNumber numberWithUnsignedInt:*((unsigned int *)bind->buffer)];
+                else
+                    value = [NSNumber numberWithInt:*((int *)bind->buffer)];
+                break;
+            case MYSQL_TYPE_LONGLONG:
+                if (bind->is_unsigned)
+                    value = [NSNumber numberWithUnsignedLongLong:*((unsigned long long *)bind->buffer)];
+                else
+                    value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
+                break;
+            case MYSQL_TYPE_DOUBLE:
+                value = [NSNumber numberWithDouble:*((double *)bind->buffer)];
+            case MYSQL_TYPE_TINY:
+                value = [NSNumber numberWithChar:*((char *)bind->buffer)];
+                break;
+            case MYSQL_TYPE_DECIMAL:
+                // XXX - decimals are actually bound to either float or double
+                // so we will never hit this case
+                break;
+                // all mysql date/time datatypes are mapped to the MYSQL_TIME structure
+            case MYSQL_TYPE_TIMESTAMP:
+            case MYSQL_TYPE_DATETIME:
+            case MYSQL_TYPE_DATE:
+            case MYSQL_TYPE_TIME:
+            case MYSQL_TYPE_YEAR:
+            case MYSQL_TYPE_NEWDATE:
+                // convert the MYSQL_TIME structure to epoch
+                // so that we can than build an NSDate object on top of it
+                dateTime = (MYSQL_TIME *)bind->buffer;
+                memset(&unixTime, 0, sizeof(unixTime));
+                unixTime.tm_year = dateTime->year-1900;
+                unixTime.tm_mon = dateTime->month-1;
+                unixTime.tm_mday = dateTime->day;
+                unixTime.tm_hour = dateTime->hour;
+                unixTime.tm_min = dateTime->minute;
+                unixTime.tm_sec = dateTime->second;
+                time = mktime(&unixTime);
+                value = [NSDate dateWithTimeIntervalSince1970:time];
+                break;
+                // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
+            case MYSQL_TYPE_VARCHAR:
+            case MYSQL_TYPE_VAR_STRING:
+            case MYSQL_TYPE_STRING:
+                value = [NSString stringWithUTF8String:(char *)bind->buffer];
+                break;
+            case MYSQL_TYPE_BIT:
+                value = [NSNumber numberWithChar:*((char *)bind->buffer) & 0x01];
+                break;
+            case MYSQL_TYPE_TINY_BLOB:
+            case MYSQL_TYPE_BLOB:
+            case MYSQL_TYPE_LONG_BLOB:
+                value = [NSData dataWithBytes:bind->buffer length:bind->buffer_length];
+                break;
+            case MYSQL_TYPE_NULL:
+            default: // unknown datatype will be null-ed
+                value = [NSNull null];
+                break;
+        }
+    }
+    return value;    
 }
+
+@end
+
+#pragma mark -
+#pragma mark Internal Binds storage management
 
 @implementation CSMySQLPreparedStatement
 
@@ -223,10 +263,9 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 {
     [super init];
     resultBinds = nil;
-    numFields = 0;
-    self.database = aDatabase;
-    self.statement = mysql_stmt_init(database.databaseHandle);
-    if (!self.statement) {
+    database = aDatabase;
+    statement = mysql_stmt_init(database.databaseHandle);
+    if (!statement) {
         if (error) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
             [errorDetail setObject:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] 
@@ -283,10 +322,10 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 
 - (void)dealloc
 {
-    if (self.statement)
+    if (statement)
         mysql_stmt_close(statement);
     if (resultBinds)
-        destroyResultBinds(resultBinds, numFields);
+        [resultBinds release];;
     [super dealloc];
 }
 
@@ -295,7 +334,7 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
-    unsigned long bindParameterCount = mysql_stmt_param_count(self.statement);
+    unsigned long bindParameterCount = mysql_stmt_param_count(statement);
 
     if (bindParameterCount > 0) {
         MYSQL_BIND *params = calloc(bindParameterCount, sizeof(MYSQL_BIND));
@@ -422,8 +461,8 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
             }
         }
 
-        if (mysql_stmt_bind_param(self.statement, params) == 0) {
-            if (mysql_stmt_execute(self.statement) == 0) {
+        if (mysql_stmt_bind_param(statement, params) == 0) {
+            if (mysql_stmt_execute(statement) == 0) {
                 canFetch = YES;
                 success = YES;
             }
@@ -454,9 +493,9 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 #pragma mark -
 #pragma mark Fetch messages
 
-- (void)fetchRowWithBinds:(MYSQL_BIND *)binds error:(NSError **)error
+- (void)fetchRow:(NSError **)error
 {
-    if (mysql_stmt_bind_result(statement, binds) != 0) {
+    if (mysql_stmt_bind_result(statement, [resultBinds binds]) != 0) {
         canFetch = NO;
         if (error) {
             NSMutableDictionary *errorDetail;
@@ -484,13 +523,15 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 {
     if (canFetch == NO)
         return nil;
-
+    int numFields = mysql_stmt_field_count(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
     if (!resultBinds) {
-        numFields = mysql_stmt_field_count(statement);
-        resultBinds = createResultBinds(fields, numFields);
+        resultBinds = [[CSMySQLPreparedStatementBinds alloc] 
+                       initWithFields:fields 
+                       Count:numFields
+                      ];
     }
-    [self fetchRowWithBinds:resultBinds error:error];
+    [self fetchRow:error];
     if (!canFetch) { // end of rows or error occurred
         // we can release the row-storage now
         [self finish];
@@ -498,7 +539,7 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
     }
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:numFields];
     for (int i = 0; i < numFields; i++)
-        [row insertObject:translate(&resultBinds[i]) atIndex:i];
+        [row insertObject:[resultBinds getBoundColumn:i] atIndex:i];
     
     return row;
 }
@@ -511,18 +552,20 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
     if (canFetch == NO)
         return nil;
     
-    numFields = mysql_stmt_field_count(statement);
+    int numFields = mysql_stmt_field_count(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
     if (!resultBinds) {
-        numFields = mysql_stmt_field_count(statement);
-        resultBinds = createResultBinds(fields, numFields);
+        resultBinds = [[CSMySQLPreparedStatementBinds alloc] 
+                       initWithFields:fields 
+                       Count:numFields
+                       ];
     }
-    [self fetchRowWithBinds:resultBinds error:error];
+    [self fetchRow:error];
     if (canFetch) {
         row = [NSMutableDictionary dictionaryWithCapacity:numFields];
         for (i = 0; i < numFields; i++) {
             NSString *fieldName = [NSString stringWithFormat:@"%s", fields[i].name];
-            [row setObject:translate(&resultBinds[i]) forKey:fieldName];
+            [row setObject:[resultBinds getBoundColumn:i] forKey:fieldName];
         }
     } else { // end of rows or error occurred
         // we can release the row-storage now.
@@ -551,9 +594,8 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
     // XXX - (also here...we will never have an error condition
     mysql_stmt_reset(statement);
     if (resultBinds) {
-        destroyResultBinds(resultBinds, numFields);
+        [resultBinds release];
         resultBinds = nil;
-        numFields = 0;
     }
     return YES;
 }

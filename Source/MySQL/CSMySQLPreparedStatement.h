@@ -8,15 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 #import "CocoaSQL.h"
-#include <mysql.h>
 
 @interface CSMySQLPreparedStatement : CSQLPreparedStatement {
-    MYSQL_STMT *statement;
-    MYSQL_BIND *resultBinds;
-    int         numFields;
+    voidPtr statement;
+    id resultBinds;
 }
 
-@property (readwrite,assign) MYSQL_STMT *statement;
+@property (readwrite,assign) voidPtr statement;
 
 - (int)affectedRows;
 
