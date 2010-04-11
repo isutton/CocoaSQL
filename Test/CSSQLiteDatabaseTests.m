@@ -168,4 +168,32 @@
     STAssertNil(error, @"preparedStatement failed.");
 }
 
+- (void)testDatatypes
+{
+    NSError *error = nil;
+    CSQLDatabase *database = (CSQLDatabase *)[self createDatabase:nil];
+    
+    [database executeSQL:@"CREATE TABLE CocoaSQL_test_datatypes (i INTEGER, t TEXT, b BLOB, r REAL, n NUMERIC)" error:nil];
+    
+    NSMutableArray *values = [NSMutableArray arrayWithCapacity:5];
+    [values addObject:[NSNumber numberWithInt:65535]];
+    [values addObject:@"some text here and there"];
+    [values addObject:[NSData dataWithData:[@"this is a blob" dataUsingEncoding:NSUTF8StringEncoding]]];
+    [values addObject:[NSNumber numberWithFloat:2.0]];
+    [values addObject:[NSDecimalNumber numberWithInt:128]];
+    
+    [database executeSQL:@"INSERT INTO CocoaSQL_test_datatypes VALUES (?, ?, ?, ?, ?)" withValues:values error:&error];
+    
+    if (error) STFail(@"%@", error);
+    
+    NSArray *row = [database fetchRowAsArrayWithSQL:@"SELECT i, t, b, r, n FROM CocoaSQL_test_datatypes LIMIT 1" error:&error];
+
+    if (error) STFail(@"%@", error);
+
+    STAssertTrue([values isEqualToArray:row], @"Got the same we inserted.");
+    
+    // Clean up.
+    [database executeSQL:@"DROP TABLE CocoaSQL_test_datatypes" error:nil];
+}
+
 @end
