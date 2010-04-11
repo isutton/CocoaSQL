@@ -117,4 +117,11 @@
     return NO;
 }
 
+- (BOOL)bindValue:(id)aValue forColumn:(int)column;
+{
+    // MUST be overridden by subclasses
+    NSLog(@"bindValue not implemented by %@\n", [self className]);
+    return NO;
+}
+
 @end

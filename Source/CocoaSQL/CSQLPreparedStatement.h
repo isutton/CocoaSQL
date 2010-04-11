@@ -49,7 +49,7 @@
 - (BOOL)finish;
 - (BOOL)finish:(NSError **)error;
 
-- (void)bindValue:(id)aValue forColumn:(int)column;
+- (BOOL)bindValue:(id)aValue forColumn:(int)column;
 - (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column;
 - (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column;
 - (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column;
