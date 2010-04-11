@@ -276,6 +276,8 @@
 - (BOOL)isActive:(NSError **)error
 {
     // TODO - return an error message
+    // XXX - being not active is a perfectly valid condition ...
+    //       so I don't really know what should be considered an error here
     if (databaseHandle)
         return (mysql_ping(databaseHandle) == 0) ? YES : NO;
     return NO;
@@ -284,6 +286,8 @@
 - (BOOL)disconnect:(NSError **)error
 {
     // TODO - return an error message
+    // XXX - also here I can't see any error condition 
+    //       which requires an explanatory message
     mysql_close(databaseHandle);
     databaseHandle = nil;
     return YES;

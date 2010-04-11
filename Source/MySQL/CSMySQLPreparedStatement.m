@@ -507,13 +507,14 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
 
 - (BOOL)isActive:(NSError **)error
 {
-    // TODO - return an error message
+    // TODO - return an error message (XXX - but what?)
     return canFetch;
 }
 
 - (BOOL)finish:(NSError **)error
 {
-    // TODO - return an error message
+    // TODO - return an error message 
+    // XXX - (also here...we will never have an error condition
     mysql_stmt_reset(statement);
     if (resultBinds) {
         destroyResultBinds(resultBinds, numFields);

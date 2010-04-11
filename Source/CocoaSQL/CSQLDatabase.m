@@ -18,9 +18,8 @@
     Class class = NSClassFromString(aClassName);
     
     if (!class) {
-        if (error) {
+        if (error)
             *error = [NSError errorWithMessage:[NSString stringWithFormat:@"Couldn't find class %@.", aClassName] andCode:500];
-        }
         return nil;
     }
     
@@ -57,9 +56,8 @@
 - (BOOL)isActive:(NSError **)error
 {
     // MUST be overridden by subclasses
-    if (error) {
+    if (error)
         *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
-    }
     return NO;
 }
 
@@ -71,9 +69,8 @@
 - (BOOL)disconnect:(NSError **)error
 {
     // MUST be overridden by subclasses
-    if (error) {
+    if (error)
         *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
-    }
     return NO;
 }
 
