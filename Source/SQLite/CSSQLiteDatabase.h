@@ -18,7 +18,6 @@
 }
 
 @property (copy) NSString *path;
-@property (readwrite,assign) voidPtr databaseHandle;
 
 #pragma mark -
 #pragma mark Initialization related messages

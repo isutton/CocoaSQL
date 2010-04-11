@@ -12,7 +12,6 @@
 @implementation CSSQLiteDatabase
 
 @synthesize path;
-@dynamic databaseHandle;
 
 #pragma mark -
 #pragma mark Initialization and dealloc related messages
