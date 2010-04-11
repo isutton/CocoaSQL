@@ -27,6 +27,8 @@
 		824F8704116DD65100075D6F /* CSQLPreparedStatement+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */; };
 		8295F291116F8CD10053E781 /* NSError+CocoaSQL.h in Headers */ = {isa = PBXBuildFile; fileRef = 8295F28F116F8CD10053E781 /* NSError+CocoaSQL.h */; };
 		8295F292116F8CD10053E781 /* NSError+CocoaSQL.m in Sources */ = {isa = PBXBuildFile; fileRef = 8295F290116F8CD10053E781 /* NSError+CocoaSQL.m */; };
+		8295F34D117205540053E781 /* CSSQLiteDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8295F34C117205540053E781 /* CSSQLiteDatabaseTests.m */; };
+		8295F384117207FD0053E781 /* CSSQLiteDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8295F34C117205540053E781 /* CSSQLiteDatabaseTests.m */; };
 		82B99917116F478F00378C70 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 824459FA115B750B00950BD9 /* Cocoa.framework */; };
 		82B99922116F47A400378C70 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
 		82B99972116F4A9C00378C70 /* libsqlite3.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
@@ -89,6 +91,8 @@
 		824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CSQLPreparedStatement+Protocol.h"; sourceTree = "<group>"; };
 		8295F28F116F8CD10053E781 /* NSError+CocoaSQL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+CocoaSQL.h"; sourceTree = "<group>"; };
 		8295F290116F8CD10053E781 /* NSError+CocoaSQL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+CocoaSQL.m"; sourceTree = "<group>"; };
+		8295F34B117205540053E781 /* CSSQLiteDatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSQLiteDatabaseTests.h; sourceTree = "<group>"; };
+		8295F34C117205540053E781 /* CSSQLiteDatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSQLiteDatabaseTests.m; sourceTree = "<group>"; };
 		82EE6F34116F273A00885118 /* otest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = otest.m; sourceTree = "<group>"; };
 		82EE6F45116F282000885118 /* otest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = otest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -220,6 +224,8 @@
 				821DBC9E116370800073C988 /* CSQLDatabaseTests.m */,
 				AA02280F116FCD280005BF0A /* CMySQLDatabaseTests.h */,
 				AA022810116FCD280005BF0A /* CMySQLDatabaseTests.m */,
+				8295F34B117205540053E781 /* CSSQLiteDatabaseTests.h */,
+				8295F34C117205540053E781 /* CSSQLiteDatabaseTests.m */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -414,6 +420,7 @@
 			files = (
 				821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */,
 				AA022811116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */,
+				8295F34D117205540053E781 /* CSSQLiteDatabaseTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +431,7 @@
 				82EE6F4A116F284300885118 /* otest.m in Sources */,
 				82B99922116F47A400378C70 /* CSQLDatabaseTests.m in Sources */,
 				AA022812116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */,
+				8295F384117207FD0053E781 /* CSSQLiteDatabaseTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
