@@ -98,9 +98,16 @@
         }
         
         for (int i = 1; i <= bindParameterCount; i++) {
-            CSQLBindValue *value = [values objectAtIndex:i-1];
+            id value = [values objectAtIndex:i-1];
+            Class valueClass = [value class];
+
             BOOL success;
-            switch ([value type]) {
+
+            if ([valueClass isSubclassOfClass:[NSNumber class]]) {
+                success = [self bindDoubleValue:[(NSNumber *)value intValue] forColumn:i];
+            }
+            
+            switch ([(CSQLBindValue *)value type]) {
                 case CSQLInteger:
                     success = [self bindIntValue:[value intValue] forColumn:i];
                     break;
