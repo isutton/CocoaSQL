@@ -11,7 +11,7 @@
 #import "CSQLBindValue.h"
 #include <mysql.h>
 
-@interface CSMySQLPreparedStatementBinds : NSObject {
+@interface CSMysqlBindsStorage : NSObject {
     MYSQL_BIND *binds;
     int         numFields;
 }
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation CSMySQLPreparedStatementBinds
+@implementation CSMysqlBindsStorage
 
 - (void)dealloc
 {
@@ -285,11 +285,13 @@
                 break;
             case CSQLText:
                 binds[index].buffer_type = MYSQL_TYPE_STRING;
-                binds[index].buffer = (void *)strdup([[value stringValue] UTF8String]); // XXX
+                // XXX - we are copying the string :(
+                binds[index].buffer = (void *)strdup([[value stringValue] UTF8String]);
                 binds[index].buffer_length = [[value stringValue] length];  // XXX
                 break;
             case CSQLBlob:
                 binds[index].buffer_type = MYSQL_TYPE_BLOB;
+                // XXX - we are copying the buffer :(
                 binds[index].buffer = (void *)[[value dataValue] copy];
                 binds[index].buffer_length = [[value dataValue] length];
                 break;
@@ -312,8 +314,9 @@
     {
         NSString *value = (NSString *)object;
         binds[index].buffer_type = MYSQL_TYPE_STRING;
-        binds[index].buffer = (void *)strdup([value UTF8String]); // XXX
-        binds[index].buffer_length = [value length];  // XXX
+        // XXX - we are copying the string :(
+        binds[index].buffer = (void *)strdup([value UTF8String]);
+        binds[index].buffer_length = [value length]; // XXX - does length return the bytelength of the buffer?
     }
     else if ([valueClass isSubclassOfClass:[NSDate class]])
     {
@@ -334,6 +337,7 @@
     {
         NSData *value = (NSData *)object;
         binds[index].buffer_type = MYSQL_TYPE_BLOB;
+        // XXX - we are copying the buffer :(
         binds[index].buffer = (void *)[value copy];
         binds[index].buffer_length = [value length];
     } else if ([valueClass isSubclassOfClass:[NSNull class]])
@@ -448,7 +452,7 @@
             return NO;
         }
 
-        CSMySQLPreparedStatementBinds *params = [[CSMySQLPreparedStatementBinds alloc] init];
+        CSMysqlBindsStorage *params = [CSMysqlBindsStorage alloc];
 
         BOOL success = NO;
         for (int i = 0; i < bindParameterCount; i++) {
@@ -524,7 +528,7 @@
     int numFields = mysql_stmt_field_count(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
     if (!resultBinds) {
-        resultBinds = [[CSMySQLPreparedStatementBinds alloc] 
+        resultBinds = [[CSMysqlBindsStorage alloc] 
                        initWithFields:fields 
                        Count:numFields
                       ];
@@ -553,7 +557,7 @@
     int numFields = mysql_stmt_field_count(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
     if (!resultBinds) {
-        resultBinds = [[CSMySQLPreparedStatementBinds alloc] 
+        resultBinds = [[CSMysqlBindsStorage alloc] 
                        initWithFields:fields 
                        Count:numFields
                        ];
