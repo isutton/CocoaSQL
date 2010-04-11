@@ -24,7 +24,9 @@
 - (NSNumber *)affectedRows;
 - (NSNumber *)lastInsertID;
 - (BOOL)disconnect;
+- (BOOL)disconnect:(NSError **)error;
 - (BOOL)isActive;
+- (BOOL)isActive:(NSError **)error;
 @end
 
 #pragma mark -

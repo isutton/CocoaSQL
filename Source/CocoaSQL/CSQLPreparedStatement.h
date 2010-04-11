@@ -45,5 +45,7 @@
 - (BOOL)setSQL:(NSString *)sql;
 - (BOOL)setSQL:(NSString *)sql error:(NSError **)error;
 - (BOOL)isActive;
+- (BOOL)isActive:(NSError **)error;
 - (BOOL)finish;
+- (BOOL)finish:(NSError **)error;
 @end

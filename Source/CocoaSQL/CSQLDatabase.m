@@ -54,16 +54,32 @@
     return [self databaseWithDriver:aDriver options:options error:error];
 }
 
-- (BOOL)isActive
+- (BOOL)isActive:(NSError **)error
 {
     // MUST be overridden by subclasses
+    if (error) {
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+    }
+    return NO;
+}
+
+- (BOOL)isActive
+{
+    return [self isActive:nil];
+}
+
+- (BOOL)disconnect:(NSError **)error
+{
+    // MUST be overridden by subclasses
+    if (error) {
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+    }
     return NO;
 }
 
 - (BOOL)disconnect
 {
-    // MUST be overridden by subclasses
-    return NO;
+    return [self disconnect:nil];
 }
 
 - (NSNumber *)affectedRows

@@ -273,15 +273,17 @@
     return [NSNumber numberWithLongLong:numRows];
 }
 
-- (BOOL)isActive
+- (BOOL)isActive:(NSError **)error
 {
+    // TODO - return an error message
     if (databaseHandle)
         return (mysql_ping(databaseHandle) == 0) ? YES : NO;
     return NO;
 }
 
-- (BOOL)disconnect
+- (BOOL)disconnect:(NSError **)error
 {
+    // TODO - return an error message
     mysql_close(databaseHandle);
     databaseHandle = nil;
     return YES;

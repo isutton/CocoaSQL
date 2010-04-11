@@ -505,13 +505,15 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
     return mysql_stmt_affected_rows(statement);
 }
 
-- (BOOL)isActive
+- (BOOL)isActive:(NSError **)error
 {
+    // TODO - return an error message
     return canFetch;
 }
 
-- (BOOL)finish
+- (BOOL)finish:(NSError **)error
 {
+    // TODO - return an error message
     mysql_stmt_reset(statement);
     if (resultBinds) {
         destroyResultBinds(resultBinds, numFields);
