@@ -276,7 +276,7 @@
 - (BOOL)isActive
 {
     if (databaseHandle)
-        return mysql_ping(databaseHandle)?YES:NO;
+        return (mysql_ping(databaseHandle) == 0) ? YES : NO;
     return NO;
 }
 
