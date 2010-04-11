@@ -14,8 +14,6 @@
 #import "CSQLPreparedStatement.h"
 #import "CSQLBindValue.h"
 
-#include <sqlite3.h>
-
 @class CSSQLiteDatabase;
 
 @interface CSSQLitePreparedStatement : CSQLPreparedStatement  {
@@ -44,4 +42,3 @@
  @return <code>id</code>
  
  */
-id translate(sqlite3_stmt *preparedStatement, int column);

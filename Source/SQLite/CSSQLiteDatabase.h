@@ -11,8 +11,6 @@
 #import "CSQLDatabase.h"
 #import "CSSQLitePreparedStatement.h"
 
-#include <sqlite3.h>
-
 @interface CSSQLiteDatabase : CSQLDatabase {
     NSString *path;
 }

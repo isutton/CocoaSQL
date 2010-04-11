@@ -7,7 +7,38 @@
 //
 
 #import "CSSQLitePreparedStatement.h"
+#include <sqlite3.h>
 
+static id translate(sqlite3_stmt *preparedStatement, int column)
+{
+    int columnType = sqlite3_column_type(preparedStatement, column);
+    int rawValueLength = sqlite3_column_bytes(preparedStatement, column);
+    sqlite3_value *rawValue = sqlite3_column_value(preparedStatement, column);
+    
+    id value;
+    
+    switch (columnType) {
+        case SQLITE_FLOAT:
+            value = [NSNumber numberWithDouble:sqlite3_value_double(rawValue)];
+            break;
+        case SQLITE_INTEGER:
+            value = [NSNumber numberWithInt:sqlite3_value_int(rawValue)];
+            break;
+        case SQLITE_TEXT:
+            value = [NSString stringWithFormat:@"%s", sqlite3_value_text(rawValue)];
+            break;
+        case SQLITE_BLOB:
+            value = [NSData dataWithBytes:sqlite3_value_blob(rawValue) length:rawValueLength];
+            break;
+        case SQLITE_NULL:
+            value = @"NULL";
+            break;
+        default:
+            break;
+    }
+    
+    return value;
+}
 
 @interface CSSQLitePreparedStatement (Private)
 
@@ -223,34 +254,3 @@
 }
 
 @end
-
-id translate(sqlite3_stmt *preparedStatement, int column)
-{
-    int columnType = sqlite3_column_type(preparedStatement, column);
-    int rawValueLength = sqlite3_column_bytes(preparedStatement, column);
-    sqlite3_value *rawValue = sqlite3_column_value(preparedStatement, column);
-    
-    id value;
-    
-    switch (columnType) {
-        case SQLITE_FLOAT:
-            value = [NSNumber numberWithDouble:sqlite3_value_double(rawValue)];
-            break;
-        case SQLITE_INTEGER:
-            value = [NSNumber numberWithInt:sqlite3_value_int(rawValue)];
-            break;
-        case SQLITE_TEXT:
-            value = [NSString stringWithFormat:@"%s", sqlite3_value_text(rawValue)];
-            break;
-        case SQLITE_BLOB:
-            value = [NSData dataWithBytes:sqlite3_value_blob(rawValue) length:rawValueLength];
-            break;
-        case SQLITE_NULL:
-            value = @"NULL";
-            break;
-        default:
-            break;
-    }
-
-    return value;
-}

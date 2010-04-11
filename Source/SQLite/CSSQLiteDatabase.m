@@ -8,6 +8,8 @@
 
 #import "CocoaSQL.h"
 #import "CSSQLiteDatabase.h"
+#include <sqlite3.h>
+
 
 @implementation CSSQLiteDatabase
 
