@@ -25,6 +25,7 @@
 - (id)initWithValues:(NSArray *)values;
 - (BOOL)bindObject:(id)object ToColumn:(int)index;
 - (void)reset;
+- (int)numFields;
 
 @end
 
@@ -222,7 +223,7 @@
                 // XXX - decimals are actually bound to either float or double
                 // so we will never hit this case
                 break;
-                // all mysql date/time datatypes are mapped to the MYSQL_TIME structure
+                // all mysql date/time datatypes are stored in a MYSQL_TIME structure
             case MYSQL_TYPE_TIMESTAMP:
             case MYSQL_TYPE_DATETIME:
             case MYSQL_TYPE_DATE:
@@ -239,7 +240,8 @@
                 unixTime.tm_hour = dateTime->hour;
                 unixTime.tm_min = dateTime->minute;
                 unixTime.tm_sec = dateTime->second;
-                time = mktime(&unixTime);
+                // mktime is not re-entrant ... but anyway, we don't neeed to be thread-safe (yet) :)
+                time = mktime(&unixTime); 
                 value = [NSDate dateWithTimeIntervalSince1970:time];
                 break;
                 // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
@@ -322,7 +324,8 @@
         binds[index].buffer_type = MYSQL_TYPE_STRING;
         // XXX - we are copying the string :(
         binds[index].buffer = (void *)strdup([value UTF8String]);
-        binds[index].buffer_length = [value length]; // XXX - does length return the bytelength of the buffer?
+        binds[index].buffer_length = [value length]; // XXX - does length return 
+                                                     // the bytelength of the buffer?
     }
     else if ([valueClass isSubclassOfClass:[NSDate class]])
     {
@@ -357,6 +360,11 @@
         return NO;
     }
     return YES;
+}
+
+- (int)numFields
+{
+    return numFields;
 }
 
 @end
@@ -448,27 +456,42 @@
     unsigned long bindParameterCount = mysql_stmt_param_count(statement);
 
     if (bindParameterCount > 0) {
-        if (!values || [values count] < bindParameterCount) {
+        BOOL success = NO;
+
+        if (values) {
+            if (paramBinds) // release old paramBinds if any
+                [paramBinds release];
+            paramBinds = [CSMysqlBindsStorage alloc];
+            for (int i = 0; i < bindParameterCount; i++) {
+                if (![paramBinds bindObject:[values objectAtIndex:i] ToColumn:i]) {
+                    if (error) {
+                        NSMutableDictionary *errorDetail;
+                        errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       [NSString stringWithFormat:@"Unknown datatatype %@",
+                                            [[values objectAtIndex:i] className]], 
+                                       @"errorMessage", 
+                                       nil];
+                        *error = [NSError errorWithDomain:@"CSMySQL" code:666 userInfo:errorDetail];
+                    } 
+                }
+            }
+            
+        } 
+        if (!paramBinds || [paramBinds numFields] < bindParameterCount) {
             if (error) {
                 NSMutableDictionary *errorDetail;
-                errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Expected %i value(s), %i provided", bindParameterCount, [values count]], @"errorMessage", nil];
+                errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                               [NSString stringWithFormat:@"Expected %i value(s), %i provided", 
+                                    bindParameterCount, [values count]], 
+                               @"errorMessage",
+                               nil];
                 *error = [NSError errorWithDomain:@"CSMySQL" code:100 userInfo:errorDetail];
             }
-            return NO;
-        }
-        if (paramBinds) // release old paramBinds if any
-            [paramBinds release];
-        paramBinds = [CSMysqlBindsStorage alloc];
-
-        BOOL success = NO;
-        for (int i = 0; i < bindParameterCount; i++) {
-            if (![paramBinds bindObject:[values objectAtIndex:i] ToColumn:i]) {
-                 if (error) {
-                     NSMutableDictionary *errorDetail;
-                     errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Unknown datatatype %@", [[values objectAtIndex:i] className]], @"errorMessage", nil];
-                     *error = [NSError errorWithDomain:@"CSMySQL" code:666 userInfo:errorDetail];
-                 } 
+            if (paramBinds) {
+                [paramBinds release];
+                paramBinds = nil;
             }
+            return NO;
         }
 
         if (mysql_stmt_bind_param(statement, [paramBinds binds]) == 0) {
