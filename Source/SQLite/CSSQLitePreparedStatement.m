@@ -117,9 +117,9 @@
             }
             
             if (!success) {
-                CSSQLiteDatabase *database_ = (CSSQLiteDatabase *)self.database;
-                NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(database_.databaseHandle)];
-                *error = [NSError errorWithMessage:errorMessage andCode:500];
+                *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
+                                                    sqlite3_errmsg(self.database.databaseHandle)]
+                                           andCode:500];
                 return NO;
             }
         }
