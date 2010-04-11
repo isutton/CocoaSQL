@@ -26,7 +26,7 @@
     NSError *error = nil;
     int affectedRows;
     
-    affectedRows = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME)" error:&error];
+    affectedRows = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME, t timestamp, bs BIGINT signed, bu BIGINT unsigned )" error:&error];
     
     STAssertNil(error, @"Error.");
     STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
@@ -44,7 +44,9 @@
     CSQLDatabase *database = [self createDatabase:&error];
     [self createTable:database];
     
-    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d) VALUES (?, ?, now())" error:&error];
+    
+    // TODO - test if giving a wrong statement fails properly
+    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d, t, bs, bu) VALUES (?, ?, now(), now(), -9223372036854775808, 18446744073709551615)" error:&error];
     
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
     for (int i = 1; i <= 100 && !error; i++) {
@@ -58,20 +60,47 @@
     NSArray *params = [NSArray arrayWithObject:[CSQLBindValue bindValueWithString:@"v%"]];
     [selectStatement executeWithValues:params error:&error];
     NSDictionary *resultDictionary;
-    int cnt = 1;
-    while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
+    int cnt = 0;
+    while (resultDictionary = [selectStatement fetchRowAsDictionary:&error]) {
+        cnt++;
         NSNumber *i = [NSNumber numberWithInt:cnt];
         NSString *v = [NSString stringWithFormat:@"v%d", cnt];
-        STAssertEquals((int)[resultDictionary count], 3, @"fetchRowAsArrayWithSQL : resultCount");
-        STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
-        STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
-        STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
-        //NSLog(@"Row: %@\n", resultDictionary);
-        cnt++;
+        STAssertEquals((int)[resultDictionary count], 6, @"fetchRowAsDictionaryWithSQL : resultCount");
+        STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsDictionaryWithSQL : resultElement1");
+        STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsDictionaryWithSQL : resultElement2");
+        STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsDictionaryWithSQL : resultElement3");
+        STAssertEqualObjects([resultDictionary objectForKey:@"bs"], [NSNumber numberWithLongLong:-9223372036854775808UL], @"fetchRowAsDictionaryWithSQL : bigint signed");
+        STAssertEqualObjects([resultDictionary objectForKey:@"bu"], [NSNumber numberWithUnsignedLongLong:18446744073709551615UL], @"fetchRowAsDictionaryWithSQL : bigint unsigned");
+        NSLog(@"Row: %@\n", resultDictionary);
     }
+    if (error)
+        NSLog(@"%@\n", error);
+    STAssertEquals(cnt, 100, @"Number of retreived rows)");
+    // test fetchRowAsArray
+    [selectStatement executeWithValues:params error:&error];
+    NSArray *resultArray;
+    cnt = 0;
+    while (resultArray = [selectStatement fetchRowAsArray:nil]) {
+        cnt++;
+        NSNumber *i = [NSNumber numberWithInt:cnt];
+        NSString *v = [NSString stringWithFormat:@"v%d", cnt];
+        STAssertEquals((int)[resultArray count], 6, @"fetchRowAsArrayWithSQL : resultCount");
+        STAssertEqualObjects([resultArray objectAtIndex:0], i , @"fetchRowAsArrayWithSQL : resultElement1");
+        STAssertEqualObjects([resultArray objectAtIndex:1], v, @"fetchRowAsArrayWithSQL : resultElement2");
+        STAssertTrue([[[resultArray objectAtIndex:2] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
+        STAssertEqualObjects([resultArray objectAtIndex:4], [NSNumber numberWithLongLong:-9223372036854775808UL], @"fetchRowAsDictionaryWithSQL : bigint signed");
+        STAssertEqualObjects([resultArray objectAtIndex:5], [NSNumber numberWithUnsignedLongLong:18446744073709551615UL], @"fetchRowAsDictionaryWithSQL : bigint unsigned");
+        //NSLog(@"Row: %@\n", resultDictionary);
+    }
+    if (error)
+        NSLog(@"%@\n", error);
+    STAssertEquals(cnt, 100, @"Number of retreived rows)");
+    
     [database executeSQL:@"DROP TABLE mysql_test" error:&error];
+    if (error)
+        NSLog(@"%@\n", error);
 }
-
+/*
 - (void)testMysqlNoCSQLBindValue
 {
     NSError *error = nil;
@@ -110,5 +139,5 @@
         cnt++;
     }
     [database executeSQL:@"DROP TABLE mysql_test" error:&error];
-}
+}*/
 @end

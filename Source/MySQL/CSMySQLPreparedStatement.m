@@ -27,16 +27,28 @@ static id translate(MYSQL_BIND *bind)
             value = [NSNumber numberWithFloat:*((float *)bind->buffer)];
             break;
         case MYSQL_TYPE_SHORT:
-            value = [NSNumber numberWithShort:*((short *)bind->buffer)];
+            if (bind->is_unsigned)
+                value = [NSNumber numberWithUnsignedShort:*((short *)bind->buffer)];
+            else
+                value = [NSNumber numberWithShort:*((short *)bind->buffer)];
             break;
         case MYSQL_TYPE_LONG:
-            value = [NSNumber numberWithLong:*((long *)bind->buffer)];
+            if (bind->is_unsigned)
+                value = [NSNumber numberWithUnsignedLong:*((long *)bind->buffer)];
+            else
+                value = [NSNumber numberWithLong:*((long *)bind->buffer)];
             break;
         case MYSQL_TYPE_INT24:
-            value = [NSNumber numberWithInt:*((int *)bind->buffer)];
+            if (bind->is_unsigned)
+                value = [NSNumber numberWithUnsignedInt:*((int *)bind->buffer)];
+            else
+                value = [NSNumber numberWithInt:*((int *)bind->buffer)];
             break;
         case MYSQL_TYPE_LONGLONG:
-            value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
+            if (bind->is_unsigned)
+                value = [NSNumber numberWithUnsignedLongLong:*((long long *)bind->buffer)];
+            else
+                value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
             break;
         case MYSQL_TYPE_DOUBLE:
             value = [NSNumber numberWithDouble:*((double *)bind->buffer)];
@@ -106,25 +118,35 @@ static MYSQL_BIND *createResultBinds(MYSQL_FIELD *fields, int numFields)
         // more strict datatype mapping
         resultBinds[i].buffer_type = fields[i].type;
         switch(fields[i].type) {
-            case MYSQL_TYPE_FLOAT:
-                resultBinds[i].buffer = calloc(1, sizeof(float));
-                break;
             case MYSQL_TYPE_SHORT:
                 resultBinds[i].buffer = calloc(1, sizeof(short));
+                if (fields[i].flags & UNSIGNED_FLAG)
+                    resultBinds[i].is_unsigned = 1;
                 break;
             case MYSQL_TYPE_LONG:
                 resultBinds[i].buffer = calloc(1, sizeof(long));
+                if (fields[i].flags & UNSIGNED_FLAG)
+                    resultBinds[i].is_unsigned = 1;
                 break;
             case MYSQL_TYPE_INT24:
                 resultBinds[i].buffer = calloc(1, sizeof(int));
+                if (fields[i].flags & UNSIGNED_FLAG)
+                    resultBinds[i].is_unsigned = 1;
                 break;
             case MYSQL_TYPE_LONGLONG:
                 resultBinds[i].buffer = calloc(1, sizeof(long long));
+                if (fields[i].flags & UNSIGNED_FLAG)
+                    resultBinds[i].is_unsigned = 1;
                 break;
-            case MYSQL_TYPE_DOUBLE:
-                resultBinds[i].buffer = calloc(1, sizeof(double));
             case MYSQL_TYPE_TINY:
                 resultBinds[i].buffer = calloc(1, sizeof(char));
+                if (fields[i].flags & UNSIGNED_FLAG)
+                    resultBinds[i].is_unsigned = 1;
+            case MYSQL_TYPE_DOUBLE:
+                resultBinds[i].buffer = calloc(1, sizeof(double));
+                break;
+            case MYSQL_TYPE_FLOAT:
+                resultBinds[i].buffer = calloc(1, sizeof(float));
                 break;
             case MYSQL_TYPE_DECIMAL:
                 /* TODO - convert mysql type decimal */
@@ -458,9 +480,7 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
     [self fetchRowWithBinds:resultBinds error:error];
     if (!canFetch) { // end of rows or error occurred
         // we can release the row-storage now
-        destroyResultBinds(resultBinds, numFields);
-        resultBinds = nil;
-        numFields = 0;
+        [self finish];
         return nil;
     }
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:numFields];
@@ -492,9 +512,7 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
                     forKey:[NSString stringWithFormat:@"%s", fields[i].name]];
     } else { // end of rows or error occurred
         // we can release the row-storage now
-        destroyResultBinds(resultBinds, numFields);
-        resultBinds = nil;
-        numFields = 0;
+        [self finish];
         return nil;
     }
     return row;
