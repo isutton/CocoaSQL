@@ -61,7 +61,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 - (id)initWithDatabase:(CSSQLiteDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     if (self = [super init]) {
-        self.database = aDatabase;
+        database = aDatabase;
         sqlite3_stmt *statement_;
         int errorCode = sqlite3_prepare_v2(aDatabase.databaseHandle, [sql UTF8String], [sql length], &statement_, NULL);
         if (errorCode != SQLITE_OK) {
@@ -74,7 +74,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
             }
             return nil;
         }
-        self.statement = statement_;
+        statement = statement_;
     }
     return self;
 }
@@ -89,27 +89,27 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 
 - (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column
 {
-    return sqlite3_bind_int(self.statement, column, [aValue intValue]) == SQLITE_OK;
+    return sqlite3_bind_int(statement, column, [aValue intValue]) == SQLITE_OK;
 }
 
 - (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column
 {
-    return sqlite3_bind_double(self.statement, column, [aValue doubleValue]) == SQLITE_OK;
+    return sqlite3_bind_double(statement, column, [aValue doubleValue]) == SQLITE_OK;
 }
 
 - (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column
 {
-    return SQLITE_OK == sqlite3_bind_text(self.statement, column, [aValue cStringUsingEncoding:NSUTF8StringEncoding], [aValue length], SQLITE_STATIC);
+    return SQLITE_OK == sqlite3_bind_text(statement, column, [aValue cStringUsingEncoding:NSUTF8StringEncoding], [aValue length], SQLITE_STATIC);
 }
 
 - (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column
 {
-    return SQLITE_OK == sqlite3_bind_blob(self.statement, column, [aValue bytes], [aValue length], SQLITE_STATIC);
+    return SQLITE_OK == sqlite3_bind_blob(statement, column, [aValue bytes], [aValue length], SQLITE_STATIC);
 }
 
 - (BOOL)bindNullValueForColumn:(int)column
 {
-    return SQLITE_OK == sqlite3_bind_null(self.statement, column);
+    return SQLITE_OK == sqlite3_bind_null(statement, column);
 }
 
 #pragma mark -
@@ -117,7 +117,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
-    int bindParameterCount = sqlite3_bind_parameter_count(self.statement);
+    int bindParameterCount = sqlite3_bind_parameter_count(statement);
 
     if (bindParameterCount > 0) {
 
@@ -152,14 +152,14 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
             
             if (!success) {
                 *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
-                                                    sqlite3_errmsg(self.database.databaseHandle)]
+                                                    sqlite3_errmsg(database.databaseHandle)]
                                            andCode:500];
                 return NO;
             }
         }
     }
 
-    int errorCode = sqlite3_step(self.statement);
+    int errorCode = sqlite3_step(statement);
     
     if (errorCode == SQLITE_ERROR) {
         if (error) {
@@ -176,7 +176,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     }
 
     if (errorCode == SQLITE_DONE) {
-        sqlite3_reset(self.statement);
+        sqlite3_reset(statement);
     }
     
     return YES;
@@ -196,10 +196,10 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
         return nil;
     }
     
-    int columnCount = sqlite3_column_count(self.statement);
+    int columnCount = sqlite3_column_count(statement);
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
     for (int i = 0; i < columnCount; i++) {
-        [row addObject:translate(self.statement, i)];
+        [row addObject:translate(statement, i)];
     }
 
     [self prepareNextFetch];
@@ -218,12 +218,12 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
         return nil;
     }
 
-    columnCount = sqlite3_column_count(self.statement);
+    columnCount = sqlite3_column_count(statement);
     row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
     
     for (int i = 0; i < columnCount; i++) {
-        value = translate(self.statement, i);
-        columnName = sqlite3_column_name(self.statement, i);
+        value = translate(statement, i);
+        columnName = sqlite3_column_name(statement, i);
         [row setObject:value forKey:[NSString stringWithFormat:@"%s", columnName]];
     }
 
@@ -240,7 +240,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 
 - (void)prepareNextFetch
 {
-    int errorCode = sqlite3_step(self.statement);
+    int errorCode = sqlite3_step(statement);
     
     if (errorCode != SQLITE_ERROR) {
         if (errorCode == SQLITE_ROW) {
