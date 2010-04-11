@@ -11,6 +11,9 @@
 #import "CSQLBindValue.h"
 #include <mysql.h>
 
+#pragma mark -
+#pragma mark CSMysqlBindsStorage
+
 @interface CSMysqlBindsStorage : NSObject {
     MYSQL_BIND *binds;
     int         numFields;
@@ -32,6 +35,9 @@
     [self reset];
     [super dealloc];
 }
+
+#pragma mark -
+#pragma mark Internal Binds storage management
 
 - (void)reset
 {
@@ -355,9 +361,6 @@
 
 @end
 
-#pragma mark -
-#pragma mark Internal Binds storage management
-
 @implementation CSMySQLPreparedStatement
 
 @synthesize statement;
@@ -432,6 +435,8 @@
         mysql_stmt_close(statement);
     if (resultBinds)
         [resultBinds release];
+    if (paramBinds)
+        [paramBinds release];
     [super dealloc];
 }
 
@@ -451,12 +456,13 @@
             }
             return NO;
         }
-
-        CSMysqlBindsStorage *params = [CSMysqlBindsStorage alloc];
+        if (paramBinds) // release old paramBinds if any
+            [paramBinds release];
+        paramBinds = [CSMysqlBindsStorage alloc];
 
         BOOL success = NO;
         for (int i = 0; i < bindParameterCount; i++) {
-            if (![params bindObject:[values objectAtIndex:i] ToColumn:i]) {
+            if (![paramBinds bindObject:[values objectAtIndex:i] ToColumn:i]) {
                  if (error) {
                      NSMutableDictionary *errorDetail;
                      errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Unknown datatatype %@", [[values objectAtIndex:i] className]], @"errorMessage", nil];
@@ -465,14 +471,17 @@
             }
         }
 
-        if (mysql_stmt_bind_param(statement, [params binds]) == 0) {
+        if (mysql_stmt_bind_param(statement, [paramBinds binds]) == 0) {
             if (mysql_stmt_execute(statement) == 0) {
                 canFetch = YES;
                 success = YES;
             }
         }
-
-        [params release];
+        // we can already release storage for paramBinds since  we don't need it anymore
+        // (it would have be freed anyway at [finish] or when dealloc'd ... 
+        //  but why keeping that stuff in memory if we don't need it?)
+        [paramBinds release];
+        paramBinds = nil;
         if (!success) {
             if (error) {
                 NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
@@ -600,6 +609,51 @@
         resultBinds = nil;
     }
     return YES;
+}
+
+#pragma mark -
+#pragma mark bindValue accessors
+
+- (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column
+{
+    if (!paramBinds)
+        paramBinds = [CSMysqlBindsStorage alloc];
+    return [paramBinds bindObject:aValue ToColumn:column];
+}
+
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column
+{
+    if (!paramBinds)
+        paramBinds = [CSMysqlBindsStorage alloc];
+    return [paramBinds bindObject:aValue ToColumn:column];
+}
+
+- (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column
+{
+    if (!paramBinds)
+        paramBinds = [CSMysqlBindsStorage alloc];
+    return [paramBinds bindObject:aValue ToColumn:column];
+}
+
+- (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column
+{
+    if (!paramBinds)
+        paramBinds = [CSMysqlBindsStorage alloc];
+    return [paramBinds bindObject:aValue ToColumn:column];
+}
+
+- (BOOL)bindNullValueForColumn:(int)column
+{
+    if (!paramBinds)
+        paramBinds = [CSMysqlBindsStorage alloc];
+    return [paramBinds bindObject:[NSNull null] ToColumn:column];
+}
+
+- (BOOL)bindValue:(id)aValue forColumn:(int)column;
+{
+    if (!paramBinds)
+        paramBinds = [CSMysqlBindsStorage alloc];
+    return [paramBinds bindObject:aValue ToColumn:column];
 }
 
 @end
