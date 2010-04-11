@@ -81,28 +81,11 @@
 
 - (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values callback:(CSQLCallback)callbackFunction context:(void *)context error:(NSError **)error;
 {
-    int affectedRows = 0;
-    int errorCode;
-    char *errorMessage;
-    
-    if (values && [values count] > 0) {
-        CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
-        if (!statement) {
-            return 0;
-        }
-        return [statement executeWithValues:values error:error];
+    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    if (!statement) {
+        return 0;
     }
-    else {
-        errorCode = sqlite3_exec(self.databaseHandle, [sql UTF8String], callbackFunction, context, &errorMessage);
-        if (errorCode != SQLITE_OK && errorCode != SQLITE_ABORT) {
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", errorMessage];
-            *error = [NSError errorWithMessage:errorMessage andCode:500];
-        }
-        else {
-            affectedRows = sqlite3_changes(self.databaseHandle);
-        }        
-    }
-    return affectedRows;
+    return [statement executeWithValues:values error:error];
 }
 
 #pragma mark -
@@ -123,9 +106,12 @@
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
-    NSMutableArray *row = [NSMutableArray array];
-    BOOL success = [self executeSQL:sql withValues:values callback:rowAsArrayCallback context:row error:error];
-    return success ? row : nil;
+    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    if (!statement) {
+        return nil;
+    }
+    [statement executeWithValues:values error:error];
+    return [statement fetchRowAsArray:error];
 }
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
@@ -138,9 +124,12 @@
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
-    NSMutableDictionary *row = [NSMutableDictionary dictionary];
-    BOOL success = [self executeSQL:sql withValues:values callback:rowAsDictionaryCallback context:row error:error];
-    return success ? row : nil;
+    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    if (!statement) {
+        return nil;
+    }
+    [statement executeWithValues:values error:error];
+    return [statement fetchRowAsDictionary:error];
 }
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
