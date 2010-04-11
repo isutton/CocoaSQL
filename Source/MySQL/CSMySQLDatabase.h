@@ -9,7 +9,6 @@
 #import <Cocoa/Cocoa.h>
 #import "CocoaSQL.h"
 
-#include <mysql.h>
 
 @interface CSMySQLDatabase : CSQLDatabase {
 }

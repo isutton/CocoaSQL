@@ -8,6 +8,7 @@
 
 #import "CSMySQLDatabase.h"
 #import "CSMySQLPreparedStatement.h"
+#include <mysql.h>
 
 @implementation CSMySQLDatabase
 
@@ -258,6 +259,18 @@
     return [self fetchRowsAsArraysWithSQL:sql
                                withValues:nil
                                     error:error];
+}
+
+- (NSNumber *)lastInsertID
+{
+    my_ulonglong last_id = mysql_insert_id(databaseHandle);
+    return [NSNumber numberWithLongLong:last_id];
+}
+
+- (NSNumber *)affectedRows
+{
+    my_ulonglong numRows = mysql_affected_rows(databaseHandle);
+    return [NSNumber numberWithLongLong:numRows];
 }
 
 #pragma mark -

@@ -64,6 +64,16 @@
     return [self disconnect:nil];
 }
 
+- (NSNumber *)affectedRows
+{
+    return 0;
+}
+
+- (NSNumber *)lastInsertID
+{
+    return 0;
+}
+
 @end
 
 

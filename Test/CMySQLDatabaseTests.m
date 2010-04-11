@@ -103,6 +103,10 @@
         STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
         STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
         //NSLog(@"Row: %@\n", resultDictionary);
+        NSNumber *a = [NSNumber numberWithInt:324];
+        NSNumber *b = [NSNumber numberWithFloat:4.5];
+        NSLog(@"a: %@ - b: %@\n", [a className], [b className]);
+
         cnt++;
     }
     [database executeSQL:@"DROP TABLE mysql_test" error:&error];
