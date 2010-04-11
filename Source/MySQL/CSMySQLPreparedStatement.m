@@ -192,11 +192,11 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
     resultBinds = nil;
     numFields = 0;
     self.database = aDatabase;
-    self.statement = mysql_stmt_init((MYSQL *)aDatabase.databaseHandle);
+    self.statement = mysql_stmt_init(database.databaseHandle);
     if (!self.statement) {
         if (error) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-            [errorDetail setObject:[NSString stringWithFormat:@"%s", mysql_error((MYSQL *)database.databaseHandle)] 
+            [errorDetail setObject:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] 
                             forKey:@"errorMessage"];
             // XXX - which errorcode should be used here?
             *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:501 userInfo:errorDetail];
@@ -239,7 +239,7 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
             NSMutableDictionary *errorDetail;
             errorDetail = [NSMutableDictionary dictionary];
             NSString *errorMessage = [NSString stringWithFormat:@"%s", 
-                                      mysql_error((MYSQL *)database.databaseHandle)];
+                                      mysql_error(database.databaseHandle)];
             [errorDetail setObject:errorMessage forKey:@"errorMessage"];
             *error = [NSError errorWithDomain:@"CSMySQL" code:errorCode userInfo:errorDetail];
         }

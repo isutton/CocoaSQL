@@ -48,8 +48,8 @@
 - (id)initWithName:(NSString *)databaseName host:(NSString *)host user:(NSString *)user password:(NSString *)password error:(NSError **)error
 {
     databaseHandle = calloc(1, sizeof(MYSQL));
-    mysql_init((MYSQL *)databaseHandle);
-    MYSQL *connected = mysql_real_connect((MYSQL *)databaseHandle, 
+    mysql_init(databaseHandle);
+    MYSQL *connected = mysql_real_connect(databaseHandle, 
                                           [host UTF8String],
                                           [user UTF8String],
                                           [password UTF8String],
@@ -58,11 +58,11 @@
                                           NULL,
                                           0);
 
-    if (!connected && mysql_ping((MYSQL *)databaseHandle) != 0) {
+    if (!connected && mysql_ping(databaseHandle) != 0) {
         if (error) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
             NSString *errorMessage = [NSString stringWithFormat:@"Can't connect to database: %s", 
-                                      mysql_error((MYSQL *)databaseHandle)];
+                                      mysql_error(databaseHandle)];
             [errorDetail setObject:errorMessage forKey:@"errorMessage"];
             *error = [NSError errorWithDomain:@"CSMySQLDatabase" code:500 userInfo:errorDetail];
             // XXX - I'm unsure if returning nil here is safe, 
@@ -78,7 +78,7 @@
 - (void)dealloc
 {
     if (databaseHandle) {
-        mysql_close((MYSQL *)databaseHandle);
+        mysql_close(databaseHandle);
         free(databaseHandle);
     }
     [super dealloc];
@@ -108,7 +108,7 @@
             affectedRows = [(CSMySQLPreparedStatement *)statement affectedRows];
     }
     else {
-        if (mysql_real_query((MYSQL *)databaseHandle, [sql UTF8String], [sql length]) != 0) {
+        if (mysql_real_query(databaseHandle, [sql UTF8String], [sql length]) != 0) {
             if (error) {
                 NSMutableDictionary *errorDetail;
                 errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -119,10 +119,10 @@
             return -1;
         }
         
-        affectedRows = mysql_affected_rows((MYSQL *)databaseHandle);
+        affectedRows = mysql_affected_rows(databaseHandle);
 
         if (callbackFunction) {
-            res = mysql_use_result((MYSQL *)databaseHandle);
+            res = mysql_use_result(databaseHandle);
             if (res) {
                 MYSQL_FIELD *fields = mysql_fetch_fields(res);
                 int nFields = mysql_num_fields(res);
