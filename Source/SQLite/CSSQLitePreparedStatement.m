@@ -31,7 +31,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
             value = [NSData dataWithBytes:sqlite3_value_blob(rawValue) length:rawValueLength];
             break;
         case SQLITE_NULL:
-            value = @"NULL";
+            value = [NSNull null];
             break;
         default:
             break;
