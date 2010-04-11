@@ -28,25 +28,25 @@ static id translate(MYSQL_BIND *bind)
             break;
         case MYSQL_TYPE_SHORT:
             if (bind->is_unsigned)
-                value = [NSNumber numberWithUnsignedShort:*((short *)bind->buffer)];
+                value = [NSNumber numberWithUnsignedShort:*((unsigned short *)bind->buffer)];
             else
                 value = [NSNumber numberWithShort:*((short *)bind->buffer)];
             break;
         case MYSQL_TYPE_LONG:
             if (bind->is_unsigned)
-                value = [NSNumber numberWithUnsignedLong:*((long *)bind->buffer)];
+                value = [NSNumber numberWithUnsignedLong:*((unsigned long *)bind->buffer)];
             else
                 value = [NSNumber numberWithLong:*((long *)bind->buffer)];
             break;
         case MYSQL_TYPE_INT24:
             if (bind->is_unsigned)
-                value = [NSNumber numberWithUnsignedInt:*((int *)bind->buffer)];
+                value = [NSNumber numberWithUnsignedInt:*((unsigned int *)bind->buffer)];
             else
                 value = [NSNumber numberWithInt:*((int *)bind->buffer)];
             break;
         case MYSQL_TYPE_LONGLONG:
             if (bind->is_unsigned)
-                value = [NSNumber numberWithUnsignedLongLong:*((long long *)bind->buffer)];
+                value = [NSNumber numberWithUnsignedLongLong:*((unsigned long long *)bind->buffer)];
             else
                 value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
             break;

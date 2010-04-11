@@ -75,7 +75,7 @@
     }
     if (error)
         NSLog(@"%@\n", error);
-    STAssertEquals(cnt, 100, @"Number of retreived rows)");
+    STAssertEquals(cnt, 100, @"Number of retreived rows)"); // ensure we got all rows
     // test fetchRowAsArray
     [selectStatement executeWithValues:params error:&error];
     NSArray *resultArray;
@@ -94,7 +94,7 @@
     }
     if (error)
         NSLog(@"%@\n", error);
-    STAssertEquals(cnt, 100, @"Number of retreived rows)");
+    STAssertEquals(cnt, 100, @"Number of retreived rows)"); // ensure we got all rows
     
     [database executeSQL:@"DROP TABLE mysql_test" error:&error];
     if (error)
