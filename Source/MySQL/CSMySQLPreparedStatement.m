@@ -10,16 +10,20 @@
 #import "CSMySQLDatabase.h"
 #import "CSQLBindValue.h"
 #include <mysql.h>
+
 @interface CSMySQLPreparedStatementBinds : NSObject {
 /**
  */
-    MYSQL_BIND *resultBinds;
-    int         numFields; 
+    MYSQL_BIND *binds;
+    int         numFields;
 }
 
 - (MYSQL_BIND *)binds;
 - (id)getBoundColumn:(int)index;
+- (id)init;
 - (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;
+- (id)initWithValues:(NSArray *)values;
+- (BOOL)bindObject:(id)object ToColumn:(int)index;
 - (void)reset;
 
 @end
@@ -34,77 +38,77 @@
 
 - (void)reset
 {
-    if (resultBinds) {
+    if (binds) {
         for (int i = 0; i < numFields; i++)
-            if (resultBinds[i].buffer)
-                free(resultBinds[i].buffer);
-        free(resultBinds);
-        resultBinds = NULL;
-        numFields = 0;
+            if (binds[i].buffer)
+                free(binds[i].buffer);
+        free(binds);
+        binds = NULL;
     }
+    numFields = 0;
 }
 
 - (MYSQL_BIND *)binds
 {
-    return resultBinds;
+    return binds;
 }
 
 - (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;
 {
-    if (resultBinds)
+    if (binds)
         [self reset];
     numFields = count;
-    resultBinds = calloc(numFields, sizeof(MYSQL_BIND));
+    binds = calloc(numFields, sizeof(MYSQL_BIND));
     for (int i = 0; i < numFields; i++) {
 #if 0
         // everything apart blobs will be stringified
         if (fields[i].type == MYSQL_TYPE_BLOB || fields[i].type == MYSQL_TYPE_LONG_BLOB
             || fields[i].type == MYSQL_TYPE_TINY_BLOB)
         {
-            resultBinds[i].buffer_type = MYSQL_TYPE_BLOB;
-            resultBinds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
-            resultBinds[i].buffer_length = MAX_BLOB_WIDTH;
+            binds[i].buffer_type = MYSQL_TYPE_BLOB;
+            binds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
+            binds[i].buffer_length = MAX_BLOB_WIDTH;
         } else {
-            resultBinds[i].buffer_type = MYSQL_TYPE_STRING;
-            resultBinds[i].buffer = calloc(1, 1024); // XXX 
-            resultBinds[i].buffer_length = 1024;
+            binds[i].buffer_type = MYSQL_TYPE_STRING;
+            binds[i].buffer = calloc(1, 1024); // XXX 
+            binds[i].buffer_length = 1024;
         }
 #else
         // more strict datatype mapping
-        resultBinds[i].buffer_type = fields[i].type;
+        binds[i].buffer_type = fields[i].type;
         switch(fields[i].type) {
             case MYSQL_TYPE_NULL:
-                resultBinds[i].buffer = NULL;
+                binds[i].buffer = NULL;
                 break;
             case MYSQL_TYPE_SHORT:
-                resultBinds[i].buffer = calloc(1, sizeof(short));
+                binds[i].buffer = calloc(1, sizeof(short));
                 if (fields[i].flags & UNSIGNED_FLAG)
-                    resultBinds[i].is_unsigned = 1;
+                    binds[i].is_unsigned = 1;
                 break;
             case MYSQL_TYPE_LONG:
-                resultBinds[i].buffer = calloc(1, sizeof(long));
+                binds[i].buffer = calloc(1, sizeof(long));
                 if (fields[i].flags & UNSIGNED_FLAG)
-                    resultBinds[i].is_unsigned = 1;
+                    binds[i].is_unsigned = 1;
                 break;
             case MYSQL_TYPE_INT24:
-                resultBinds[i].buffer = calloc(1, sizeof(int));
+                binds[i].buffer = calloc(1, sizeof(int));
                 if (fields[i].flags & UNSIGNED_FLAG)
-                    resultBinds[i].is_unsigned = 1;
+                    binds[i].is_unsigned = 1;
                 break;
             case MYSQL_TYPE_LONGLONG:
-                resultBinds[i].buffer = calloc(1, sizeof(long long));
+                binds[i].buffer = calloc(1, sizeof(long long));
                 if (fields[i].flags & UNSIGNED_FLAG)
-                    resultBinds[i].is_unsigned = 1;
+                    binds[i].is_unsigned = 1;
                 break;
             case MYSQL_TYPE_TINY:
-                resultBinds[i].buffer = calloc(1, sizeof(char));
+                binds[i].buffer = calloc(1, sizeof(char));
                 if (fields[i].flags & UNSIGNED_FLAG)
-                    resultBinds[i].is_unsigned = 1;
+                    binds[i].is_unsigned = 1;
             case MYSQL_TYPE_DOUBLE:
-                resultBinds[i].buffer = calloc(1, sizeof(double));
+                binds[i].buffer = calloc(1, sizeof(double));
                 break;
             case MYSQL_TYPE_FLOAT:
-                resultBinds[i].buffer = calloc(1, sizeof(float));
+                binds[i].buffer = calloc(1, sizeof(float));
                 break;
             case MYSQL_TYPE_DECIMAL:
                 /* TODO - convert mysql type decimal */
@@ -113,17 +117,17 @@
             case MYSQL_TYPE_VARCHAR:
             case MYSQL_TYPE_VAR_STRING:
             case MYSQL_TYPE_STRING:
-                resultBinds[i].buffer = calloc(1, 1024); // perhaps oversized (isn't 256 max_string_size?)
-                resultBinds[i].buffer_length = 1024;
+                binds[i].buffer = calloc(1, 1024); // perhaps oversized (isn't 256 max_string_size?)
+                binds[i].buffer_length = 1024;
                 break;
             case MYSQL_TYPE_BIT:
-                resultBinds[i].buffer = calloc(1, 1);
+                binds[i].buffer = calloc(1, 1);
                 break;
             case MYSQL_TYPE_TINY_BLOB:
             case MYSQL_TYPE_BLOB:
             case MYSQL_TYPE_LONG_BLOB:
-                resultBinds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
-                resultBinds[i].buffer_length = MAX_BLOB_WIDTH;
+                binds[i].buffer = calloc(1, MAX_BLOB_WIDTH);
+                binds[i].buffer_length = MAX_BLOB_WIDTH;
                 break;
                 
             case MYSQL_TYPE_TIMESTAMP:
@@ -133,16 +137,16 @@
             case MYSQL_TYPE_NEWDATE:
 #if 1
                 // handle datetime & friends using the MYSQL_TIME structure
-                resultBinds[i].buffer = calloc(1, sizeof(MYSQL_TIME));
-                resultBinds[i].buffer_length = sizeof(MYSQL_TIME);
+                binds[i].buffer = calloc(1, sizeof(MYSQL_TIME));
+                binds[i].buffer_length = sizeof(MYSQL_TIME);
 #else
                 // handle dates as strings (mysql will convert them for us if we provide
                 // a MYSQL_TYPE_STRING as buffer_type
-                resultBinds[i].buffer_type = MYSQL_TYPE_STRING; // override the type
+                binds[i].buffer_type = MYSQL_TYPE_STRING; // override the type
                 // 23 characters for datetime strings of the type YYYY-MM-DD hh:mm:ss.xxx 
                 // (assuming that microseconds will be supported soon or later)
-                resultBinds[i].buffer = calloc(1, 23);
-                resultBinds[i].buffer_length = 23;
+                binds[i].buffer = calloc(1, 23);
+                binds[i].buffer_length = 23;
 #endif
                 break;
         }
@@ -162,7 +166,7 @@
         // TODO - Erorr messages
         return nil;
     }
-    MYSQL_BIND *bind = &resultBinds[index];
+    MYSQL_BIND *bind = &binds[index];
     if (bind->is_null_value) { // mysql returned a NULL value
         value = [NSNull null];
     } else {
@@ -247,6 +251,96 @@
     return value;    
 }
 
+- (BOOL)bindObject:(id)object ToColumn:(int)index
+{
+    if (index >= numFields) {
+        binds = realloc(binds, sizeof(MYSQL_BIND) * (index+1));
+        // ensure zero-ing just allocated storage
+        memset(binds+numFields, 0, sizeof(MYSQL_BIND) * (index - numFields +1));
+        numFields = index+1;
+    }
+
+    binds[index].param_number = index;
+    Class valueClass = [object class];
+    if ([valueClass isSubclassOfClass:[CSQLBindValue class]]) {
+        CSQLBindValue *value = (CSQLBindValue *)object;
+        switch ([value type]) {
+            case CSQLInteger:
+                binds[index].buffer = malloc(sizeof(long long));
+                *((long long *)binds[index].buffer) = [value longValue];
+                binds[index].buffer_type = MYSQL_TYPE_LONGLONG;
+                break;
+            case CSQLDouble:
+                binds[index].buffer = malloc(sizeof(double));
+                *((double *)binds[index].buffer) = [value doubleValue];
+                binds[index].buffer_type = MYSQL_TYPE_DOUBLE;
+                break;
+            case CSQLText:
+                binds[index].buffer_type = MYSQL_TYPE_STRING;
+                binds[index].buffer = (void *)strdup([[value stringValue] UTF8String]); // XXX
+                binds[index].buffer_length = [[value stringValue] length];  // XXX
+                break;
+            case CSQLBlob:
+                binds[index].buffer_type = MYSQL_TYPE_BLOB;
+                binds[index].buffer = (void *)[[value dataValue] copy];
+                binds[index].buffer_length = [[value dataValue] length];
+                break;
+            case CSQLNull:
+                binds[index].buffer_type = MYSQL_TYPE_NULL;
+                break;
+            default:
+                break;
+        }
+    }
+    else if ([valueClass isSubclassOfClass:[NSNumber class]])
+    {
+        NSNumber *value = (NSNumber *)object;
+        binds[index].buffer = malloc(sizeof(double));
+        // get number as double so we will always have enough storage
+        *((double *)binds[index].buffer) = [value doubleValue];
+        binds[index].buffer_type = MYSQL_TYPE_DOUBLE;
+    }
+    else if ([valueClass isSubclassOfClass:[NSString class]])
+    {
+        NSString *value = (NSString *)object;
+        binds[index].buffer_type = MYSQL_TYPE_STRING;
+        binds[index].buffer = (void *)strdup([value UTF8String]); // XXX
+        binds[index].buffer_length = [value length];  // XXX
+    }
+    else if ([valueClass isSubclassOfClass:[NSDate class]])
+    {
+        NSDate *value = (NSDate *)object;
+        binds[index].buffer_type = MYSQL_TYPE_DATETIME;
+        time_t epoch = [value timeIntervalSince1970];
+        struct tm *time = localtime(&epoch);
+        binds[index].buffer = malloc(sizeof(MYSQL_TIME));
+        ((MYSQL_TIME *)binds[index].buffer)->year = time->tm_year+1900;
+        ((MYSQL_TIME *)binds[index].buffer)->month = time->tm_mon+1;
+        ((MYSQL_TIME *)binds[index].buffer)->day = time->tm_mday;
+        ((MYSQL_TIME *)binds[index].buffer)->hour = time->tm_hour;
+        ((MYSQL_TIME *)binds[index].buffer)->minute = time->tm_min;
+        ((MYSQL_TIME *)binds[index].buffer)->second = time->tm_sec;
+        binds[index].buffer = binds[index].buffer;
+    }
+    else if ([valueClass isSubclassOfClass:[NSData class]])
+    {
+        NSData *value = (NSData *)object;
+        binds[index].buffer_type = MYSQL_TYPE_BLOB;
+        binds[index].buffer = (void *)[value copy];
+        binds[index].buffer_length = [value length];
+    } else if ([valueClass isSubclassOfClass:[NSNull class]])
+    {
+        // null value
+        binds[index].buffer_type = MYSQL_TYPE_NULL;
+        binds[index].buffer = NULL; // XXX - not necessary since it has been calloc'd
+    }
+    else // UNKNOWN DATATYPE
+    {
+        return NO;
+    }
+    return YES;
+}
+
 @end
 
 #pragma mark -
@@ -325,7 +419,7 @@
     if (statement)
         mysql_stmt_close(statement);
     if (resultBinds)
-        [resultBinds release];;
+        [resultBinds release];
     [super dealloc];
 }
 
@@ -337,8 +431,6 @@
     unsigned long bindParameterCount = mysql_stmt_param_count(statement);
 
     if (bindParameterCount > 0) {
-        MYSQL_BIND *params = calloc(bindParameterCount, sizeof(MYSQL_BIND));
-
         if (!values || [values count] < bindParameterCount) {
             if (error) {
                 NSMutableDictionary *errorDetail;
@@ -347,130 +439,28 @@
             }
             return NO;
         }
-        
-        // allocate memory to use as binding-storage for parameters.
-        // worst case is when all parameters are of a certain type, 
-        // so we allocate space to store enough items of each type 
-        // (which means 'bindParameterCount' elements of each possible type)
-        // possible types are actually 'long long', 'double' and 'MYSQL_TIME', 
-        // so we are not going to waste that much memory. (considering also 
-        // that the number of parameters will never be so huge)
-        
-        // integers will be stored as long long [ XXX - perhaps double is a better choice? ]
-        long *lStorage = calloc(bindParameterCount, sizeof(long long));
-        int  lStorageCount = 0;
-        // doubles and floats will be both stored in a double
-        double *dStorage = calloc(bindParameterCount, sizeof(double));
-        int  dStorageCount = 0;
-        // all date/time types will be stored in a MYSQL_TIME
-        MYSQL_TIME *tStorage = calloc(bindParameterCount, sizeof(MYSQL_TIME));
-        int  tStorageCount = 0;
-        
+
+        CSMySQLPreparedStatementBinds *params = [[CSMySQLPreparedStatementBinds alloc] init];
+
         BOOL success = NO;
         for (int i = 0; i < bindParameterCount; i++) {
-            params[i].param_number = i;
-            id encapsulatedValue = [values objectAtIndex:i];
-            Class valueClass = [encapsulatedValue class];
-            if ([valueClass isSubclassOfClass:[CSQLBindValue class]]) {
-                CSQLBindValue *value = (CSQLBindValue *)encapsulatedValue;
-                switch ([value type]) {
-                    case CSQLInteger:
-                        lStorage[lStorageCount] = [value longValue];
-                        params[i].buffer_type = MYSQL_TYPE_LONGLONG;
-                        params[i].buffer = &lStorage[lStorageCount];
-                        lStorageCount++;
-                        break;
-                    case CSQLDouble:
-                        dStorage[lStorageCount] = [value doubleValue];
-                        params[i].buffer_type = MYSQL_TYPE_DOUBLE;
-                        params[i].buffer = &dStorage[dStorageCount];
-                        dStorageCount++;
-                        break;
-                    case CSQLText:
-                        params[i].buffer_type = MYSQL_TYPE_STRING;
-                        params[i].buffer = (void *)[[value stringValue] UTF8String]; // XXX
-                        params[i].buffer_length = [[value stringValue] length];  // XXX
-                        break;
-                    case CSQLBlob:
-                        params[i].buffer_type = MYSQL_TYPE_BLOB;
-                        params[i].buffer = (void *)[[value dataValue] bytes];
-                        params[i].buffer_length = [[value dataValue] length];
-                        break;
-                    case CSQLNull:
-                        params[i].buffer_type = MYSQL_TYPE_NULL;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else if ([valueClass isSubclassOfClass:[NSNumber class]])
-            {
-                NSNumber *value = (NSNumber *)encapsulatedValue;
-                // get number as double so we will always have enough storage
-                dStorage[dStorageCount] = [value doubleValue];
-                params[i].buffer_type = MYSQL_TYPE_DOUBLE;
-                params[i].buffer = &dStorage[dStorageCount];
-                dStorageCount++;
-            }
-            else if ([valueClass isSubclassOfClass:[NSString class]])
-            {
-                NSString *value = (NSString *)encapsulatedValue;
-                params[i].buffer_type = MYSQL_TYPE_STRING;
-                params[i].buffer = (void *)[value UTF8String]; // XXX
-                params[i].buffer_length = [value length];  // XXX
-            }
-            else if ([valueClass isSubclassOfClass:[NSDate class]])
-            {
-                NSDate *value = (NSDate *)encapsulatedValue;
-                params[i].buffer_type = MYSQL_TYPE_DATETIME;
-                time_t epoch = [value timeIntervalSince1970];
-                struct tm *time = localtime(&epoch);
-                tStorage[tStorageCount].year = time->tm_year+1900;
-                tStorage[tStorageCount].month = time->tm_mon+1;
-                tStorage[tStorageCount].day = time->tm_mday;
-                tStorage[tStorageCount].hour = time->tm_hour;
-                tStorage[tStorageCount].minute = time->tm_min;
-                tStorage[tStorageCount].second = time->tm_sec;
-                params[i].buffer = &tStorage[tStorageCount];
-                tStorageCount++;
-            }
-            else if ([valueClass isSubclassOfClass:[NSData class]])
-            {
-                NSData *value = (NSData *)encapsulatedValue;
-                params[i].buffer_type = MYSQL_TYPE_BLOB;
-                params[i].buffer = (void *)[value bytes];
-                params[i].buffer_length = [value length];
-            } else if ([valueClass isSubclassOfClass:[NSNull class]])
-            {
-                // null value
-                params[i].buffer_type = MYSQL_TYPE_NULL;
-                params[i].buffer = NULL; // XXX - not necessary since it has been calloc'd
-            }
-            else // UNKNOWN DATATYPE
-            {
-                if (error) {
-                    NSMutableDictionary *errorDetail;
-                    errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Unknown datatatype %@", [valueClass className]], @"errorMessage", nil];
-                    *error = [NSError errorWithDomain:@"CSMySQL" code:666 userInfo:errorDetail];
-                }
-                free(lStorage);
-                free(dStorage);
-                free(tStorage);
-                free(params);                
-                return NO;
+            if (![params bindObject:[values objectAtIndex:i] ToColumn:i]) {
+                 if (error) {
+                     NSMutableDictionary *errorDetail;
+                     errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Unknown datatatype %@", [[values objectAtIndex:i] className]], @"errorMessage", nil];
+                     *error = [NSError errorWithDomain:@"CSMySQL" code:666 userInfo:errorDetail];
+                 } 
             }
         }
 
-        if (mysql_stmt_bind_param(statement, params) == 0) {
+        if (mysql_stmt_bind_param(statement, [params binds]) == 0) {
             if (mysql_stmt_execute(statement) == 0) {
                 canFetch = YES;
                 success = YES;
             }
         }
-        free(lStorage);
-        free(dStorage);
-        free(tStorage);
-        free(params);
+
+        [params release];
         if (!success) {
             if (error) {
                 NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];

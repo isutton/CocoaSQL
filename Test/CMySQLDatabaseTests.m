@@ -41,21 +41,31 @@
 - (void)testMysqlDatatypes
 {
     NSError *error = nil;
+
     CSQLDatabase *database = [self createDatabase:&error];
     [self createTable:database];
-    
     
     // TODO - test if giving a wrong statement fails properly
     CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d, t, bs, bu, f) VALUES (?, ?, now(), now(), -9223372036854775808, 18446744073709551615, 0.123456789)" error:&error];
     
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
     for (int i = 1; i <= 100 && !error; i++) {
+
+        /*
+
         [values bindIntValue:i];
         [values bindStringValue:[NSString stringWithFormat:@"v%i", i]];
         [statement executeWithValues:values error:&error];
         [values removeAllObjects];
+         */
+        [statement executeWithValues:[NSArray arrayWithObjects:
+                                      [NSNumber numberWithInt:i],
+                                      [NSString stringWithFormat:@"v%d", i],
+                                      nil
+                                      ]
+                               error:&error];
     }
-    
+
     CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM mysql_test WHERE v like ?" error:&error];
     NSArray *params = [NSArray arrayWithObject:[CSQLBindValue bindValueWithString:@"v%"]];
     [selectStatement executeWithValues:params error:&error];
@@ -72,7 +82,7 @@
         STAssertEqualObjects([resultDictionary objectForKey:@"bs"], [NSNumber numberWithLongLong:-9223372036854775808UL], @"fetchRowAsDictionaryWithSQL : bigint signed");
         STAssertEqualObjects([resultDictionary objectForKey:@"bu"], [NSNumber numberWithUnsignedLongLong:18446744073709551615UL], @"fetchRowAsDictionaryWithSQL : bigint unsigned");
         STAssertEqualObjects([resultDictionary objectForKey:@"f"], [NSNumber numberWithFloat:0.123456789], @"fetchRowAsDictionaryWithSQL : float");
-        //NSLog(@"Row: %@\n", resultDictionary);
+        //NSLog(@"Row %d: %@\n",cnt, resultDictionary);
     }
     if (error)
         NSLog(@"%@\n", error);
