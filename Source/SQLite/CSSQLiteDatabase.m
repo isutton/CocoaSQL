@@ -34,6 +34,7 @@
 - (id)initWithPath:(NSString *)aPath error:(NSError **)error
 {
     if (self = [super init]) {
+        statement = nil;
         self.path = [aPath stringByExpandingTildeInPath];
         sqlite3 *databaseHandle_;
         int errorCode = sqlite3_open_v2([self.path UTF8String], &databaseHandle_, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE, 0);
