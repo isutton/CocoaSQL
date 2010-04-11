@@ -56,22 +56,31 @@
 
 - (BOOL)isActive
 {
-    return [self isActive:nil];
+    // MUST be overridden by subclasses
+    // XXX - infinite recursion here !!!!, 
+    // better to just return NO in the baseclass implementation
+    //return [self isActive:nil];
+    return NO;
 }
 
 - (BOOL)disconnect
 {
-    return [self disconnect:nil];
+    // XXX - infinite recursion here !!!!
+    // better to just return NO in the baseclass implementation
+    //return [self disconnect:nil];
+    return NO;
 }
 
 - (NSNumber *)affectedRows
 {
-    return 0;
+    // MUST be overridden by subclasses
+    return [NSNumber numberWithInt:0];
 }
 
 - (NSNumber *)lastInsertID
 {
-    return 0;
+    // MUST be overridden by subclasses
+    return [NSNumber numberWithInt:0];
 }
 
 @end

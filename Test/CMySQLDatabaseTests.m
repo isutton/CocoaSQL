@@ -95,7 +95,7 @@
     [selectStatement executeWithValues:params error:&error];
     NSDictionary *resultDictionary;
     int cnt = 1;
-    while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
+    while (resultDictionary = [selectStatement fetchRowAsDictionary:&error]) {
         NSNumber *i = [NSNumber numberWithInt:cnt];
         NSString *v = [NSString stringWithFormat:@"v%d", cnt];
         STAssertEquals((int)[resultDictionary count], 3, @"fetchRowAsArrayWithSQL : resultCount");
