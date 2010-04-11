@@ -137,7 +137,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
             if ([valueClass isSubclassOfClass:[NSDecimalNumber class]]) {
                 success = [self bindDecimalValue:(NSDecimalNumber *)value forColumn:i];
             }
-            if ([valueClass isSubclassOfClass:[NSNumber class]]) {
+            else if ([valueClass isSubclassOfClass:[NSNumber class]]) {
                 success = [self bindIntegerValue:(NSNumber *)value forColumn:i];
             }
             else if ([valueClass isSubclassOfClass:[NSString class]]) {
