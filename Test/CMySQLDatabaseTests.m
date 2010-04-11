@@ -100,7 +100,7 @@
     if (error)
         NSLog(@"%@\n", error);
 }
-/*
+
 - (void)testMysqlNoCSQLBindValue
 {
     NSError *error = nil;
@@ -119,7 +119,7 @@
                                error:&error];
     }
     
-    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM mysql_test WHERE v like ?" error:&error];
+    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT i, v, d FROM mysql_test WHERE v like ?" error:&error];
     NSArray *params = [NSArray arrayWithObject:@"v%"];
     [selectStatement executeWithValues:params error:&error];
     NSDictionary *resultDictionary;
@@ -139,5 +139,6 @@
         cnt++;
     }
     [database executeSQL:@"DROP TABLE mysql_test" error:&error];
-}*/
+}
+
 @end
