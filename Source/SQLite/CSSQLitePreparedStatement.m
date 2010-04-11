@@ -112,6 +112,9 @@
             else if ([valueClass isSubclassOfClass:[NSData class]]) {
                 success = [self bindDataValue:(NSData *)value forColumn:i];
             }
+            else if ([valueClass isSubclassOfClass:[NSNull class]]) {
+                success = [self bindNullValueForColumn:i];
+            }
             
             if (!success) {
                 CSSQLiteDatabase *database_ = (CSSQLiteDatabase *)self.database;
