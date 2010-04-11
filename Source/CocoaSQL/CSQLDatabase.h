@@ -23,7 +23,8 @@
 
 - (NSNumber *)affectedRows;
 - (NSNumber *)lastInsertID;
-
+- (BOOL)disconnect;
+- (BOOL)isActive;
 @end
 
 #pragma mark -

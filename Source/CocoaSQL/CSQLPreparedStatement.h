@@ -44,5 +44,6 @@
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase error:(NSError **)error;
 - (BOOL)setSQL:(NSString *)sql;
 - (BOOL)setSQL:(NSString *)sql error:(NSError **)error;
-
+- (BOOL)isActive;
+- (BOOL)finish;
 @end
