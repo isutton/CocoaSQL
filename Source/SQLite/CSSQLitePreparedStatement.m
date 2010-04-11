@@ -56,14 +56,14 @@
 #pragma mark -
 #pragma mark Bind messages
 
-- (BOOL)bindIntValue:(int)aValue forColumn:(int)column
+- (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column
 {
-    return sqlite3_bind_int(self.statement, column, aValue) == SQLITE_OK;
+    return sqlite3_bind_int(self.statement, column, [aValue intValue]) == SQLITE_OK;
 }
 
-- (BOOL)bindDoubleValue:(double)aValue forColumn:(int)column
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column
 {
-    return sqlite3_bind_double(self.statement, column, aValue) == SQLITE_OK;
+    return sqlite3_bind_double(self.statement, column, [aValue doubleValue]) == SQLITE_OK;
 }
 
 - (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column
@@ -103,8 +103,11 @@
 
             BOOL success;
 
+            if ([valueClass isSubclassOfClass:[NSDecimalNumber class]]) {
+                success = [self bindDecimalValue:(NSDecimalNumber *)value forColumn:i];
+            }
             if ([valueClass isSubclassOfClass:[NSNumber class]]) {
-                success = [self bindDoubleValue:[(NSNumber *)value intValue] forColumn:i];
+                success = [self bindIntegerValue:(NSNumber *)value forColumn:i];
             }
             else if ([valueClass isSubclassOfClass:[NSString class]]) {
                 success = [self bindStringValue:(NSString *)value forColumn:i];
