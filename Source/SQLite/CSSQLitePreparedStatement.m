@@ -106,25 +106,11 @@
             if ([valueClass isSubclassOfClass:[NSNumber class]]) {
                 success = [self bindDoubleValue:[(NSNumber *)value intValue] forColumn:i];
             }
-            
-            switch ([(CSQLBindValue *)value type]) {
-                case CSQLInteger:
-                    success = [self bindIntValue:[value intValue] forColumn:i];
-                    break;
-                case CSQLDouble:
-                    success = [self bindDoubleValue:[value doubleValue] forColumn:i];
-                    break;
-                case CSQLText:
-                    success = [self bindStringValue:[value stringValue] forColumn:i];
-                    break;
-                case CSQLBlob:
-                    success = [self bindDataValue:[value dataValue] forColumn:i];
-                    break;
-                case CSQLNull:
-                    success = [self bindNullValueForColumn:i];
-                    break;
-                default:
-                    break;
+            else if ([valueClass isSubclassOfClass:[NSString class]]) {
+                success = [self bindStringValue:(NSString *)value forColumn:i];
+            }
+            else if ([valueClass isSubclassOfClass:[NSData class]]) {
+                success = [self bindDataValue:(NSData *)value forColumn:i];
             }
             
             if (!success) {

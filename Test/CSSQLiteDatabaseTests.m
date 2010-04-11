@@ -115,7 +115,7 @@
     
     error = nil;
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
-    [values bindIntValue:1];
+    [values addObject:[NSNumber numberWithInt:1]];
     affectedRows = [database executeSQL:@"DELETE FROM t WHERE i = ?" withValues:values error:&error];
     
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
@@ -143,15 +143,15 @@
     
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
     for (int i = 1; i <= 100 && !error; i++) {
-        [values bindIntValue:i];
-        [values bindStringValue:[NSString stringWithFormat:@"v%i", i]];
+        [values addObject:[NSNumber numberWithInt:i]];
+        [values addObject:[NSString stringWithFormat:@"v%i", i]];
         [statement executeWithValues:values error:&error];
         [values removeAllObjects];
     }
     
     NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
     CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM t WHERE v like ?" error:&error];
-    [params bindStringValue:@"v%"];
+    [params addObject:@"v%"];
     [selectStatement executeWithValues:params error:&error];
     NSDictionary *resultDictionary;
     int cnt = 1;
