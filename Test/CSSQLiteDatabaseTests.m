@@ -11,7 +11,7 @@
 
 @implementation CSSQLiteDatabaseTests
 
-#define TEST_DRIVER @"MySQL"
+#define TEST_DRIVER @"SQLite"
 #define TEST_DB @"test.db"
 #define TEST_DSN @"SQLite:path=test.db"
 
