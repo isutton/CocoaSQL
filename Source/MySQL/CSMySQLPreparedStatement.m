@@ -352,24 +352,24 @@ static void destroyResultBinds(MYSQL_BIND *resultBinds, int numFields)
                     default:
                         break;
                 }
-            } 
+            }
             else if ([valueClass isSubclassOfClass:[NSNumber class]])
             {
                 NSNumber *value = (NSNumber *)encapsulatedValue;
                 // get number as double so we will always have enough storage
-                dStorage[lStorageCount] = [value doubleValue];
+                dStorage[dStorageCount] = [value doubleValue];
                 params[i].buffer_type = MYSQL_TYPE_DOUBLE;
                 params[i].buffer = &dStorage[dStorageCount];
                 params[i].param_number = i;
                 dStorageCount++;
-            } 
+            }
             else if ([valueClass isSubclassOfClass:[NSString class]])
             {
                 NSString *value = (NSString *)encapsulatedValue;
                 params[i].buffer_type = MYSQL_TYPE_STRING;
                 params[i].buffer = (void *)[value UTF8String]; // XXX
                 params[i].buffer_length = [value length];  // XXX
-            } 
+            }
             else if ([valueClass isSubclassOfClass:[NSDate class]])
             {
                 NSDate *value = (NSDate *)encapsulatedValue;
