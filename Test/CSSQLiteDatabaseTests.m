@@ -95,7 +95,7 @@
     if (error)
         STFail(@"%@", error);
     STAssertEquals((int)[resultArray count], 2, @"fetchRowAsArrayWithSQL : resultArrayCount");
-    STAssertEqualObjects([resultArray objectAtIndex:0], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
+    STAssertEqualObjects([resultArray objectAtIndex:0], [NSNumber numberWithInt:2] , @"fetchRowAsArrayWithSQL : resultElement1");
     STAssertEqualObjects([resultArray objectAtIndex:1], @"test2" , @"fetchRowAsArrayWithSQL : resultElement2");
     
     // test fetchRowAsDictionaryWithSQL
@@ -104,7 +104,7 @@
     if (error)
         STFail(@"%@", error);
     STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
-    STAssertEqualObjects([resultDictionary objectForKey:@"i"], @"1" , @"fetchRowAsArrayWithSQL : resultElement1");
+    STAssertEqualObjects([resultDictionary objectForKey:@"i"], [NSNumber numberWithInt:1] , @"fetchRowAsArrayWithSQL : resultElement1");
     STAssertEqualObjects([resultDictionary objectForKey:@"v"], @"test" , @"fetchRowAsArrayWithSQL : resultElement2");
     
     error = nil;
