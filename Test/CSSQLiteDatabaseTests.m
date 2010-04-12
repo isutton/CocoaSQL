@@ -279,7 +279,14 @@
 
     if (error) STFail(@"%@", error);
 
-    STAssertTrue([values isEqualToArray:row], @"Got the same we inserted.");
+    STAssertEquals([[row objectAtIndex:0] intValue], [[values objectAtIndex:0] intValue], @"int");
+    STAssertEqualObjects([row objectAtIndex:1], [values objectAtIndex:1], @"NSString");
+    STAssertEqualObjects([row objectAtIndex:2], [values objectAtIndex:2], @"NSData");
+    STAssertEquals([[row objectAtIndex:3] floatValue], [[values objectAtIndex:3] floatValue], @"float");
+    STAssertEquals([[row objectAtIndex:4] longLongValue], [[values objectAtIndex:4] longLongValue], @"signed long long - positive");
+    STAssertEquals([[row objectAtIndex:5] longLongValue], [[values objectAtIndex:5] longLongValue], @"signed long long - negative");
+    STAssertEquals([[row objectAtIndex:6] unsignedLongLongValue], [[values objectAtIndex:6] unsignedLongLongValue], @"unsigned long long");
+    STAssertEqualObjects([row objectAtIndex:7], [values objectAtIndex:7], @"NSNull");
     
     // Clean up.
     [database executeSQL:@"DROP TABLE CocoaSQL_test_datatypes" error:nil];
