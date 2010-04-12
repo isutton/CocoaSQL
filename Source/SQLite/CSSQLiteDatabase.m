@@ -56,7 +56,7 @@
         return NO;
     }
     
-    databaseHandle = NULL;
+    databaseHandle = nil;
     
     return YES;
 }

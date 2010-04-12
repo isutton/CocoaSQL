@@ -233,7 +233,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
             }
             return NO;
         }
-        statement = NULL;
+        statement = nil;
     }
     return YES;
 }
