@@ -13,7 +13,6 @@
 
 @interface CSSQLiteDatabase : CSQLDatabase {
     NSString *path;
-    CSQLPreparedStatement *statement;
 }
 
 @property (copy) NSString *path;

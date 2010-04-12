@@ -34,7 +34,6 @@
 - (id)initWithPath:(NSString *)aPath error:(NSError **)error
 {
     if (self = [super init]) {
-        statement = nil;
         self.path = [aPath stringByExpandingTildeInPath];
         sqlite3 *databaseHandle_;
         int errorCode = sqlite3_open_v2([self.path UTF8String], &databaseHandle_, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE, 0);
@@ -83,10 +82,12 @@
 
 - (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
 {
-    statement = [self prepareStatement:sql error:error];
+    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    
     if (!statement) {
         return 0;
     }
+    
     return [statement executeWithValues:values error:error];
 }
 
@@ -100,14 +101,15 @@
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
-    statement = [[self prepareStatement:sql error:error] retain];
+    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    
     if (!statement) {
         return nil;
     }
+    
     [statement executeWithValues:values error:error];
-    NSArray *row = [statement fetchRowAsArray:error];
-    [statement release];
-    return row;
+
+    return [statement fetchRowAsArray:error];
 }
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
@@ -120,14 +122,15 @@
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
-    statement = [[self prepareStatement:sql error:error] retain];
+    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    
     if (!statement) {
         return nil;
     }
+    
     [statement executeWithValues:values error:error];
-    NSDictionary *row = [statement fetchRowAsDictionary:error];
-    [statement release];
-    return row;
+    
+    return [statement fetchRowAsDictionary:error];
 }
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
@@ -140,10 +143,12 @@
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
-    statement = [[self prepareStatement:sql error:error] retain];
+    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    
     if (!statement) {
         return nil;
     }
+    
     NSDictionary *row;
     NSMutableArray *rows = [NSMutableArray array];
     if ([statement executeWithValues:values error:error]) {
@@ -151,7 +156,7 @@
             [rows addObject:row];
         }
     }
-    [statement release];
+
     return rows;
 }
 
@@ -162,10 +167,12 @@
 
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
-    statement = [[self prepareStatement:sql error:error] retain];
+    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    
     if (!statement) {
         return nil;
     }
+    
     NSArray *row;
     NSMutableArray *rows = [NSMutableArray array];
     if ([statement executeWithValues:values error:error]) {
@@ -173,7 +180,7 @@
             [rows addObject:row];
         }
     }
-    [statement release];
+
     return rows;
 }
 
