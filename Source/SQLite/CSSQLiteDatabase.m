@@ -44,23 +44,23 @@
                                        andCode:500];
             return nil;
         }
-        self.databaseHandle = (voidPtr)databaseHandle_;
+        databaseHandle = (voidPtr)databaseHandle_;
     }
     return self;
 }
 
 - (BOOL)disconnect:(NSError **)error
 {
-    int errorCode = sqlite3_close(self.databaseHandle);
+    int errorCode = sqlite3_close(databaseHandle);
     
     if (errorCode != SQLITE_OK) {
         if (error) {
-            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", sqlite3_errmsg(self.databaseHandle)] andCode:500];
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", sqlite3_errmsg(databaseHandle)] andCode:500];
         }
         return NO;
     }
     
-    self.databaseHandle = NULL;
+    databaseHandle = NULL;
     
     return YES;
 }
