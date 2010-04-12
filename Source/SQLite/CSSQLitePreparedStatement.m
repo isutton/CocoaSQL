@@ -52,8 +52,6 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 
 @end
 
-#pragma mark -
-
 @implementation CSSQLitePreparedStatement
 
 @synthesize statement;
@@ -83,9 +81,6 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     [database release];
     [super dealloc];
 }
-
-#pragma mark -
-#pragma mark Bind messages
 
 - (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column
 {
@@ -137,9 +132,6 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     
 }
 
-#pragma mark -
-#pragma mark Execute messages
-
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
     int bindParameterCount = sqlite3_bind_parameter_count(statement);
@@ -185,9 +177,6 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 {
     return [self executeWithValues:nil error:error];
 }
-
-#pragma mark -
-#pragma mark Fetch messages
 
 - (NSArray *)fetchRowAsArray:(NSError **)error
 {
@@ -255,8 +244,6 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 }
 
 @end
-
-#pragma mark -
 
 @implementation CSSQLitePreparedStatement (Private)
 

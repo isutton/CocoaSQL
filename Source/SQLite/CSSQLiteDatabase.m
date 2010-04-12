@@ -15,9 +15,6 @@
 
 @synthesize path;
 
-#pragma mark -
-#pragma mark Initialization and dealloc related messages
-
 + (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
 {
     CSSQLiteDatabase *database;
@@ -77,9 +74,6 @@
     [super dealloc];
 }
 
-#pragma mark -
-#pragma mark CSQLDatabase related messages
-
 - (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
@@ -95,9 +89,6 @@
 {
     return [self executeSQL:sql withValues:nil error:error];
 }
-
-#pragma mark -
-#pragma mark Row as Array
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
@@ -117,9 +108,6 @@
     return [self fetchRowAsArrayWithSQL:sql withValues:nil error:error];
 }
 
-#pragma mark -
-#pragma mark Row as Dictionary
-
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
@@ -137,9 +125,6 @@
 {
     return [self fetchRowAsDictionaryWithSQL:sql withValues:nil error:error];
 }
-
-#pragma mark -
-#pragma mark Rows as Dictionaries
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
@@ -188,9 +173,6 @@
 {
     return [self fetchRowsAsArraysWithSQL:sql withValues:nil error:error];
 }
-
-#pragma mark -
-#pragma mark Prepared Statement messages
 
 - (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
 {
