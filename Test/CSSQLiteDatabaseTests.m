@@ -136,14 +136,17 @@
     //STAssertEquals(affectedRows, 1, @"DROP TABLE."); // XXX - This doesn't seem to work with mysql connector, affectedRows is 0 when dropping a table :/
 }
 
-- (void)testPreparedStatement
+- (void)testPreparedStatementWithValuesAsArray
 {
     NSError *error = nil;
     CSQLDatabase *database = [self createDatabase:&error];
     [self createTable:database];
-    
+
     CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO t (i, v) VALUES (?, ?)" error:&error];
-    
+
+    if (error)
+        STFail(@"Couldn't create prepared statement: %@.", error);
+
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
     for (int i = 1; i <= 100 && !error; i++) {
         [values addObject:[NSNumber numberWithInt:i]];
@@ -151,23 +154,72 @@
         [statement executeWithValues:values error:&error];
         [values removeAllObjects];
     }
+        
+    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT i, v FROM t WHERE v like ? ORDER BY i" error:&error];
     
-    NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
-    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM t WHERE v like ?" error:&error];
-    [params addObject:@"v%"];
-    [selectStatement executeWithValues:params error:&error];
+    if (error)
+        STFail(@"Couldn't create prepared statement: %@.", error);
+
+    values = [NSMutableArray arrayWithCapacity:1];
+    [values addObject:@"v%"];
+    [selectStatement executeWithValues:values error:&error];
+    
     NSDictionary *resultDictionary;
-    int cnt = 1;
+    int count = 1;
     while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
-        NSNumber *i = [NSNumber numberWithInt:cnt];
-        NSString *v = [NSString stringWithFormat:@"v%d", cnt];
+        NSNumber *i = [NSNumber numberWithInt:count];
+        NSString *v = [NSString stringWithFormat:@"v%d", count];
         STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
         STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
         STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
-        cnt++;
+        count++;
     }
-    [database executeSQL:@"DROP TABLE t" error:&error];
-    STAssertNil(error, @"preparedStatement failed.");
+    
+    [database executeSQL:@"DROP TABLE t" error:nil];
+}
+
+
+- (void)testPreparedStatementBindingToStatement
+{
+    NSError *error = nil;
+    CSQLDatabase *database = [self createDatabase:&error];
+    [self createTable:database];
+    
+    error = nil;
+    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO t (i, v) VALUES (?, ?)" error:&error];
+    
+    if (error)
+        STFail(@"Couldn't create prepared statement: %@.", error);
+    
+    for (int i = 1; i <= 100 && !error; i++) {
+        [statement bindValue:[NSNumber numberWithInt:i] forColumn:1];
+        [statement bindValue:[NSString stringWithFormat:@"v%i", i] forColumn:2];
+        [statement execute:&error];
+        if (error)
+            STFail(@"Couldn't insert row > %@", error);
+    }
+    
+    error = nil;
+    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT i, v FROM t WHERE v like ? ORDER BY i" error:&error];
+    
+    if (error)
+        STFail(@"Couldn't create prepared statement: %@.", error);
+
+    [selectStatement bindValue:@"v%" forColumn:1];
+    [selectStatement execute:&error];
+    
+    NSDictionary *resultDictionary;
+    int count = 1;
+    while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
+        NSNumber *i = [NSNumber numberWithInt:count];
+        NSString *v = [NSString stringWithFormat:@"v%d", count];
+        STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
+        STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
+        STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
+        count++;
+    }
+    
+    [database executeSQL:@"DROP TABLE t" error:nil];
 }
 
 - (void)testDatatypes
