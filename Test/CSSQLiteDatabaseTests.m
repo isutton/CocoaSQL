@@ -82,36 +82,69 @@
     [self createTable:database];
     
     error = nil;
-    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (1, 'test')" error:&error];
+    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (1, 'test1')" error:&error];
     
-    if (error) 
-        STFail(@"%@", error);
+    if (error) STFail(@"%@", error);
     STAssertEquals(affectedRows, 1, @"INSERT.");
     
     error = nil;
     affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (2, 'test2')" error:&error];
     
-    if (error)
-        STFail(@"%@", error);
+    if (error) STFail(@"%@", error);
     STAssertEquals(affectedRows, 1, @"INSERT.");
     
-    // test fetchRowAsArrayWithSQL
+    //
+    // fetchRowAsArrayWithSQL:error: returns the first row from the result set.
+    //
     error = nil;
-    NSArray *resultArray = [database fetchRowAsArrayWithSQL:@"SELECT * FROM t WHERE i=2" error:&error];
-    if (error)
-        STFail(@"%@", error);
-    STAssertEquals((int)[resultArray count], 2, @"fetchRowAsArrayWithSQL : resultArrayCount");
-    STAssertEqualObjects([resultArray objectAtIndex:0], [NSNumber numberWithInt:2] , @"fetchRowAsArrayWithSQL : resultElement1");
-    STAssertEqualObjects([resultArray objectAtIndex:1], @"test2" , @"fetchRowAsArrayWithSQL : resultElement2");
+    NSArray *expectedArray = [NSArray arrayWithObjects:[NSNumber numberWithInt:2], @"test2", nil];
+    NSArray *resultArray = [database fetchRowAsArrayWithSQL:@"SELECT i, v FROM t ORDER BY i DESC" error:&error];
     
-    // test fetchRowAsDictionaryWithSQL
+    if (error) STFail(@"%@", error);
+    STAssertEquals((int)[resultArray count], 2, @"fetchRowAsArrayWithSQL:error: number of elements in array match.");
+    STAssertEqualObjects(resultArray, expectedArray, @"fetchRowAsArrayWithSQL:error: rows match.");
+
+    //
+    // fetchRowAsDictionaryWithSQL:error: returns the first row from the result set.
+    //
     error = nil;
-    NSDictionary *resultDictionary = [database fetchRowAsDictionaryWithSQL:@"SELECT * FROM t WHERE i=1" error:&error];
-    if (error)
-        STFail(@"%@", error);
-    STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
-    STAssertEqualObjects([resultDictionary objectForKey:@"i"], [NSNumber numberWithInt:1] , @"fetchRowAsArrayWithSQL : resultElement1");
-    STAssertEqualObjects([resultDictionary objectForKey:@"v"], @"test" , @"fetchRowAsArrayWithSQL : resultElement2");
+    NSDictionary *expectedDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        [NSNumber numberWithInt:1], @"i", 
+                                        @"test1", @"v", 
+                                        nil];
+    NSDictionary *resultDictionary = [database fetchRowAsDictionaryWithSQL:@"SELECT i, v FROM t ORDER BY i" error:&error];
+
+    if (error) STFail(@"%@", error);
+    STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsDictionaryWithSQL:error: number of keys in dictionary match.");
+    STAssertEqualObjects(resultDictionary, expectedDictionary, @"fetchRowAsDictionaryWithSQL:error: rows match.");
+    
+    //
+    // fetchRowsAsArraysWithSQL:error: returns all the rows as arrays.
+    //
+    error = nil;
+    expectedArray = [NSArray arrayWithObjects:
+                     [NSArray arrayWithObjects:[NSNumber numberWithInt:1], @"test1", nil],
+                     [NSArray arrayWithObjects:[NSNumber numberWithInt:2], @"test2", nil],
+                     nil];
+    resultArray = [database fetchRowsAsArraysWithSQL:@"SELECT i, v FROM t ORDER BY i" error:&error];
+    
+    if (error) STFail([error description]);
+    STAssertEquals([resultArray count], [expectedArray count], @"fetchRowsAsArraysWithSQL:error: number of rows returned match.");
+    STAssertEqualObjects(resultArray, expectedArray, @"fetchRowsAsArraysWithSQL:error: rows match.");
+    
+    //
+    // fetchRowsAsDictionariesWithSQL:error: returns all the rows as dictionaries.
+    //
+    error = nil;
+    expectedArray = [NSArray arrayWithObjects:
+                     [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:2], @"i", @"test2", @"v", nil],
+                     [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"i", @"test1", @"v", nil],
+                     nil];
+    resultArray = [database fetchRowsAsDictionariesWithSQL:@"SELECT i, v FROM t ORDER BY i DESC" error:&error];
+    
+    if (error) STFail([error description]);
+    STAssertEquals([resultArray count], [expectedArray count], @"fetchRowsAsDictionariesWithSQL:error: number of rows returned match.");
+    STAssertEqualObjects(resultArray, expectedArray, @"fetchRowsAsDictionariesWithSQL:error: rows match.");
     
     error = nil;
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
