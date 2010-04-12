@@ -61,7 +61,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 - (id)initWithDatabase:(CSSQLiteDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     if (self = [super init]) {
-        database = aDatabase;
+        database = [aDatabase retain];
         sqlite3_stmt *statement_;
         int errorCode = sqlite3_prepare_v2(aDatabase.databaseHandle, [sql UTF8String], [sql length], &statement_, NULL);
         if (errorCode != SQLITE_OK) {
@@ -80,6 +80,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 - (void)dealloc
 {
     [self finish];
+    [database release];
     [super dealloc];
 }
 
