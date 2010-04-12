@@ -42,12 +42,6 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 
 @interface CSSQLitePreparedStatement (Private)
 
-/**
- 
- Prepares the underlying sqlite3 prepared statement for the next fetch 
- operation, if any.
- 
- */
 - (void)prepareNextFetch;
 
 @end
@@ -82,7 +76,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     [super dealloc];
 }
 
-- (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column
+- (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)column
 {
     return sqlite3_bind_int(statement, column, [aValue intValue]) == SQLITE_OK;
 }
@@ -92,17 +86,17 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     return sqlite3_bind_double(statement, column, [aValue doubleValue]) == SQLITE_OK;
 }
 
-- (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column
+- (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)column
 {
     return SQLITE_OK == sqlite3_bind_text(statement, column, [aValue cStringUsingEncoding:NSUTF8StringEncoding], [aValue length], SQLITE_STATIC);
 }
 
-- (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column
+- (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)column
 {
     return SQLITE_OK == sqlite3_bind_blob(statement, column, [aValue bytes], [aValue length], SQLITE_STATIC);
 }
 
-- (BOOL)bindNullValueForColumn:(int)column
+- (BOOL)bindNullValueToColumn:(int)column
 {
     return SQLITE_OK == sqlite3_bind_null(statement, column);
 }
@@ -116,16 +110,16 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
         success = [self bindDecimalValue:(NSDecimalNumber *)aValue toColumn:column];
     }
     else if ([valueClass isSubclassOfClass:[NSNumber class]]) {
-        success = [self bindIntegerValue:(NSNumber *)aValue forColumn:column];
+        success = [self bindIntegerValue:(NSNumber *)aValue toColumn:column];
     }
     else if ([valueClass isSubclassOfClass:[NSString class]]) {
-        success = [self bindStringValue:(NSString *)aValue forColumn:column];
+        success = [self bindStringValue:(NSString *)aValue toColumn:column];
     }
     else if ([valueClass isSubclassOfClass:[NSData class]]) {
-        success = [self bindDataValue:(NSData *)aValue forColumn:column];
+        success = [self bindDataValue:(NSData *)aValue toColumn:column];
     }
     else if ([valueClass isSubclassOfClass:[NSNull class]]) {
-        success = [self bindNullValueForColumn:column];
+        success = [self bindNullValueToColumn:column];
     }
     
     return success;
