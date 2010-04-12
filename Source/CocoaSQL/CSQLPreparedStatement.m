@@ -82,42 +82,42 @@
     return [self finish:nil];
 }
 
-- (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column
+- (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)column
 {
     // MUST be overridden by subclasses
     NSLog(@"bindIntegerValue not implemented by %@\n", [self className]);
     return NO;
 }
 
-- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)column
 {
     // MUST be overridden by subclasses
     NSLog(@"bindDecimalValue not implemented by %@\n", [self className]);
     return NO;
 }
 
-- (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column
+- (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)column
 {
     // MUST be overridden by subclasses
     NSLog(@"bindStringValue not implemented by %@\n", [self className]);
     return NO;
 }
 
-- (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column
+- (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)column
 {
     // MUST be overridden by subclasses
     NSLog(@"bindDataValue not implemented by %@\n", [self className]);
     return NO;
 }
 
-- (BOOL)bindNullValueForColumn:(int)column
+- (BOOL)bindNullValueToColumn:(int)column
 {
     // MUST be overridden by subclasses
     NSLog(@"bindNullValue not implemented by %@\n", [self className]);
     return NO;
 }
 
-- (BOOL)bindValue:(id)aValue forColumn:(int)column;
+- (BOOL)bindValue:(id)aValue toColumn:(int)column;
 {
     // MUST be overridden by subclasses
     NSLog(@"bindValue not implemented by %@\n", [self className]);

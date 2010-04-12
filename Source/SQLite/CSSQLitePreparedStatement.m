@@ -87,7 +87,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     return sqlite3_bind_int(statement, column, [aValue intValue]) == SQLITE_OK;
 }
 
-- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)column
 {
     return sqlite3_bind_double(statement, column, [aValue doubleValue]) == SQLITE_OK;
 }
@@ -107,13 +107,13 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     return SQLITE_OK == sqlite3_bind_null(statement, column);
 }
 
-- (BOOL)bindValue:(id)aValue forColumn:(int)column
+- (BOOL)bindValue:(id)aValue toColumn:(int)column
 {
     BOOL success = NO;
     Class valueClass = [aValue class];
     
     if ([valueClass isSubclassOfClass:[NSDecimalNumber class]]) {
-        success = [self bindDecimalValue:(NSDecimalNumber *)aValue forColumn:column];
+        success = [self bindDecimalValue:(NSDecimalNumber *)aValue toColumn:column];
     }
     else if ([valueClass isSubclassOfClass:[NSNumber class]]) {
         success = [self bindIntegerValue:(NSNumber *)aValue forColumn:column];
@@ -139,7 +139,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     if (bindParameterCount > 0 && values && [values count] > 0) {
         for (int i = 1; i <= bindParameterCount; i++) {
             id value = [values objectAtIndex:i-1];
-            if (![self bindValue:value forColumn:i]) {
+            if (![self bindValue:value toColumn:i]) {
                 *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
                                                     sqlite3_errmsg(database.databaseHandle)]
                                            andCode:500];

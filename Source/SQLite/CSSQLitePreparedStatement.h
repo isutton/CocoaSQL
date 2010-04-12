@@ -27,9 +27,9 @@
 - (BOOL)finish:(NSError **)error;
 - (BOOL)isActive:(NSError **)error;
 
-- (BOOL)bindValue:(id)aValue forColumn:(int)column;
+- (BOOL)bindValue:(id)aValue toColumn:(int)column;
 - (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column;
-- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column;
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)column;
 - (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column;
 - (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column;
 - (BOOL)bindNullValueForColumn:(int)column;

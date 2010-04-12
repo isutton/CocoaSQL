@@ -56,7 +56,7 @@
         return NO;
     }
     
-    databaseHandle = nil;
+    // free(databaseHandle);
     
     return YES;
 }

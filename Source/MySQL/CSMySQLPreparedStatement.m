@@ -23,7 +23,7 @@
 - (id)getBoundColumn:(int)index;
 - (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;
 - (id)initWithValues:(NSArray *)values;
-- (BOOL)bindObject:(id)object ToColumn:(int)index;
+- (BOOL)bindObject:(id)object toColumn:(int)index;
 - (void)reset;
 - (int)numFields;
 
@@ -60,7 +60,7 @@
 - (id)initWithValues:(NSArray *)values
 {
     for (int i = 0; i < [values count]; i++) {
-        if (![self bindObject:[values objectAtIndex:i] ToColumn:i]) {
+        if (![self bindObject:[values objectAtIndex:i] toColumn:i]) {
             [self reset];
             return nil; // XXX
         }
@@ -267,7 +267,7 @@
     return value;    
 }
 
-- (BOOL)bindObject:(id)object ToColumn:(int)index
+- (BOOL)bindObject:(id)object toColumn:(int)index
 {
     if (index >= numFields) {
         binds = realloc(binds, sizeof(MYSQL_BIND) * (index+1));
@@ -464,7 +464,7 @@
                 [paramBinds release];
             paramBinds = [CSMysqlBindsStorage alloc];
             for (int i = 0; i < bindParameterCount; i++) {
-                if (![paramBinds bindObject:[values objectAtIndex:i] ToColumn:i]) {
+                if (![paramBinds bindObject:[values objectAtIndex:i] toColumn:i]) {
                     if (error) {
                         NSMutableDictionary *errorDetail;
                         errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -638,46 +638,46 @@
 #pragma mark -
 #pragma mark bindValue accessors
 
-- (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column
+- (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)column
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue ToColumn:column];
+    return [paramBinds bindObject:aValue toColumn:column];
 }
 
-- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)column
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue ToColumn:column];
+    return [paramBinds bindObject:aValue toColumn:column];
 }
 
-- (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column
+- (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)column
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue ToColumn:column];
+    return [paramBinds bindObject:aValue toColumn:column];
 }
 
-- (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column
+- (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)column
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue ToColumn:column];
+    return [paramBinds bindObject:aValue toColumn:column];
 }
 
 - (BOOL)bindNullValueForColumn:(int)column
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:[NSNull null] ToColumn:column];
+    return [paramBinds bindObject:[NSNull null] toColumn:column];
 }
 
-- (BOOL)bindValue:(id)aValue forColumn:(int)column;
+- (BOOL)bindValue:(id)aValue toColumn:(int)column;
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue ToColumn:column];
+    return [paramBinds bindObject:aValue toColumn:column];
 }
 
 @end
