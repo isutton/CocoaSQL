@@ -16,7 +16,6 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     sqlite3_value *rawValue = sqlite3_column_value(preparedStatement, column);
     
     sqlite3_int64 signedValue;
-    sqlite3_uint64 unsignedValue;
     id value;
     
     switch (columnType) {
@@ -30,13 +29,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
             // depending on its values.
             //
             signedValue = sqlite3_value_int64(rawValue);
-            unsignedValue = sqlite3_value_int64(rawValue);
-            if (signedValue == -1 && unsignedValue > 0) {
-                value = [NSNumber numberWithUnsignedLongLong:unsignedValue];
-            }
-            else {
-                value = [NSNumber numberWithLongLong:signedValue];
-            }
+            value = [NSNumber numberWithLongLong:signedValue];
             break;
         case SQLITE_TEXT:
             value = [NSString stringWithFormat:@"%s", sqlite3_value_text(rawValue)];
