@@ -23,7 +23,7 @@
 
 + (id)databaseWithPath:(NSString *)aPath error:(NSError **)error;
 
-
 - (id)initWithPath:(NSString *)aPath error:(NSError **)error;
+- (CSQLPreparedStatement *)prepareStatementImpl:(NSString *)sql error:(NSError **)error;
 
 @end

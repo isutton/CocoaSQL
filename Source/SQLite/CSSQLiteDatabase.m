@@ -185,7 +185,7 @@
 #pragma mark -
 #pragma mark Prepared Statement messages
 
-- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
+- (CSQLPreparedStatement *)prepareStatementImpl:(NSString *)sql error:(NSError **)error
 {
     return [CSSQLitePreparedStatement preparedStatementWithDatabase:self andSQL:sql error:error];
 }
