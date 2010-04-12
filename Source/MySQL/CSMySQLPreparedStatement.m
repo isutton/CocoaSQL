@@ -380,7 +380,7 @@
 {
     [super init];
     resultBinds = nil;
-    database = aDatabase;
+    database = [aDatabase retain];
     statement = mysql_stmt_init(database.databaseHandle);
     if (!statement) {
         if (error) {
@@ -445,6 +445,7 @@
         [resultBinds release];
     if (paramBinds)
         [paramBinds release];
+    [database release];
     [super dealloc];
 }
 
