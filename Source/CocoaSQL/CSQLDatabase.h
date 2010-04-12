@@ -14,6 +14,7 @@
 @interface CSQLDatabase : NSObject <CSQLDatabase>
 {
     voidPtr databaseHandle;
+    NSMutableArray *preparedStatements;
 }
 
 @property (readwrite,assign) voidPtr databaseHandle;
@@ -21,12 +22,18 @@
 + (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;
 
+- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql;
+- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error;
+
 - (NSNumber *)affectedRows;
 - (NSNumber *)lastInsertID;
+
 - (BOOL)disconnect;
 - (BOOL)disconnect:(NSError **)error;
+
 - (BOOL)isActive;
 - (BOOL)isActive:(NSError **)error;
+
 @end
 
 #pragma mark -

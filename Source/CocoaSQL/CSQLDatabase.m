@@ -53,6 +53,14 @@
     return [self databaseWithDriver:aDriver options:options error:error];
 }
 
+- (id)init
+{
+    if (self = [super init]) {
+        preparedStatements = [NSMutableArray array];        
+    }
+    return self;
+}
+
 - (BOOL)isActive:(NSError **)error
 {
     // MUST be overridden by subclasses
@@ -89,6 +97,32 @@
 {
     // MUST be overridden by subclasses
     return [NSNumber numberWithInt:0];
+}
+
+- (void)dealloc
+{
+    for (CSQLPreparedStatement *statement in preparedStatements) {
+        NSLog(@"Finishing statement %@", statement);
+        [statement finish];
+    }
+    [super dealloc];
+}
+
+- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql
+{
+    return [self prepareStatement:sql error:nil];
+}
+
+- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
+{
+    CSQLPreparedStatement *statement = nil;
+    if ([self respondsToSelector:@selector(prepareStatementImpl:error:)]) {
+        statement = [[self prepareStatementImpl:sql error:error] retain];
+        if (statement) {
+            [preparedStatements addObject:statement];
+        }
+    }
+    return statement;
 }
 
 @end
