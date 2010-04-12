@@ -110,6 +110,31 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     return SQLITE_OK == sqlite3_bind_null(statement, column);
 }
 
+- (BOOL)bindValue:(id)aValue forColumn:(int)column
+{
+    BOOL success = NO;
+    Class valueClass = [aValue class];
+    
+    if ([valueClass isSubclassOfClass:[NSDecimalNumber class]]) {
+        success = [self bindDecimalValue:(NSDecimalNumber *)aValue forColumn:column];
+    }
+    else if ([valueClass isSubclassOfClass:[NSNumber class]]) {
+        success = [self bindIntegerValue:(NSNumber *)aValue forColumn:column];
+    }
+    else if ([valueClass isSubclassOfClass:[NSString class]]) {
+        success = [self bindStringValue:(NSString *)aValue forColumn:column];
+    }
+    else if ([valueClass isSubclassOfClass:[NSData class]]) {
+        success = [self bindDataValue:(NSData *)aValue forColumn:column];
+    }
+    else if ([valueClass isSubclassOfClass:[NSNull class]]) {
+        success = [self bindNullValueForColumn:column];
+    }
+    
+    return success;
+    
+}
+
 #pragma mark -
 #pragma mark Execute messages
 
@@ -118,30 +143,9 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     int bindParameterCount = sqlite3_bind_parameter_count(statement);
 
     if (bindParameterCount > 0 && values && [values count] > 0) {
-        
         for (int i = 1; i <= bindParameterCount; i++) {
             id value = [values objectAtIndex:i-1];
-            Class valueClass = [value class];
-
-            BOOL success;
-
-            if ([valueClass isSubclassOfClass:[NSDecimalNumber class]]) {
-                success = [self bindDecimalValue:(NSDecimalNumber *)value forColumn:i];
-            }
-            else if ([valueClass isSubclassOfClass:[NSNumber class]]) {
-                success = [self bindIntegerValue:(NSNumber *)value forColumn:i];
-            }
-            else if ([valueClass isSubclassOfClass:[NSString class]]) {
-                success = [self bindStringValue:(NSString *)value forColumn:i];
-            }
-            else if ([valueClass isSubclassOfClass:[NSData class]]) {
-                success = [self bindDataValue:(NSData *)value forColumn:i];
-            }
-            else if ([valueClass isSubclassOfClass:[NSNull class]]) {
-                success = [self bindNullValueForColumn:i];
-            }
-            
-            if (!success) {
+            if (![self bindValue:value forColumn:i]) {
                 *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
                                                     sqlite3_errmsg(database.databaseHandle)]
                                            andCode:500];
