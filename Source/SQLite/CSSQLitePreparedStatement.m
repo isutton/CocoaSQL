@@ -248,6 +248,11 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     return YES;
 }
 
+- (BOOL)isActive:(NSError **)error
+{
+    return YES;
+}
+
 @end
 
 #pragma mark -
