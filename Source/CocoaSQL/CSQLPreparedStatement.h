@@ -42,10 +42,13 @@
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase;
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error;
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase error:(NSError **)error;
+
 - (BOOL)setSQL:(NSString *)sql;
 - (BOOL)setSQL:(NSString *)sql error:(NSError **)error;
+
 - (BOOL)isActive;
 - (BOOL)isActive:(NSError **)error;
+
 - (BOOL)finish;
 - (BOOL)finish:(NSError **)error;
 
