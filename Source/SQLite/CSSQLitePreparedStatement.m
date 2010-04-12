@@ -15,6 +15,8 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     int rawValueLength = sqlite3_column_bytes(preparedStatement, column);
     sqlite3_value *rawValue = sqlite3_column_value(preparedStatement, column);
     
+    sqlite3_int64 signedValue;
+    sqlite3_uint64 unsignedValue;
     id value;
     
     switch (columnType) {
@@ -22,7 +24,19 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
             value = [NSNumber numberWithDouble:sqlite3_value_double(rawValue)];
             break;
         case SQLITE_INTEGER:
-            value = [NSNumber numberWithLongLong:sqlite3_value_int64(rawValue)];
+            //
+            // Maybe this can be done differently, but I don't know how. The idea
+            // is to get both signed and unsigned values, and use one or another
+            // depending on its values.
+            //
+            signedValue = sqlite3_value_int64(rawValue);
+            unsignedValue = sqlite3_value_int64(rawValue);
+            if (signedValue == -1 && unsignedValue > 0) {
+                value = [NSNumber numberWithUnsignedLongLong:unsignedValue];
+            }
+            else {
+                value = [NSNumber numberWithLongLong:signedValue];
+            }
             break;
         case SQLITE_TEXT:
             value = [NSString stringWithFormat:@"%s", sqlite3_value_text(rawValue)];
