@@ -39,8 +39,9 @@
         sqlite3 *databaseHandle_;
         int errorCode = sqlite3_open_v2([self.path UTF8String], &databaseHandle_, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE, 0);
         if (errorCode != SQLITE_OK) {
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(databaseHandle_)];
-            *error = [NSError errorWithMessage:errorMessage andCode:500];
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
+                                                sqlite3_errmsg(databaseHandle_)] 
+                                       andCode:500];
             return nil;
         }
         self.databaseHandle = (voidPtr)databaseHandle_;
