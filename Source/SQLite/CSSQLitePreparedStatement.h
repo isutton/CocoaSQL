@@ -22,23 +22,13 @@
 
 @property (readwrite,assign) voidPtr statement;
 
-/**
- 
- @param database
- @param sql
- 
- @return <code>preparedStatement</code>
- 
- */
 - (CSQLPreparedStatement *)initWithDatabase:(CSQLDatabase *)database andSQL:(NSString *)sql error:(NSError **)error;
 
-@end
+- (BOOL)bindValue:(id)aValue forColumn:(int)column;
+- (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column;
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column;
+- (BOOL)bindStringValue:(NSString *)aValue forColumn:(int)column;
+- (BOOL)bindDataValue:(NSData *)aValue forColumn:(int)column;
+- (BOOL)bindNullValueForColumn:(int)column;
 
-/**
- 
- @param preparedStatement
- @param column
- 
- @return <code>id</code>
- 
- */
+@end
