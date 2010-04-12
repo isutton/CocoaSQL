@@ -17,11 +17,7 @@
 
 @property (copy) NSString *path;
 
-#pragma mark -
-#pragma mark Initialization related messages
-
 + (id)databaseWithPath:(NSString *)aPath error:(NSError **)error;
-
 
 - (id)initWithPath:(NSString *)aPath error:(NSError **)error;
 
