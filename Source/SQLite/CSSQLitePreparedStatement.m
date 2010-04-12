@@ -156,7 +156,9 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     
     if (errorCode == SQLITE_ERROR) {
         if (error) {
-            *error = [NSError errorWithMessage:@"An error happened." andCode:500];
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
+                                                sqlite3_errmsg(database.databaseHandle)]
+                                       andCode:500];
         }
         return NO;
     }
