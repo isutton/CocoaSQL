@@ -23,7 +23,7 @@
 - (id)getBoundColumn:(int)index;
 - (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;
 - (id)initWithValues:(NSArray *)values;
-- (BOOL)bindObject:(id)object toColumn:(int)index;
+- (BOOL)bindValue:(id)object toColumn:(int)index;
 - (void)reset;
 - (int)numFields;
 
@@ -60,7 +60,7 @@
 - (id)initWithValues:(NSArray *)values
 {
     for (int i = 0; i < [values count]; i++) {
-        if (![self bindObject:[values objectAtIndex:i] toColumn:i]) {
+        if (![self bindValue:[values objectAtIndex:i] toColumn:i]) {
             [self reset];
             return nil; // XXX
         }
@@ -267,7 +267,7 @@
     return value;    
 }
 
-- (BOOL)bindObject:(id)object toColumn:(int)index
+- (BOOL)bindValue:(id)aValue toColumn:(int)index
 {
     if (index >= numFields) {
         binds = realloc(binds, sizeof(MYSQL_BIND) * (index+1));
@@ -277,9 +277,9 @@
     }
 
     binds[index].param_number = index;
-    Class valueClass = [object class];
+    Class valueClass = [aValue class];
     if ([valueClass isSubclassOfClass:[CSQLBindValue class]]) {
-        CSQLBindValue *value = (CSQLBindValue *)object;
+        CSQLBindValue *value = (CSQLBindValue *)aValue;
         switch ([value type]) {
             case CSQLInteger:
                 binds[index].buffer = malloc(sizeof(long long));
@@ -312,7 +312,7 @@
     }
     else if ([valueClass isSubclassOfClass:[NSNumber class]])
     {
-        NSNumber *value = (NSNumber *)object;
+        NSNumber *value = (NSNumber *)aValue;
         binds[index].buffer = malloc(sizeof(double));
         // get number as double so we will always have enough storage
         *((double *)binds[index].buffer) = [value doubleValue];
@@ -320,7 +320,7 @@
     }
     else if ([valueClass isSubclassOfClass:[NSString class]])
     {
-        NSString *value = (NSString *)object;
+        NSString *value = (NSString *)aValue;
         binds[index].buffer_type = MYSQL_TYPE_STRING;
         // XXX - we are copying the string :(
         binds[index].buffer = (void *)strdup([value UTF8String]);
@@ -329,7 +329,7 @@
     }
     else if ([valueClass isSubclassOfClass:[NSDate class]])
     {
-        NSDate *value = (NSDate *)object;
+        NSDate *value = (NSDate *)aValue;
         binds[index].buffer_type = MYSQL_TYPE_DATETIME;
         time_t epoch = [value timeIntervalSince1970];
         struct tm *time = localtime(&epoch);
@@ -344,7 +344,7 @@
     }
     else if ([valueClass isSubclassOfClass:[NSData class]])
     {
-        NSData *value = (NSData *)object;
+        NSData *value = (NSData *)aValue;
         binds[index].buffer_type = MYSQL_TYPE_BLOB;
         // XXX - we are copying the buffer :(
         binds[index].buffer = (void *)[value copy];
@@ -464,7 +464,7 @@
                 [paramBinds release];
             paramBinds = [CSMysqlBindsStorage alloc];
             for (int i = 0; i < bindParameterCount; i++) {
-                if (![paramBinds bindObject:[values objectAtIndex:i] toColumn:i]) {
+                if (![paramBinds bindValue:[values objectAtIndex:i] toColumn:i]) {
                     if (error) {
                         NSMutableDictionary *errorDetail;
                         errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -638,46 +638,46 @@
 #pragma mark -
 #pragma mark bindValue accessors
 
-- (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)column
+- (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)index
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue toColumn:column];
+    return [paramBinds bindValue:aValue toColumn:index];
 }
 
-- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)column
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)index
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue toColumn:column];
+    return [paramBinds bindValue:aValue toColumn:index];
 }
 
-- (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)column
+- (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)index
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue toColumn:column];
+    return [paramBinds bindValue:aValue toColumn:index];
 }
 
-- (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)column
+- (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)index
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue toColumn:column];
+    return [paramBinds bindValue:aValue toColumn:index];
 }
 
-- (BOOL)bindNullValueForColumn:(int)column
+- (BOOL)bindNullValueForColumn:(int)index
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:[NSNull null] toColumn:column];
+    return [paramBinds bindValue:[NSNull null] toColumn:index];
 }
 
-- (BOOL)bindValue:(id)aValue toColumn:(int)column;
+- (BOOL)bindValue:(id)aValue toColumn:(int)index;
 {
     if (!paramBinds)
         paramBinds = [CSMysqlBindsStorage alloc];
-    return [paramBinds bindObject:aValue toColumn:column];
+    return [paramBinds bindValue:aValue toColumn:index];
 }
 
 @end

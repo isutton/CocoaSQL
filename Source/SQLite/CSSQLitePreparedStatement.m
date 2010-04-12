@@ -76,50 +76,50 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     [super dealloc];
 }
 
-- (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)column
+- (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)index
 {
-    return sqlite3_bind_int(statement, column, [aValue intValue]) == SQLITE_OK;
+    return sqlite3_bind_int(statement, index, [aValue intValue]) == SQLITE_OK;
 }
 
-- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)column
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)index
 {
-    return sqlite3_bind_double(statement, column, [aValue doubleValue]) == SQLITE_OK;
+    return sqlite3_bind_double(statement, index, [aValue doubleValue]) == SQLITE_OK;
 }
 
-- (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)column
+- (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)index
 {
-    return SQLITE_OK == sqlite3_bind_text(statement, column, [aValue cStringUsingEncoding:NSUTF8StringEncoding], [aValue length], SQLITE_STATIC);
+    return SQLITE_OK == sqlite3_bind_text(statement, index, [aValue cStringUsingEncoding:NSUTF8StringEncoding], [aValue length], SQLITE_STATIC);
 }
 
-- (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)column
+- (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)index
 {
-    return SQLITE_OK == sqlite3_bind_blob(statement, column, [aValue bytes], [aValue length], SQLITE_STATIC);
+    return SQLITE_OK == sqlite3_bind_blob(statement, index, [aValue bytes], [aValue length], SQLITE_STATIC);
 }
 
-- (BOOL)bindNullValueToColumn:(int)column
+- (BOOL)bindNullValueToColumn:(int)index
 {
-    return SQLITE_OK == sqlite3_bind_null(statement, column);
+    return SQLITE_OK == sqlite3_bind_null(statement, index);
 }
 
-- (BOOL)bindValue:(id)aValue toColumn:(int)column
+- (BOOL)bindValue:(id)aValue toColumn:(int)index
 {
     BOOL success = NO;
     Class valueClass = [aValue class];
     
     if ([valueClass isSubclassOfClass:[NSDecimalNumber class]]) {
-        success = [self bindDecimalValue:(NSDecimalNumber *)aValue toColumn:column];
+        success = [self bindDecimalValue:(NSDecimalNumber *)aValue toColumn:index];
     }
     else if ([valueClass isSubclassOfClass:[NSNumber class]]) {
-        success = [self bindIntegerValue:(NSNumber *)aValue toColumn:column];
+        success = [self bindIntegerValue:(NSNumber *)aValue toColumn:index];
     }
     else if ([valueClass isSubclassOfClass:[NSString class]]) {
-        success = [self bindStringValue:(NSString *)aValue toColumn:column];
+        success = [self bindStringValue:(NSString *)aValue toColumn:index];
     }
     else if ([valueClass isSubclassOfClass:[NSData class]]) {
-        success = [self bindDataValue:(NSData *)aValue toColumn:column];
+        success = [self bindDataValue:(NSData *)aValue toColumn:index];
     }
     else if ([valueClass isSubclassOfClass:[NSNull class]]) {
-        success = [self bindNullValueToColumn:column];
+        success = [self bindNullValueToColumn:index];
     }
     
     return success;

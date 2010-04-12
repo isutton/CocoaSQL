@@ -27,11 +27,11 @@
 - (BOOL)finish:(NSError **)error;
 - (BOOL)isActive:(NSError **)error;
 
-- (BOOL)bindValue:(id)aValue toColumn:(int)column;
-- (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)column;
-- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)column;
-- (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)column;
-- (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)column;
-- (BOOL)bindNullValueToColumn:(int)column;
+- (BOOL)bindValue:(id)aValue toColumn:(int)index;
+- (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)index;
+- (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)index;
+- (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)index;
+- (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)index;
+- (BOOL)bindNullValueToColumn:(int)index;
 
 @end
