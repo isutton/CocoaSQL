@@ -81,17 +81,19 @@
     
     [self createTable:database];
     
+    //
+    // executeSQL:withValues:error:
+    //
     error = nil;
-    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (1, 'test1')" error:&error];
-    
-    if (error) STFail(@"%@", error);
-    STAssertEquals(affectedRows, 1, @"INSERT.");
-    
-    error = nil;
-    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (2, 'test2')" error:&error];
-    
-    if (error) STFail(@"%@", error);
-    STAssertEquals(affectedRows, 1, @"INSERT.");
+    NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
+    for (int i = 1; i <= 2; i++) {
+        [values addObject:[NSNumber numberWithInt:i]];
+        [values addObject:[NSString stringWithFormat:@"test%i", i]];
+        [database executeSQL:@"INSERT INTO t (i, v) VALUES (?, ?)" withValues:values error:&error];
+        [values removeAllObjects];
+        if (error) STFail([error description]);
+    }
+    values = nil;
     
     //
     // fetchRowAsArrayWithSQL:error: returns the first row from the result set.
@@ -146,27 +148,15 @@
     STAssertEquals([resultArray count], [expectedArray count], @"fetchRowsAsDictionariesWithSQL:error: number of rows returned match.");
     STAssertEqualObjects(resultArray, expectedArray, @"fetchRowsAsDictionariesWithSQL:error: rows match.");
     
+    //
+    // executeSQL:withValues:error:
+    //
     error = nil;
-    NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
-    [values addObject:[NSNumber numberWithInt:1]];
+    values = [NSMutableArray arrayWithObjects:[NSNumber numberWithInt:1], nil];
     affectedRows = [database executeSQL:@"DELETE FROM t WHERE i = ?" withValues:values error:&error];
-    if (error)
-        STFail(@"%@", error);
+
+    if (error) STFail(@"%@", error);
     STAssertEquals(affectedRows, 1, @"DELETE with bind values.");
-
-    error = nil;
-    affectedRows = [database executeSQL:@"DELETE FROM t" error:&error];
-
-    if (error)
-        STFail(@"%@", error);
-    STAssertEquals(affectedRows, 1, @"DELETE.");
-    
-    error = nil;
-    affectedRows = [database executeSQL:@"DROP TABLE t" error:&error];
-
-    if (error)
-        STFail(@"%@", error);
-    //STAssertEquals(affectedRows, 1, @"DROP TABLE."); // XXX - This doesn't seem to work with mysql connector, affectedRows is 0 when dropping a table :/
 }
 
 - (void)testPreparedStatementWithValuesAsArray
