@@ -14,22 +14,22 @@
 #pragma mark -
 #pragma mark CSMysqlBindsStorage
 
-@interface CSMysqlBindsStorage : NSObject {
+@interface CSMySQLBindsStorage : NSObject {
     MYSQL_BIND *binds;
     int         numFields;
 }
 
 - (MYSQL_BIND *)binds;
 - (id)getBoundColumn:(int)index;
-- (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;
+- (id)initWithFields:(MYSQL_FIELD *)fields count:(int)count;
 - (id)initWithValues:(NSArray *)values;
-- (BOOL)bindValue:(id)object toColumn:(int)index;
+- (BOOL)bindValue:(id)aValue toColumn:(int)index;
 - (void)reset;
 - (int)numFields;
 
 @end
 
-@implementation CSMysqlBindsStorage
+@implementation CSMySQLBindsStorage
 
 - (void)dealloc
 {
@@ -68,7 +68,7 @@
     return self;
 }
 
-- (id)initWithFields:(MYSQL_FIELD *)fields Count:(int)count;
+- (id)initWithFields:(MYSQL_FIELD *)fields count:(int)count;
 {
     if (binds)
         [self reset];
@@ -462,7 +462,7 @@
         if (values) {
             if (paramBinds) // release old paramBinds if any
                 [paramBinds release];
-            paramBinds = [CSMysqlBindsStorage alloc];
+            paramBinds = [CSMySQLBindsStorage alloc];
             for (int i = 0; i < bindParameterCount; i++) {
                 if (![paramBinds bindValue:[values objectAtIndex:i] toColumn:i]) {
                     if (error) {
@@ -561,9 +561,9 @@
     int numFields = mysql_stmt_field_count(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
     if (!resultBinds) {
-        resultBinds = [[CSMysqlBindsStorage alloc] 
+        resultBinds = [[CSMySQLBindsStorage alloc] 
                        initWithFields:fields 
-                       Count:numFields
+                       count:numFields
                       ];
     }
     [self fetchRow:error];
@@ -590,9 +590,9 @@
     int numFields = mysql_stmt_field_count(statement);
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
     if (!resultBinds) {
-        resultBinds = [[CSMysqlBindsStorage alloc] 
+        resultBinds = [[CSMySQLBindsStorage alloc] 
                        initWithFields:fields 
-                       Count:numFields
+                       count:numFields
                        ];
     }
     [self fetchRow:error];
@@ -641,42 +641,42 @@
 - (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)index
 {
     if (!paramBinds)
-        paramBinds = [CSMysqlBindsStorage alloc];
+        paramBinds = [CSMySQLBindsStorage alloc];
     return [paramBinds bindValue:aValue toColumn:index];
 }
 
 - (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)index
 {
     if (!paramBinds)
-        paramBinds = [CSMysqlBindsStorage alloc];
+        paramBinds = [CSMySQLBindsStorage alloc];
     return [paramBinds bindValue:aValue toColumn:index];
 }
 
 - (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)index
 {
     if (!paramBinds)
-        paramBinds = [CSMysqlBindsStorage alloc];
+        paramBinds = [CSMySQLBindsStorage alloc];
     return [paramBinds bindValue:aValue toColumn:index];
 }
 
 - (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)index
 {
     if (!paramBinds)
-        paramBinds = [CSMysqlBindsStorage alloc];
+        paramBinds = [CSMySQLBindsStorage alloc];
     return [paramBinds bindValue:aValue toColumn:index];
 }
 
 - (BOOL)bindNullValueForColumn:(int)index
 {
     if (!paramBinds)
-        paramBinds = [CSMysqlBindsStorage alloc];
+        paramBinds = [CSMySQLBindsStorage alloc];
     return [paramBinds bindValue:[NSNull null] toColumn:index];
 }
 
 - (BOOL)bindValue:(id)aValue toColumn:(int)index;
 {
     if (!paramBinds)
-        paramBinds = [CSMysqlBindsStorage alloc];
+        paramBinds = [CSMySQLBindsStorage alloc];
     return [paramBinds bindValue:aValue toColumn:index];
 }
 
