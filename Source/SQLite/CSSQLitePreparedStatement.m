@@ -66,11 +66,9 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
         int errorCode = sqlite3_prepare_v2(aDatabase.databaseHandle, [sql UTF8String], [sql length], &statement_, NULL);
         if (errorCode != SQLITE_OK) {
             if (error) {
-                NSMutableDictionary *errorDetail;
-                errorDetail = [NSMutableDictionary dictionary];
-                NSString *errorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(aDatabase.databaseHandle)];
-                [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-                *error = [NSError errorWithDomain:@"CSSQLite" code:errorCode userInfo:errorDetail];
+                *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
+                                                    sqlite3_errmsg(aDatabase.databaseHandle)] 
+                                           andCode:500];
             }
             return nil;
         }
