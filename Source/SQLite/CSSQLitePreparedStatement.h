@@ -24,6 +24,9 @@
 
 - (CSQLPreparedStatement *)initWithDatabase:(CSQLDatabase *)database andSQL:(NSString *)sql error:(NSError **)error;
 
+- (BOOL)finish:(NSError **)error;
+- (BOOL)isActive:(NSError **)error;
+
 - (BOOL)bindValue:(id)aValue forColumn:(int)column;
 - (BOOL)bindIntegerValue:(NSNumber *)aValue forColumn:(int)column;
 - (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue forColumn:(int)column;
