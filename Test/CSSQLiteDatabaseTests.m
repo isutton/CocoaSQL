@@ -178,23 +178,26 @@
         [values removeAllObjects];
     }
         
-    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT i, v FROM t WHERE v like ? ORDER BY i" error:&error];
+    CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT i, v FROM t WHERE v LIKE ? AND i < ? ORDER BY i" error:&error];
     
     if (error)
         STFail(@"Couldn't create prepared statement: %@.", error);
 
     values = [NSMutableArray arrayWithCapacity:1];
     [values addObject:@"v%"];
+    [values addObject:[NSNumber numberWithInt:3]];
     [selectStatement executeWithValues:values error:&error];
     
+    NSArray *expectedArray = [NSArray arrayWithObjects:
+                              [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"i", @"v1", @"v", nil],
+                              [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:2], @"i", @"v2", @"v", nil],
+                              nil];
     NSDictionary *resultDictionary;
     int count = 1;
     while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
-        NSNumber *i = [NSNumber numberWithInt:count];
-        NSString *v = [NSString stringWithFormat:@"v%d", count];
-        STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
-        STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
-        STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
+        NSDictionary *expectedDictionary = [expectedArray objectAtIndex:count-1];
+        STAssertEquals([resultDictionary count], [expectedDictionary count], @"fetchRowAsArrayWithSQL: number of keys match.");
+        STAssertEqualObjects(resultDictionary, expectedDictionary, @"fetchRowAsDictionary: rows match.");
         count++;
     }
     
