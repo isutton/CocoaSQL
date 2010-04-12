@@ -25,7 +25,6 @@
 - (BOOL)bindValue:(id)aValue toColumn:(int)index;
 - (void)reset;
 - (int)numFields;
-
 @end
 
 @implementation CSMySQLBindsStorage
@@ -58,12 +57,8 @@
 
 - (id)initWithValues:(NSArray *)values
 {
-    for (int i = 0; i < [values count]; i++) {
-        if (![self bindValue:[values objectAtIndex:i] toColumn:i]) {
-            [self reset];
-            return nil; // XXX
-        }
-    }
+    for (int i = 0; i < [values count]; i++)
+        [self bindObject:[values objectAtIndex:i] ToColumn:i];
     return self;
 }
 
@@ -266,7 +261,7 @@
     return value;    
 }
 
-- (BOOL)bindValue:(id)aValue toColumn:(int)index
+- (BOOL)bindObject:(id)object ToColumn:(int)index
 {
     if (index >= numFields) {
         binds = realloc(binds, sizeof(MYSQL_BIND) * (index+1));
@@ -276,11 +271,42 @@
     }
 
     binds[index].param_number = index;
-    Class valueClass = [aValue class];
-    
-    if ([valueClass isSubclassOfClass:[NSNumber class]])
+    Class valueClass = [object class];
+    if ([valueClass isSubclassOfClass:[CSQLBindValue class]]) {
+        CSQLBindValue *value = (CSQLBindValue *)object;
+        switch ([value type]) {
+            case CSQLInteger:
+                binds[index].buffer = malloc(sizeof(long long));
+                *((long long *)binds[index].buffer) = [value longValue];
+                binds[index].buffer_type = MYSQL_TYPE_LONGLONG;
+                break;
+            case CSQLDouble:
+                binds[index].buffer = malloc(sizeof(double));
+                *((double *)binds[index].buffer) = [value doubleValue];
+                binds[index].buffer_type = MYSQL_TYPE_DOUBLE;
+                break;
+            case CSQLText:
+                binds[index].buffer_type = MYSQL_TYPE_STRING;
+                // XXX - we are copying the string :(
+                binds[index].buffer = (void *)strdup([[value stringValue] UTF8String]);
+                binds[index].buffer_length = [[value stringValue] length];  // XXX
+                break;
+            case CSQLBlob:
+                binds[index].buffer_type = MYSQL_TYPE_BLOB;
+                // XXX - we are copying the buffer :(
+                binds[index].buffer = (void *)[[value dataValue] copy];
+                binds[index].buffer_length = [[value dataValue] length];
+                break;
+            case CSQLNull:
+                binds[index].buffer_type = MYSQL_TYPE_NULL;
+                break;
+            default:
+                break;
+        }
+    }
+    else if ([valueClass isSubclassOfClass:[NSNumber class]])
     {
-        NSNumber *value = (NSNumber *)aValue;
+        NSNumber *value = (NSNumber *)object;
         binds[index].buffer = malloc(sizeof(double));
         // get number as double so we will always have enough storage
         *((double *)binds[index].buffer) = [value doubleValue];
@@ -288,7 +314,7 @@
     }
     else if ([valueClass isSubclassOfClass:[NSString class]])
     {
-        NSString *value = (NSString *)aValue;
+        NSString *value = (NSString *)object;
         binds[index].buffer_type = MYSQL_TYPE_STRING;
         // XXX - we are copying the string :(
         binds[index].buffer = (void *)strdup([value UTF8String]);
@@ -297,7 +323,7 @@
     }
     else if ([valueClass isSubclassOfClass:[NSDate class]])
     {
-        NSDate *value = (NSDate *)aValue;
+        NSDate *value = (NSDate *)object;
         binds[index].buffer_type = MYSQL_TYPE_DATETIME;
         time_t epoch = [value timeIntervalSince1970];
         struct tm *time = localtime(&epoch);
@@ -312,7 +338,7 @@
     }
     else if ([valueClass isSubclassOfClass:[NSData class]])
     {
-        NSData *value = (NSData *)aValue;
+        NSData *value = (NSData *)object;
         binds[index].buffer_type = MYSQL_TYPE_BLOB;
         // XXX - we are copying the buffer :(
         binds[index].buffer = (void *)[value copy];
@@ -325,6 +351,8 @@
     }
     else // UNKNOWN DATATYPE
     {
+        binds[index].buffer_type = MYSQL_TYPE_NULL;
+        binds[index].buffer = NULL;
         return NO;
     }
     return YES;
