@@ -79,6 +79,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 
 - (void)dealloc
 {
+    [self finish];
     [super dealloc];
 }
 
@@ -227,6 +228,24 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     [self prepareNextFetch];
     
     return row;
+}
+
+- (BOOL)finish:(NSError **)error
+{
+    if (statement) {
+        int errorCode = sqlite3_finalize(statement);
+        
+        if (errorCode != SQLITE_OK) {
+            if (error) {
+                *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
+                                                    sqlite3_errmsg(database.databaseHandle)]
+                                           andCode:500];
+            }
+            return NO;
+        }
+        statement = NULL;
+    }
+    return YES;
 }
 
 @end
