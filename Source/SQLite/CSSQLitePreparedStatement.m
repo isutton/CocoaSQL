@@ -119,14 +119,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 {
     int bindParameterCount = sqlite3_bind_parameter_count(statement);
 
-    if (bindParameterCount > 0) {
-
-        if (!values || [values count] < bindParameterCount) {
-            NSMutableDictionary *errorDetail;
-            errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Expected %i value(s), %i provided", bindParameterCount, [values count]], @"errorMessage", nil];
-            *error = [NSError errorWithDomain:@"CSSQLite" code:100 userInfo:errorDetail];
-            return NO;
-        }
+    if (bindParameterCount > 0 && values && [values count] > 0) {
         
         for (int i = 1; i <= bindParameterCount; i++) {
             id value = [values objectAtIndex:i-1];
