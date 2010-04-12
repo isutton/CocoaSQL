@@ -224,9 +224,15 @@
     if (error)
         STFail(@"Couldn't create prepared statement: %@.", error);
     
+    BOOL success = NO;
     for (int i = 1; i <= 100 && !error; i++) {
-        [statement bindValue:[NSNumber numberWithInt:i] forColumn:1];
-        [statement bindValue:[NSString stringWithFormat:@"v%i", i] forColumn:2];
+        
+        success = [statement bindValue:[NSNumber numberWithInt:i] forColumn:1];
+        STAssertTrue(success, @"bindValue:forColumn:");
+        
+        success = [statement bindValue:[NSString stringWithFormat:@"v%i", i] forColumn:2];
+        STAssertTrue(success, @"bindValue:forColumn:");
+        
         [statement execute:&error];
         if (error)
             STFail(@"Couldn't insert row > %@", error);
