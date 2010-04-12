@@ -8,7 +8,6 @@
 
 #import "CSMySQLPreparedStatement.h"
 #import "CSMySQLDatabase.h"
-#import "CSQLBindValue.h"
 #include <mysql.h>
 
 #pragma mark -
@@ -278,39 +277,8 @@
 
     binds[index].param_number = index;
     Class valueClass = [aValue class];
-    if ([valueClass isSubclassOfClass:[CSQLBindValue class]]) {
-        CSQLBindValue *value = (CSQLBindValue *)aValue;
-        switch ([value type]) {
-            case CSQLInteger:
-                binds[index].buffer = malloc(sizeof(long long));
-                *((long long *)binds[index].buffer) = [value longValue];
-                binds[index].buffer_type = MYSQL_TYPE_LONGLONG;
-                break;
-            case CSQLDouble:
-                binds[index].buffer = malloc(sizeof(double));
-                *((double *)binds[index].buffer) = [value doubleValue];
-                binds[index].buffer_type = MYSQL_TYPE_DOUBLE;
-                break;
-            case CSQLText:
-                binds[index].buffer_type = MYSQL_TYPE_STRING;
-                // XXX - we are copying the string :(
-                binds[index].buffer = (void *)strdup([[value stringValue] UTF8String]);
-                binds[index].buffer_length = [[value stringValue] length];  // XXX
-                break;
-            case CSQLBlob:
-                binds[index].buffer_type = MYSQL_TYPE_BLOB;
-                // XXX - we are copying the buffer :(
-                binds[index].buffer = (void *)[[value dataValue] copy];
-                binds[index].buffer_length = [[value dataValue] length];
-                break;
-            case CSQLNull:
-                binds[index].buffer_type = MYSQL_TYPE_NULL;
-                break;
-            default:
-                break;
-        }
-    }
-    else if ([valueClass isSubclassOfClass:[NSNumber class]])
+    
+    if ([valueClass isSubclassOfClass:[NSNumber class]])
     {
         NSNumber *value = (NSNumber *)aValue;
         binds[index].buffer = malloc(sizeof(double));

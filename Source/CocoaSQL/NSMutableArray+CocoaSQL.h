@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "CSQLBindValue.h"
 
 @interface NSMutableArray (CocoaSQL) 
 

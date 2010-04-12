@@ -13,8 +13,6 @@
 		821DBC4211636C100073C988 /* CocoaSQL.h in Headers */ = {isa = PBXBuildFile; fileRef = 821DBC4111636C100073C988 /* CocoaSQL.h */; };
 		821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
 		821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
-		8223B8EF1161023F004108A1 /* CSQLBindValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 8223B8ED1161023F004108A1 /* CSQLBindValue.h */; };
-		8223B8F01161023F004108A1 /* CSQLBindValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 8223B8EE1161023F004108A1 /* CSQLBindValue.m */; };
 		823C7C8A115CCD210061ECAD /* CSQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 823C7C89115CCD210061ECAD /* CSQLPreparedStatement.h */; };
 		823C7CC6115CE4DA0061ECAD /* CSSQLitePreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 823C7CC4115CE4DA0061ECAD /* CSSQLitePreparedStatement.h */; };
 		823C7CC7115CE4DA0061ECAD /* CSSQLitePreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 823C7CC5115CE4DA0061ECAD /* CSSQLitePreparedStatement.m */; };
@@ -77,8 +75,6 @@
 		821DBC9D116370800073C988 /* CSQLDatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLDatabaseTests.h; sourceTree = "<group>"; };
 		821DBC9E116370800073C988 /* CSQLDatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLDatabaseTests.m; sourceTree = "<group>"; };
 		821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLPreparedStatement.m; sourceTree = "<group>"; };
-		8223B8ED1161023F004108A1 /* CSQLBindValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLBindValue.h; sourceTree = "<group>"; };
-		8223B8EE1161023F004108A1 /* CSQLBindValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLBindValue.m; sourceTree = "<group>"; };
 		823C7C89115CCD210061ECAD /* CSQLPreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLPreparedStatement.h; sourceTree = "<group>"; };
 		823C7CC4115CE4DA0061ECAD /* CSSQLitePreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSQLitePreparedStatement.h; sourceTree = "<group>"; };
 		823C7CC5115CE4DA0061ECAD /* CSSQLitePreparedStatement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSQLitePreparedStatement.m; sourceTree = "<group>"; };
@@ -237,8 +233,6 @@
 				821DBBA811634CB30073C988 /* CSQLDatabase.m */,
 				823C7C89115CCD210061ECAD /* CSQLPreparedStatement.h */,
 				821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */,
-				8223B8ED1161023F004108A1 /* CSQLBindValue.h */,
-				8223B8EE1161023F004108A1 /* CSQLBindValue.m */,
 				821DBB7911633B4E0073C988 /* NSMutableArray+CocoaSQL.h */,
 				821DBB7A11633B4E0073C988 /* NSMutableArray+CocoaSQL.m */,
 				821DBC4111636C100073C988 /* CocoaSQL.h */,
@@ -285,7 +279,6 @@
 				82445A55115B9A6400950BD9 /* CSSQLiteDatabase.h in Headers */,
 				823C7C8A115CCD210061ECAD /* CSQLPreparedStatement.h in Headers */,
 				823C7CC6115CE4DA0061ECAD /* CSSQLitePreparedStatement.h in Headers */,
-				8223B8EF1161023F004108A1 /* CSQLBindValue.h in Headers */,
 				821DBB7B11633B4E0073C988 /* NSMutableArray+CocoaSQL.h in Headers */,
 				821DBC4211636C100073C988 /* CocoaSQL.h in Headers */,
 				AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */,
@@ -443,7 +436,6 @@
 				AA62F97E116C7B3200C4FE4A /* CSQLPreparedStatement.m in Sources */,
 				82445A56115B9A6400950BD9 /* CSSQLiteDatabase.m in Sources */,
 				823C7CC7115CE4DA0061ECAD /* CSSQLitePreparedStatement.m in Sources */,
-				8223B8F01161023F004108A1 /* CSQLBindValue.m in Sources */,
 				821DBB7C11633B4E0073C988 /* NSMutableArray+CocoaSQL.m in Sources */,
 				AA2B20E01165CDD600F4DC57 /* CSMySQLDatabase.m in Sources */,
 				AA3698AD116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */,

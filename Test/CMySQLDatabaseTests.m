@@ -57,7 +57,7 @@
     }
 
     CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM mysql_test WHERE v like ?" error:&error];
-    NSArray *params = [NSArray arrayWithObject:[CSQLBindValue bindValueWithString:@"v%"]];
+    NSArray *params = [NSArray arrayWithObject:@"v%"];
     [selectStatement executeWithValues:params error:&error];
     NSDictionary *resultDictionary;
     int cnt = 0;

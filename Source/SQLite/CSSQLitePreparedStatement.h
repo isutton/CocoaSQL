@@ -12,7 +12,6 @@
 #import "CSSQLiteDatabase.h"
 #import "CSQLDatabase.h"
 #import "CSQLPreparedStatement.h"
-#import "CSQLBindValue.h"
 
 @class CSSQLiteDatabase;
 
