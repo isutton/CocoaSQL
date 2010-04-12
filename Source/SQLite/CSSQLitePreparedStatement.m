@@ -22,7 +22,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
             value = [NSNumber numberWithDouble:sqlite3_value_double(rawValue)];
             break;
         case SQLITE_INTEGER:
-            value = [NSNumber numberWithInt:sqlite3_value_int(rawValue)];
+            value = [NSNumber numberWithLongLong:sqlite3_value_int64(rawValue)];
             break;
         case SQLITE_TEXT:
             value = [NSString stringWithFormat:@"%s", sqlite3_value_text(rawValue)];
@@ -78,7 +78,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 
 - (BOOL)bindIntegerValue:(NSNumber *)aValue toColumn:(int)index
 {
-    return sqlite3_bind_int(statement, index, [aValue intValue]) == SQLITE_OK;
+    return sqlite3_bind_int64(statement, index, (sqlite3_int64)[aValue longLongValue]) == SQLITE_OK;
 }
 
 - (BOOL)bindDecimalValue:(NSDecimalNumber *)aValue toColumn:(int)index
