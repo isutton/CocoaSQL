@@ -8,9 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "CocoaSQL.h"
 
-@interface CSPostgreSQLPreparedStatement : NSObject {
+@interface CSPostgreSQLPreparedStatement : CSQLPreparedStatement {
 
 }
+
+- (void)getError:(NSError **)error;
 
 @end

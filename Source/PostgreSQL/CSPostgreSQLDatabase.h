@@ -8,8 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "CSQLDatabase.h"
-#import "CSQLPreparedStatement.h"
+#import "CocoaSQL.h"
 
 @interface CSPostgreSQLDatabase : CSQLDatabase {
 

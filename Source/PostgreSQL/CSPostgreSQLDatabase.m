@@ -7,6 +7,7 @@
 //
 
 #import "CSPostgreSQLDatabase.h"
+#import "CSPostgreSQLPreparedStatement.h"
 #include <libpq-fe.h>
 
 @implementation CSPostgreSQLDatabase
@@ -51,6 +52,11 @@
 {
     [self disconnect];
     [super dealloc];
+}
+
+- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
+{
+    return [CSPostgreSQLPreparedStatement preparedStatementWithDatabase:self andSQL:sql error:error];
 }
 
 @end
