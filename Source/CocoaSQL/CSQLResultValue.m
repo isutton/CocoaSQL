@@ -173,8 +173,10 @@
         return [NSDecimalNumber decimalNumberWithString:value]; // XXX - test
     }
     if ([[value class] isSubclassOfClass:[NSDate class]]) {
-        // returns unix epoch
-        // TODO - do conversion
+        // XXX - ugly and definitely unconvenient (but at least returns a valid value)
+        //       we must find a better way to do this conversion
+        [NSDecimalNumber decimalNumberWithDecimal:
+            [[NSNumber numberWithDouble:[value timeIntervalSince1970]] decimalValue]];
     }
     if ([[value class] isSubclassOfClass:[NSNull class]]) {
         return [NSDecimalNumber decimalNumberWithString:@"0.0"];
