@@ -99,20 +99,24 @@
     // fetchRowAsArrayWithSQL:error: returns the first row from the result set.
     //
     error = nil;
-    NSArray *expectedArray = [NSArray arrayWithObjects:[NSNumber numberWithInt:2], @"test2", nil];
+    NSArray *expectedArray = [NSArray arrayWithObjects:
+                              [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:2]], 
+                              [CSQLResultValue valueWithString:@"test2"],
+                               nil
+                             ];
     NSArray *resultArray = [database fetchRowAsArrayWithSQL:@"SELECT i, v FROM t ORDER BY i DESC" error:&error];
     
     if (error) STFail(@"%@", error);
     STAssertEquals((int)[resultArray count], 2, @"fetchRowAsArrayWithSQL:error: number of elements in array match.");
     STAssertEqualObjects(resultArray, expectedArray, @"fetchRowAsArrayWithSQL:error: rows match.");
-
+    NSLog(@"%@ \n--\n%@\n", [[resultArray objectAtIndex:0] numberValue], [[expectedArray objectAtIndex:0] numberValue]);
     //
     // fetchRowAsDictionaryWithSQL:error: returns the first row from the result set.
     //
     error = nil;
     NSDictionary *expectedDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        [NSNumber numberWithInt:1], @"i", 
-                                        @"test1", @"v", 
+                                        [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:1]], @"i", 
+                                        [CSQLResultValue valueWithString:@"test1"], @"v", 
                                         nil];
     NSDictionary *resultDictionary = [database fetchRowAsDictionaryWithSQL:@"SELECT i, v FROM t ORDER BY i" error:&error];
 
@@ -125,9 +129,18 @@
     //
     error = nil;
     expectedArray = [NSArray arrayWithObjects:
-                     [NSArray arrayWithObjects:[NSNumber numberWithInt:1], @"test1", nil],
-                     [NSArray arrayWithObjects:[NSNumber numberWithInt:2], @"test2", nil],
-                     nil];
+                     [NSArray arrayWithObjects:
+                      [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:1]],
+                      [CSQLResultValue valueWithString:@"test1"], 
+                       nil
+                     ],
+                     [NSArray arrayWithObjects:
+                      [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:2]],
+                      [CSQLResultValue valueWithString:@"test2"],
+                       nil
+                     ],
+                     nil
+                    ];
     resultArray = [database fetchRowsAsArraysWithSQL:@"SELECT i, v FROM t ORDER BY i" error:&error];
     
     if (error) STFail([error description]);
@@ -139,8 +152,16 @@
     //
     error = nil;
     expectedArray = [NSArray arrayWithObjects:
-                     [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:2], @"i", @"test2", @"v", nil],
-                     [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"i", @"test1", @"v", nil],
+                     [NSDictionary dictionaryWithObjectsAndKeys:
+                      [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:2]], @"i",
+                      [CSQLResultValue valueWithString:@"test2"], @"v",
+                      nil
+                     ],
+                     [NSDictionary dictionaryWithObjectsAndKeys:
+                      [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:1]], @"i",
+                      [CSQLResultValue valueWithString:@"test1"], @"v",
+                      nil
+                     ],
                      nil];
     resultArray = [database fetchRowsAsDictionariesWithSQL:@"SELECT i, v FROM t ORDER BY i DESC" error:&error];
     
@@ -189,8 +210,16 @@
     [selectStatement executeWithValues:values error:&error];
     
     NSArray *expectedArray = [NSArray arrayWithObjects:
-                              [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"i", @"v1", @"v", nil],
-                              [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:2], @"i", @"v2", @"v", nil],
+                              [NSDictionary dictionaryWithObjectsAndKeys:
+                               [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:1]], @"i",
+                               [CSQLResultValue valueWithString:@"v1"], @"v",
+                                nil
+                              ],
+                              [NSDictionary dictionaryWithObjectsAndKeys:
+                               [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:2]], @"i",
+                               [CSQLResultValue valueWithString:@"v2"], @"v",
+                                nil
+                              ],
                               nil];
     NSDictionary *resultDictionary;
     int count = 1;
@@ -246,8 +275,8 @@
         NSNumber *i = [NSNumber numberWithInt:count];
         NSString *v = [NSString stringWithFormat:@"v%d", count];
         STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
-        STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
-        STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
+        STAssertEqualObjects([[resultDictionary objectForKey:@"i"] numberValue], i , @"fetchRowAsArrayWithSQL : resultElement1");
+        STAssertEqualObjects([[resultDictionary objectForKey:@"v"] stringValue], v, @"fetchRowAsArrayWithSQL : resultElement2");
         count++;
     }
     
@@ -279,14 +308,28 @@
 
     if (error) STFail(@"%@", error);
 
-    STAssertEquals([[row objectAtIndex:0] intValue], [[values objectAtIndex:0] intValue], @"int");
-    STAssertEqualObjects([row objectAtIndex:1], [values objectAtIndex:1], @"NSString");
-    STAssertEqualObjects([row objectAtIndex:2], [values objectAtIndex:2], @"NSData");
-    STAssertEquals([[row objectAtIndex:3] floatValue], [[values objectAtIndex:3] floatValue], @"float");
-    STAssertEquals([[row objectAtIndex:4] longLongValue], [[values objectAtIndex:4] longLongValue], @"signed long long - positive");
-    STAssertEquals([[row objectAtIndex:5] longLongValue], [[values objectAtIndex:5] longLongValue], @"signed long long - negative");
-    STAssertEquals([[row objectAtIndex:6] unsignedLongLongValue], [[values objectAtIndex:6] unsignedLongLongValue], @"unsigned long long");
-    STAssertEqualObjects([row objectAtIndex:7], [values objectAtIndex:7], @"NSNull");
+    STAssertEquals([[[row objectAtIndex:0] numberValue] intValue],
+                   [[values objectAtIndex:0] intValue],
+                   @"int");
+    STAssertEqualObjects([[row objectAtIndex:1] stringValue],
+                         [values objectAtIndex:1],
+                         @"NSString");
+    STAssertEqualObjects([[row objectAtIndex:2] dataValue],
+                         [values objectAtIndex:2],
+                         @"NSData");
+    STAssertEquals([[[row objectAtIndex:3] decimalNumberValue] floatValue],
+                   [[values objectAtIndex:3] floatValue],
+                   @"float");
+    STAssertEquals([[[row objectAtIndex:4] numberValue] longLongValue],
+                   [[values objectAtIndex:4] longLongValue],
+                   @"signed long long - positive");
+    STAssertEquals([[[row objectAtIndex:5] numberValue] longLongValue],
+                   [[values objectAtIndex:5] longLongValue],
+                   @"signed long long - negative");
+    STAssertEquals([[[row objectAtIndex:6] numberValue] unsignedLongLongValue],
+                   [[values objectAtIndex:6] unsignedLongLongValue],
+                   @"unsigned long long");
+    STAssertTrue([[row objectAtIndex:7] isNull], @"NSNull");
     
     // Clean up.
     [database executeSQL:@"DROP TABLE CocoaSQL_test_datatypes" error:nil];

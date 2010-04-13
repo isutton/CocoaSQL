@@ -20,7 +20,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     
     switch (columnType) {
         case SQLITE_FLOAT:
-            value = [NSNumber numberWithDouble:sqlite3_value_double(rawValue)];
+            value = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:sqlite3_value_double(rawValue)]];
             break;
         case SQLITE_INTEGER:
             //
@@ -29,16 +29,16 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
             // depending on its values.
             //
             signedValue = sqlite3_value_int64(rawValue);
-            value = [NSNumber numberWithLongLong:signedValue];
+            value = [CSQLResultValue valueWithNumber:[NSNumber numberWithLongLong:signedValue]];
             break;
         case SQLITE_TEXT:
-            value = [NSString stringWithFormat:@"%s", sqlite3_value_text(rawValue)];
+            value = [CSQLResultValue valueWithString:[NSString stringWithFormat:@"%s", sqlite3_value_text(rawValue)]];
             break;
         case SQLITE_BLOB:
-            value = [NSData dataWithBytes:sqlite3_value_blob(rawValue) length:rawValueLength];
+            value = [CSQLResultValue valueWithData:[NSData dataWithBytes:sqlite3_value_blob(rawValue) length:rawValueLength]];
             break;
         case SQLITE_NULL:
-            value = [NSNull null];
+            value = [CSQLResultValue valueWithNull];
             break;
         default:
             break;

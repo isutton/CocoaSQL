@@ -98,7 +98,7 @@ int rowAsArrayCallback(void *callbackContext, int columnCount, char **columnValu
 {
     NSMutableArray *row = callbackContext;
     for (int i = 0; i < columnCount; i++) {
-        [row addObject:[NSString stringWithFormat:@"%s", columnValues[i]]];
+        [row addObject:[CSQLResultValue valueWithString:[NSString stringWithFormat:@"%s", columnValues[i]]]];
     }
     return 0;
 }
@@ -107,7 +107,7 @@ int rowAsDictionaryCallback(void *callbackContext, int columnCount, char **colum
 {
     NSMutableDictionary *row = callbackContext;
     for (int i = 0; i < columnCount; i++) {
-        [row setObject:[NSString stringWithFormat:@"%s", columnValues[i]]
+        [row setObject:[CSQLResultValue valueWithString:[NSString stringWithFormat:@"%s", columnValues[i]]]
                 forKey:[NSString stringWithFormat:@"%s", columnNames[i]]];
     }
     return 0;
@@ -118,7 +118,7 @@ int rowsAsDictionariesCallback(void *callbackContext, int columnCount, char **co
     NSMutableArray *rows = callbackContext;
     NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
     for (int i = 0; i < columnCount; i++) {
-        [row setObject:[NSString stringWithFormat:@"%s", columnValues[i]]
+        [row setObject:[CSQLResultValue valueWithString:[NSString stringWithFormat:@"%s", columnValues[i]]]
                 forKey:[NSString stringWithFormat:@"%s", columnNames[i]]];
     }
     [rows addObject:row];
@@ -130,7 +130,7 @@ int rowsAsArraysCallback(void *callbackContext, int columnCount, char **columnVa
     NSMutableArray *rows = callbackContext;
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
     for (int i = 0; i < columnCount; i++) {
-        [row addObject:[NSString stringWithFormat:@"%s", columnValues[i]]];
+        [row addObject:[CSQLResultValue valueWithString:[NSString stringWithFormat:@"%s", columnValues[i]]]];
     }
     [rows addObject:row];
     return 0;

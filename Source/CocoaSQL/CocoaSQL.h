@@ -10,5 +10,6 @@
 
 #import "CSQLDatabase.h"
 #import "CSQLPreparedStatement.h"
+#import "CSQLResultValue.h"
 #import "NSMutableArray+CocoaSQL.h"
 #import "NSError+CocoaSQL.h"

@@ -102,15 +102,15 @@
     NSArray *resultArray = [database fetchRowAsArrayWithSQL:@"SELECT * FROM t WHERE i=2" error:&error];
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals((int)[resultArray count], 2, @"fetchRowAsArrayWithSQL : resultArrayCount");
-    STAssertEqualObjects([resultArray objectAtIndex:0], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
-    STAssertEqualObjects([resultArray objectAtIndex:1], @"test2" , @"fetchRowAsArrayWithSQL : resultElement2");
+    STAssertEqualObjects([[resultArray objectAtIndex:0] stringValue], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
+    STAssertEqualObjects([[resultArray objectAtIndex:1] stringValue], @"test2" , @"fetchRowAsArrayWithSQL : resultElement2");
 
     // test fetchRowAsDictionaryWithSQL
     NSDictionary *resultDictionary = [database fetchRowAsDictionaryWithSQL:@"SELECT * FROM t WHERE i=1" error:&error];
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
     STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
-    STAssertEqualObjects([resultDictionary objectForKey:@"i"], @"1" , @"fetchRowAsArrayWithSQL : resultElement1");
-    STAssertEqualObjects([resultDictionary objectForKey:@"v"], @"test" , @"fetchRowAsArrayWithSQL : resultElement2");
+    STAssertEqualObjects([[resultDictionary objectForKey:@"i"] stringValue], @"1" , @"fetchRowAsArrayWithSQL : resultElement1");
+    STAssertEqualObjects([[resultDictionary objectForKey:@"v"] stringValue], @"test" , @"fetchRowAsArrayWithSQL : resultElement2");
     
     error = nil;
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
@@ -158,8 +158,8 @@
         NSNumber *i = [NSNumber numberWithInt:cnt];
         NSString *v = [NSString stringWithFormat:@"v%d", cnt];
         STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
-        STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
-        STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
+        STAssertEqualObjects([[resultDictionary objectForKey:@"i"] numberValue], i , @"fetchRowAsArrayWithSQL : resultElement1");
+        STAssertEqualObjects([[resultDictionary objectForKey:@"v"] stringValue], v, @"fetchRowAsArrayWithSQL : resultElement2");
         cnt++;
     }
     [database executeSQL:@"DROP TABLE t" error:&error];

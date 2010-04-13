@@ -48,7 +48,10 @@
 		AA3698AD116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */; };
 		AA62F97E116C7B3200C4FE4A /* CSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */; };
 		AA987E91116E5D420023E86F /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
+		AAA449B21174FED6006143D9 /* CSQLResultValue.h in Headers */ = {isa = PBXBuildFile; fileRef = AAF71F9111744D93001D79EA /* CSQLResultValue.h */; };
+		AAA449B31174FED6006143D9 /* CSQLResultValue.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF71F9211744D93001D79EA /* CSQLResultValue.m */; };
 		AAC3325D116F5E830097879F /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
+		AAC3327A116F60FB0097879F /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +116,8 @@
 		AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSMySQLPreparedStatement.h; path = Source/MySQL/CSMySQLPreparedStatement.h; sourceTree = "<group>"; };
 		AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSMySQLPreparedStatement.m; path = Source/MySQL/CSMySQLPreparedStatement.m; sourceTree = "<group>"; };
 		AA987E90116E5D420023E86F /* libmysqlclient.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libmysqlclient.dylib; sourceTree = "<group>"; };
+		AAF71F9111744D93001D79EA /* CSQLResultValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLResultValue.h; sourceTree = "<group>"; };
+		AAF71F9211744D93001D79EA /* CSQLResultValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLResultValue.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAC3327A116F60FB0097879F /* libmysqlclient.dylib in Frameworks */,
 				821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -195,8 +201,8 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				828B5C951174623F00AB732C /* Connectors */,
 				821DBC9C116370520073C988 /* Test */,
+				828B5C951174623F00AB732C /* Connectors */,
 				82445A10115B889000950BD9 /* CocoaSQL */,
 			);
 			name = Classes;
@@ -252,6 +258,8 @@
 				824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */,
 				8295F28F116F8CD10053E781 /* NSError+CocoaSQL.h */,
 				8295F290116F8CD10053E781 /* NSError+CocoaSQL.m */,
+				AAF71F9111744D93001D79EA /* CSQLResultValue.h */,
+				AAF71F9211744D93001D79EA /* CSQLResultValue.m */,
 			);
 			name = CocoaSQL;
 			path = Source/CocoaSQL;
@@ -349,6 +357,7 @@
 				8295F291116F8CD10053E781 /* NSError+CocoaSQL.h in Headers */,
 				828B5C8F1174621B00AB732C /* CSPostgreSQLDatabase.h in Headers */,
 				828B5C931174623000AB732C /* CSPostgreSQLPreparedStatement.h in Headers */,
+				AAA449B21174FED6006143D9 /* CSQLResultValue.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +516,7 @@
 				8295F292116F8CD10053E781 /* NSError+CocoaSQL.m in Sources */,
 				828B5D9411749B0E00AB732C /* CSPostgreSQLPreparedStatement.m in Sources */,
 				828B5D9511749B1200AB732C /* CSPostgreSQLDatabase.m in Sources */,
+				AAA449B31174FED6006143D9 /* CSQLResultValue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

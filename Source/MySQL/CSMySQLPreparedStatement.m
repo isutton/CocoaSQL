@@ -185,41 +185,63 @@
     }
     MYSQL_BIND *bind = &binds[index];
     if (isNull[index]) { // mysql returned a NULL value
-        value = [NSNull null];
+        value = [CSQLResultValue valueWithNull];
     } else {
         switch(bind->buffer_type)
         {
             case MYSQL_TYPE_FLOAT:
-                value = [NSNumber numberWithFloat:*((float *)bind->buffer)];
+                value = [CSQLResultValue valueWithNumber:
+                         [NSNumber numberWithFloat:*((float *)bind->buffer)]
+                        ];
                 break;
             case MYSQL_TYPE_SHORT:
                 if (bind->is_unsigned)
-                    value = [NSNumber numberWithUnsignedShort:*((unsigned short *)bind->buffer)];
+                    value = [CSQLResultValue valueWithNumber:
+                              [NSNumber numberWithUnsignedShort:*((unsigned short *)bind->buffer)]
+                            ];
                 else
-                    value = [NSNumber numberWithShort:*((short *)bind->buffer)];
+                    value = [CSQLResultValue valueWithNumber:
+                             [NSNumber numberWithShort:*((short *)bind->buffer)]
+                            ];
                 break;
             case MYSQL_TYPE_LONG:
                 if (bind->is_unsigned)
-                    value = [NSNumber numberWithUnsignedLong:*((unsigned long *)bind->buffer)];
+                    value = [CSQLResultValue valueWithNumber:
+                             [NSNumber numberWithUnsignedLong:*((unsigned long *)bind->buffer)]
+                            ];
                 else
-                    value = [NSNumber numberWithLong:*((long *)bind->buffer)];
+                    value = [CSQLResultValue valueWithNumber:
+                             [NSNumber numberWithLong:*((long *)bind->buffer)]
+                            ];
                 break;
             case MYSQL_TYPE_INT24:
                 if (bind->is_unsigned)
-                    value = [NSNumber numberWithUnsignedInt:*((unsigned int *)bind->buffer)];
+                    value = [CSQLResultValue valueWithNumber:
+                             [NSNumber numberWithUnsignedInt:*((unsigned int *)bind->buffer)]
+                            ];
                 else
-                    value = [NSNumber numberWithInt:*((int *)bind->buffer)];
+                    value = [CSQLResultValue valueWithNumber:
+                             [NSNumber numberWithInt:*((int *)bind->buffer)]
+                            ];
                 break;
             case MYSQL_TYPE_LONGLONG:
                 if (bind->is_unsigned)
-                    value = [NSNumber numberWithUnsignedLongLong:*((unsigned long long *)bind->buffer)];
+                    value = [CSQLResultValue valueWithNumber:
+                             [NSNumber numberWithUnsignedLongLong:*((unsigned long long *)bind->buffer)]
+                            ];
                 else
-                    value = [NSNumber numberWithLongLong:*((long long *)bind->buffer)];
+                    value = [CSQLResultValue valueWithNumber:
+                             [NSNumber numberWithLongLong:*((long long *)bind->buffer)]
+                            ];
                 break;
             case MYSQL_TYPE_DOUBLE:
-                value = [NSNumber numberWithDouble:*((double *)bind->buffer)];
+                value = [CSQLResultValue valueWithNumber:
+                         [NSNumber numberWithDouble:*((double *)bind->buffer)]
+                        ];
             case MYSQL_TYPE_TINY:
-                value = [NSNumber numberWithChar:*((char *)bind->buffer)];
+                value = [CSQLResultValue valueWithNumber:
+                         [NSNumber numberWithChar:*((char *)bind->buffer)]
+                        ];
                 break;
             case MYSQL_TYPE_DECIMAL:
                 // XXX - decimals are actually bound to either float or double
@@ -244,25 +266,33 @@
                 unixTime.tm_sec = dateTime->second;
                 // mktime is not re-entrant ... but anyway, we don't neeed to be thread-safe (yet) :)
                 time = mktime(&unixTime); 
-                value = [NSDate dateWithTimeIntervalSince1970:time];
+                value = [CSQLResultValue valueWithDate:
+                         [NSDate dateWithTimeIntervalSince1970:time]
+                        ];
                 break;
                 // XXX - unsure if varchars are returned with a fixed-length of 3 bytes or as a string
             case MYSQL_TYPE_VARCHAR:
             case MYSQL_TYPE_VAR_STRING:
             case MYSQL_TYPE_STRING:
-                value = [NSString stringWithUTF8String:(char *)bind->buffer];
+                value = [CSQLResultValue valueWithString:
+                         [NSString stringWithUTF8String:(char *)bind->buffer]
+                        ];
                 break;
             case MYSQL_TYPE_BIT:
-                value = [NSNumber numberWithChar:*((char *)bind->buffer) & 0x01];
+                value = [CSQLResultValue valueWithNumber:
+                         [NSNumber numberWithChar:*((char *)bind->buffer) & 0x01]
+                        ];
                 break;
             case MYSQL_TYPE_TINY_BLOB:
             case MYSQL_TYPE_BLOB:
             case MYSQL_TYPE_LONG_BLOB:
-                value = [NSData dataWithBytes:bind->buffer length:bind->buffer_length];
+                value = [CSQLResultValue valueWithData:
+                         [NSData dataWithBytes:bind->buffer length:bind->buffer_length]
+                        ];
                 break;
             case MYSQL_TYPE_NULL:
             default: // unknown datatype will be null-ed
-                value = [NSNull null];
+                value = [CSQLResultValue valueWithNull];
                 break;
         }
     }
