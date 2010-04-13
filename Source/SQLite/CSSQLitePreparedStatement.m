@@ -55,8 +55,6 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 
 @implementation CSSQLitePreparedStatement
 
-@synthesize statement;
-
 - (id)initWithDatabase:(CSSQLiteDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     if (self = [super init]) {

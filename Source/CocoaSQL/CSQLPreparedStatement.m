@@ -12,6 +12,7 @@
 
 @synthesize canFetch;
 @synthesize database;
+@synthesize statement;
 
 + (id)preparedStatementWithDatabase:(id)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
@@ -122,6 +123,11 @@
     // MUST be overridden by subclasses
     NSLog(@"bindValue not implemented by %@\n", [self className]);
     return NO;
+}
+
+- (BOOL) execute:(NSError **)error
+{
+    return [self executeWithValues:nil error:error];
 }
 
 @end

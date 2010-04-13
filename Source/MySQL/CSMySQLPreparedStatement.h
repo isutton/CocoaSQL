@@ -10,12 +10,9 @@
 #import "CocoaSQL.h"
 
 @interface CSMySQLPreparedStatement : CSQLPreparedStatement {
-    voidPtr statement;
     id resultBinds;
     id paramBinds;
 }
-
-@property (readwrite,assign) voidPtr statement;
 
 - (int)affectedRows;
 

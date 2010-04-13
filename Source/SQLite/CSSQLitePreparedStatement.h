@@ -16,10 +16,8 @@
 @class CSSQLiteDatabase;
 
 @interface CSSQLitePreparedStatement : CSQLPreparedStatement  {
-    voidPtr statement;
-}
 
-@property (readwrite,assign) voidPtr statement;
+}
 
 - (CSQLPreparedStatement *)initWithDatabase:(CSQLDatabase *)database andSQL:(NSString *)sql error:(NSError **)error;
 

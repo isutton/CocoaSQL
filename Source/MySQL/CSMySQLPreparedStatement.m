@@ -373,8 +373,6 @@
 
 @implementation CSMySQLPreparedStatement
 
-@synthesize statement;
-
 #pragma mark -
 #pragma mark Initializers
 

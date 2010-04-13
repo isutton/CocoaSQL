@@ -14,11 +14,13 @@
 @interface CSQLPreparedStatement : NSObject <CSQLPreparedStatement>
 {
     CSQLDatabase *database;
+    voidPtr statement;
     BOOL canFetch;
 }
 
 @property (retain) CSQLDatabase *database;
 @property (readonly) BOOL canFetch;
+@property (readwrite,assign) voidPtr statement;
 
 /**
  
@@ -58,5 +60,7 @@
 - (BOOL)bindStringValue:(NSString *)aValue toColumn:(int)column;
 - (BOOL)bindDataValue:(NSData *)aValue toColumn:(int)column;
 - (BOOL)bindNullValueToColumn:(int)column;
+
+- (voidPtr)statement;
 
 @end
