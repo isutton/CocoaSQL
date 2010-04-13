@@ -15,6 +15,7 @@
 
 @interface CSMySQLBindsStorage : NSObject {
     MYSQL_BIND *binds;
+    my_bool    *isNull;
     int         numFields;
 }
 
@@ -47,6 +48,10 @@
         free(binds);
         binds = NULL;
     }
+    if (isNull) {
+        free(isNull);
+        isNull = NULL;
+    }
     numFields = 0;
 }
 
@@ -68,6 +73,7 @@
         [self reset];
     numFields = count;
     binds = calloc(numFields, sizeof(MYSQL_BIND));
+    isNull = calloc(numFields, sizeof(my_bool));
     for (int i = 0; i < numFields; i++) {
 #if 0
         // everything apart blobs will be stringified
@@ -85,9 +91,11 @@
 #else
         // more strict datatype mapping
         binds[i].buffer_type = fields[i].type;
+        binds[i].is_null = &isNull[i];
         switch(fields[i].type) {
             case MYSQL_TYPE_NULL:
                 binds[i].buffer = NULL;
+                binds[i].buffer_type = MYSQL_TYPE_NULL;
                 break;
             case MYSQL_TYPE_SHORT:
                 binds[i].buffer = calloc(1, sizeof(short));
@@ -176,7 +184,7 @@
         return nil;
     }
     MYSQL_BIND *bind = &binds[index];
-    if (bind->is_null_value) { // mysql returned a NULL value
+    if (isNull[index]) { // mysql returned a NULL value
         value = [NSNull null];
     } else {
         switch(bind->buffer_type)
