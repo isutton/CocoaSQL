@@ -267,11 +267,6 @@
     return nil;
 }
 
-- (id)value
-{
-    return value;
-}
-
 - (BOOL)isNull
 {
     if ([[value class] isSubclassOfClass:[NSNull class]])
@@ -309,7 +304,7 @@
 // return the objCType of the value we hold
 - (const char *)objCType
 {
-    const char *val = NULL;
+    const char *val = "";
     if ([[value class] isSubclassOfClass:[NSValue class]])
         val = [value objCType];
 
@@ -319,6 +314,16 @@
 - (void)getValue:(void *)buffer
 {
     return [value getValue:buffer];
+}
+
+- (NSString *)type
+{
+    return [value className];
+}
+
+- (id)value
+{
+    return value;
 }
 
 @end

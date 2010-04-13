@@ -39,5 +39,7 @@
 - (NSData *)dataValue;
 - (BOOL)boolValue;
 - (BOOL)isNull;
+- (id)value;
+- (NSString *)type;
 
 @end
