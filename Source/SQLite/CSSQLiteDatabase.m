@@ -56,8 +56,6 @@
         return NO;
     }
     
-    // free(databaseHandle);
-    
     return YES;
 }
 
