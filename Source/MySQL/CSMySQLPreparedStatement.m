@@ -630,7 +630,7 @@
     return [paramBinds bindValue:aValue toColumn:index];
 }
 
-- (BOOL)bindNullValueForColumn:(int)index
+- (BOOL)bindNullValueToColumn:(int)index
 {
     if (!paramBinds)
         paramBinds = [CSMySQLBindsStorage alloc];
