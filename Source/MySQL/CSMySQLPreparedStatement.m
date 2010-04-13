@@ -303,7 +303,7 @@
 {
     if (index >= numFields) {
         binds = realloc(binds, sizeof(MYSQL_BIND) * (index+1));
-        // ensure zero-ing just allocated storage
+        // ensure zero-ing the storage we have just alloc'd
         memset(binds+numFields, 0, sizeof(MYSQL_BIND) * (index - numFields +1));
         numFields = index+1;
     }
@@ -323,8 +323,8 @@
         NSString *value = (NSString *)object;
         binds[index].buffer_type = MYSQL_TYPE_STRING;
         // XXX - we are copying the string :(
-        if (binds[index].buffer)
-            free(binds[index].buffer); // avoid leaking the previously copied string (if any)
+        if (binds[index].buffer) // avoid leaking the previously copied string (if any)
+            free(binds[index].buffer);
         binds[index].buffer = (void *)strdup([value UTF8String]);
         binds[index].buffer_length = [value length]; // XXX - does length return 
                                                      // the bytelength of the buffer?
@@ -357,7 +357,13 @@
     {
         // null value
         binds[index].buffer_type = MYSQL_TYPE_NULL;
-        binds[index].buffer = NULL; // XXX - not necessary since it has been calloc'd
+        // we could be re-binding a column
+        // the caller could want to ignore a certain column 
+        // (setting the bound value to NULL) he was previously
+        // receiving, while still fetching rows from the same dataset
+        if (binds[index].buffer)
+            free(binds[index].buffer);
+        binds[index].buffer = NULL;
     }
     else // UNKNOWN DATATYPE
     {
