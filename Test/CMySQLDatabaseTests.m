@@ -26,7 +26,7 @@
     NSError *error = nil;
     int affectedRows;
     
-    affectedRows = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME, t timestamp, bs BIGINT signed, bu BIGINT unsigned, f float )" error:&error];
+    affectedRows = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME, t timestamp, bs BIGINT signed, bu BIGINT unsigned, f float, n INTEGER NULL)" error:&error];
     
     STAssertNil(error, @"Error.");
     STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
@@ -43,10 +43,16 @@
     NSError *error = nil;
 
     CSQLDatabase *database = [self createDatabase:&error];
+
+    [database executeSQL:@"SET SQL_MODE='TRADITIONAL'" error:&error];
+    if (error) STFail([[error userInfo] objectForKey:@"errorMessage"]);
+
+    error = nil;
+
     [self createTable:database];
     
     // TODO - test if giving a wrong statement fails properly
-    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d, t, bs, bu, f) VALUES (?, ?, now(), now(), -9223372036854775808, 18446744073709551615, 0.123456789)" error:&error];
+    CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d, t, bs, bu, f, n) VALUES (?, ?, now(), now(), -9223372036854775808, 18446744073709551615, 0.123456789, NULL)" error:&error];
     
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
     for (int i = 1; i <= 100 && !error; i++) {
@@ -56,6 +62,8 @@
         [values removeAllObjects];
     }
 
+    
+    error = nil;
     CSQLPreparedStatement *selectStatement = [database prepareStatement:@"SELECT * FROM mysql_test WHERE v like ?" error:&error];
     NSArray *params = [NSArray arrayWithObject:@"v%"];
     [selectStatement executeWithValues:params error:&error];
@@ -65,14 +73,15 @@
         cnt++;
         NSNumber *i = [NSNumber numberWithInt:cnt];
         NSString *v = [NSString stringWithFormat:@"v%d", cnt];
-        STAssertEquals((int)[resultDictionary count], 7, @"fetchRowAsDictionaryWithSQL : resultCount");
+        STAssertEquals((int)[resultDictionary count], 8, @"fetchRowAsDictionaryWithSQL : resultCount");
         STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsDictionaryWithSQL : resultElement1");
         STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsDictionaryWithSQL : resultElement2");
         STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsDictionaryWithSQL : resultElement3");
         STAssertEqualObjects([resultDictionary objectForKey:@"bs"], [NSNumber numberWithLongLong:-9223372036854775808UL], @"fetchRowAsDictionaryWithSQL : bigint signed");
         STAssertEqualObjects([resultDictionary objectForKey:@"bu"], [NSNumber numberWithUnsignedLongLong:18446744073709551615UL], @"fetchRowAsDictionaryWithSQL : bigint unsigned");
         STAssertEqualObjects([resultDictionary objectForKey:@"f"], [NSNumber numberWithFloat:0.123456789], @"fetchRowAsDictionaryWithSQL : float");
-        //NSLog(@"Row %d: %@\n",cnt, resultDictionary);
+        STAssertEqualObjects([resultDictionary objectForKey:@"n"], [NSNull null], @"fetchRowAsDictionaryWithSQL : NULL");
+        NSLog(@"Row %d: %@\n",cnt, resultDictionary);
     }
     if (error)
         NSLog(@"%@\n", error);
@@ -85,13 +94,14 @@
         cnt++;
         NSNumber *i = [NSNumber numberWithInt:cnt];
         NSString *v = [NSString stringWithFormat:@"v%d", cnt];
-        STAssertEquals((int)[resultArray count], 7, @"fetchRowAsArrayWithSQL : resultCount");
+        STAssertEquals((int)[resultArray count], 8, @"fetchRowAsArrayWithSQL : resultCount");
         STAssertEqualObjects([resultArray objectAtIndex:0], i , @"fetchRowAsArrayWithSQL : resultElement1");
         STAssertEqualObjects([resultArray objectAtIndex:1], v, @"fetchRowAsArrayWithSQL : resultElement2");
         STAssertTrue([[[resultArray objectAtIndex:2] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
         STAssertEqualObjects([resultArray objectAtIndex:4], [NSNumber numberWithLongLong:-9223372036854775808UL], @"fetchRowAsDictionaryWithSQL : bigint signed");
         STAssertEqualObjects([resultArray objectAtIndex:5], [NSNumber numberWithUnsignedLongLong:18446744073709551615UL], @"fetchRowAsDictionaryWithSQL : bigint unsigned");
         STAssertEqualObjects([resultArray objectAtIndex:6], [NSNumber numberWithFloat:0.123456789], @"fetchRowAsDictionaryWithSQL : float");
+        STAssertEqualObjects([resultArray objectAtIndex:7], [NSNull null], @"fetchRowAsArray : NULL");
         //NSLog(@"Row: %@\n", resultDictionary);
     }
     if (error)
@@ -132,7 +142,7 @@
         cnt++;
         NSNumber *i = [NSNumber numberWithInt:cnt];
         NSString *v = [NSString stringWithFormat:@"v%d", cnt];
-        STAssertEquals((int)[resultDictionary count], 7, @"fetchRowAsArrayWithSQL : resultCount");
+        STAssertEquals((int)[resultDictionary count], 8, @"fetchRowAsArrayWithSQL : resultCount");
         STAssertEqualObjects([resultDictionary objectForKey:@"i"], i , @"fetchRowAsArrayWithSQL : resultElement1");
         STAssertEqualObjects([resultDictionary objectForKey:@"v"], v, @"fetchRowAsArrayWithSQL : resultElement2");
         STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
