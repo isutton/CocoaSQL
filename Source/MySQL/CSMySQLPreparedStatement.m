@@ -313,7 +313,7 @@
     if ([valueClass isSubclassOfClass:[NSNumber class]])
     {
         NSNumber *value = (NSNumber *)object;
-        binds[index].buffer = malloc(sizeof(double));
+        binds[index].buffer = realloc(binds[index].buffer, (sizeof(double)));
         // get number as double so we will always have enough storage
         *((double *)binds[index].buffer) = [value doubleValue];
         binds[index].buffer_type = MYSQL_TYPE_DOUBLE;
@@ -323,6 +323,8 @@
         NSString *value = (NSString *)object;
         binds[index].buffer_type = MYSQL_TYPE_STRING;
         // XXX - we are copying the string :(
+        if (binds[index].buffer)
+            free(binds[index].buffer); // avoid leaking the previously copied string (if any)
         binds[index].buffer = (void *)strdup([value UTF8String]);
         binds[index].buffer_length = [value length]; // XXX - does length return 
                                                      // the bytelength of the buffer?
@@ -333,7 +335,7 @@
         binds[index].buffer_type = MYSQL_TYPE_DATETIME;
         time_t epoch = [value timeIntervalSince1970];
         struct tm *time = localtime(&epoch);
-        binds[index].buffer = malloc(sizeof(MYSQL_TIME));
+        binds[index].buffer = realloc(binds[index].buffer, sizeof(MYSQL_TIME));
         ((MYSQL_TIME *)binds[index].buffer)->year = time->tm_year+1900;
         ((MYSQL_TIME *)binds[index].buffer)->month = time->tm_mon+1;
         ((MYSQL_TIME *)binds[index].buffer)->day = time->tm_mday;
@@ -347,6 +349,8 @@
         NSData *value = (NSData *)object;
         binds[index].buffer_type = MYSQL_TYPE_BLOB;
         // XXX - we are copying the buffer :(
+        if (binds[index].buffer)
+            free(binds[index].buffer);
         binds[index].buffer = (void *)[value copy];
         binds[index].buffer_length = [value length];
     } else if ([valueClass isSubclassOfClass:[NSNull class]])
