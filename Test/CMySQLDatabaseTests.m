@@ -93,7 +93,7 @@
                              @"fetchRowAsDictionaryWithSQL : float");
         STAssertTrue([[resultDictionary objectForKey:@"n"] isNull], @"fetchRowAsDictionaryWithSQL : NULL");
 
-        NSLog(@"Row %d: %@\n",cnt, resultDictionary);
+        //NSLog(@"Row %d: %@\n",cnt, resultDictionary);
     }
     if (error)
         NSLog(@"%@\n", error);
