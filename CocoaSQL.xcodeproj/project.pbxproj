@@ -532,10 +532,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"/opt/local/include/**",
-					"/usr/local/include/**",
-				);
+				HEADER_SEARCH_PATHS = /opt/local/include/mysql5/mysql;
 				LIBRARY_SEARCH_PATHS = "/opt/local/lib/**";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
