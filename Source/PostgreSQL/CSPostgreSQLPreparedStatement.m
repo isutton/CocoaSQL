@@ -73,8 +73,9 @@
             else if ([[value class] isSubclassOfClass:[NSString class]]) {
                 paramValues[i] = [(NSString *)value UTF8String];
             }
-            
-            
+            else if ([[value class] isSubclassOfClass:[NSData class]]) {
+                paramValues[i] = [(NSData *)value bytes];
+            }
         }
         
     }
