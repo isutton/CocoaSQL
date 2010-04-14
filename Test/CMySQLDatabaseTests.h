@@ -23,7 +23,7 @@
 #import "CSQLDatabase.h"
 
 @interface CMySQLDatabaseTests : SenTestCase {
-
+	int rowCount;
 }
 
 @end

@@ -143,9 +143,69 @@
         NSLog(@"%@\n", error);
     STAssertEquals(cnt, 100, @"Number of retreived rows)"); // ensure we got all rows
     
-    [database executeSQL:@"DROP TABLE mysql_test" error:&error];
     if (error)
         NSLog(@"%@\n", error);
+	
+	NSLog(@"Params %@", params);
+	rowCount = 0;
+	[selectStatement executeWithValues:params receiver:self selector:@selector(gotRowAsDictionary:)];
+    STAssertEquals(rowCount, 100, @"Number of retreived rows)"); // ensure we got all rows
+	rowCount = 0;
+	[selectStatement executeWithValues:params receiver:self selector:@selector(gotRowAsArray:) rowAsDictionary:NO];
+    STAssertEquals(rowCount, 100, @"Number of retreived rows)"); // ensure we got all rows
+	[database executeSQL:@"DROP TABLE mysql_test" error:&error];
+
 }
 
+- (void)gotRowAsDictionary:(NSDictionary *)row
+{
+	int cnt = ++rowCount;
+	NSNumber *i = [NSNumber numberWithInt:cnt];
+	NSString *v = [NSString stringWithFormat:@"v%d", cnt];
+	STAssertEquals((int)[row count], 8, @"fetchRowAsDictionaryWithSQL : resultCount");
+	STAssertEqualObjects([[row objectForKey:@"i"] numberValue],
+						 i,
+						 @"fetchRowAsArrayWithSQL : resultElement1");
+	STAssertEqualObjects([[row objectForKey:@"v"] stringValue],
+						 v,
+						 @"fetchRowAsArrayWithSQL : resultElement2");
+	//TODO - find a proper way to test dates
+	//STAssertTrue([[[row objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
+	STAssertEqualObjects([[row objectForKey:@"bs"] numberValue],
+						 [NSNumber numberWithLongLong:-9223372036854775808UL], 
+						 @"fetchRowAsDictionaryWithSQL : bigint signed");
+	STAssertEqualObjects([[row objectForKey:@"bu"] numberValue],
+						 [NSNumber numberWithUnsignedLongLong:18446744073709551615UL],
+						 @"fetchRowAsDictionaryWithSQL : bigint unsigned");
+	STAssertEqualObjects([[row objectForKey:@"f"] numberValue],
+						 [NSNumber numberWithFloat:0.123456789],
+						 @"fetchRowAsDictionaryWithSQL : float");
+	STAssertTrue([[row objectForKey:@"n"] isNull], @"fetchRowAsDictionaryWithSQL : NULL");
+}
+
+- (void)gotRowAsArray:(NSArray *)row
+{
+	int cnt = ++rowCount;
+	NSNumber *i = [NSNumber numberWithInt:cnt];
+	NSString *v = [NSString stringWithFormat:@"v%d", cnt];
+	STAssertEquals((int)[row count], 8, @"fetchRowAsArrayWithSQL : resultCount");
+	STAssertEqualObjects([[row objectAtIndex:0] numberValue],
+						 i,
+						 @"fetchRowAsArrayWithSQL : resultElement1");
+	STAssertEqualObjects([[row objectAtIndex:1] stringValue],
+						 v,
+						 @"fetchRowAsArrayWithSQL : resultElement2");
+	//TODO - find a proper way to test dates
+	//STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
+	STAssertEqualObjects([[row objectAtIndex:4] numberValue],
+						 [NSNumber numberWithLongLong:-9223372036854775808UL], 
+						 @"fetchRowAsDictionaryWithSQL : bigint signed");
+	STAssertEqualObjects([[row objectAtIndex:5] numberValue],
+						 [NSNumber numberWithUnsignedLongLong:18446744073709551615UL],
+						 @"fetchRowAsDictionaryWithSQL : bigint unsigned");
+	STAssertEqualObjects([[row objectAtIndex:6] numberValue],
+						 [NSNumber numberWithFloat:0.123456789],
+						 @"fetchRowAsDictionaryWithSQL : float");
+	STAssertTrue([[row objectAtIndex:7] isNull], @"fetchRowAsArray : NULL");
+}
 @end

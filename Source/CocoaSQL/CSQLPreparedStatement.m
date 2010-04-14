@@ -142,4 +142,32 @@
     return [self executeWithValues:nil error:error];
 }
 
+- (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector
+{
+	return [self executeWithValues:values receiver:receiver selector:selector rowAsDictionary:YES];
+}
+
+- (BOOL)executeAndNotifyReceiver:(id)receiver withSelector:(SEL)selector
+{
+	return [self executeWithValues:nil receiver:receiver selector:selector];
+}
+
+- (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector rowAsDictionary:(BOOL)wantsDictionary
+{
+	if ([self executeWithValues:values error:nil]) {
+		SEL fetchSelector;
+		if (wantsDictionary)
+			fetchSelector = @selector(fetchRowAsDictionary:);
+		else
+			fetchSelector = @selector(fetchRowAsArray:);
+
+		NSDictionary *row;
+		while (row = [self performSelector:fetchSelector withObject:nil]) {
+			[receiver performSelector:selector withObject:row];
+		}
+		return YES;
+	}
+	return NO;
+}
+
 @end
