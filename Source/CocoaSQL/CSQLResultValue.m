@@ -239,20 +239,24 @@
     if ([[value class] isSubclassOfClass:[NSNull class]])
         return [NSData alloc]; // empty data
     if ([[value class] isSubclassOfClass:[NSNumber class]]) {
+        const char *objCType = [value objCType];
         int length = 0;
         // we care only about the first character, which is enough to tell us the size
-        switch (*[value objCType]) {
+        switch (*objCType) {
             case 'c':
                 length = 1;
+                break;
+            case 'h':
+            case 'C':
+                length = 2;
+                break;
             case 'd':
             case 'D':
             case 'i':
             case 'o':
             case 'O':
                 length = 4;
-            case 'h':
-            case 'C':
-                length = 2;
+                break;
             case 'q':
             case 'f':
             case 'F':
@@ -263,6 +267,32 @@
             case 'a':
             case 'A':
                 length = 8;
+                break;
+            // but when length-modifiers have been used ...
+            // we need to look at following characters as well
+            case 'l':
+                if (*(objCType+1) == 'l')
+                    length = sizeof(long long);
+                else
+                    length = sizeof(long);
+                break;
+            case 'L':
+                switch (*(objCType+1)) {
+                    case 'a':
+                    case 'A':
+                    case 'e':
+                    case 'E':
+                    case 'f':
+                    case 'F':
+                    case 'g':
+                    case 'G':
+                        length = sizeof(long double);
+                        break;
+                    default:
+                        // TODO - Error Message
+                        break;
+                }
+                break;
         }
         return [NSData dataWithBytesNoCopy:[value pointerValue] length:length];
     }
@@ -309,7 +339,9 @@
     const char *val = "";
     if ([[value class] isSubclassOfClass:[NSValue class]])
         val = [value objCType];
-
+    else if ([[value class] isSubclassOfClass:[NSString class]] ||
+             [[value class] isSubclassOfClass:[NSData class]])
+        val = "%s";
     return val;
 }
 
