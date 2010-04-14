@@ -141,6 +141,22 @@
     }
 }
 
+- (NSDictionary *)fetchRowAsDictionary:(NSError **)error
+{
+    if (!canFetch) 
+        return nil;
+
+    return nil;
+}
+
+- (NSArray *)fetchRowAsArray:(NSError **)error
+{
+    if (!canFetch)
+        return nil;
+    
+    return nil;
+}
+
 - (void)dealloc
 {
     [database release];

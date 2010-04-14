@@ -141,8 +141,18 @@
     
     STAssertTrue([statement execute:&error], @"Statement was not executed.");
     STAssertNil(error, [error description]);
-    STAssertTrue(statement.canFetch, @"Statement should not return rows.");
+    STAssertTrue(statement.canFetch, @"Statement should return rows.");
     
+    error = nil;
+    NSArray *array = [statement fetchRowAsArray:&error];
+
+    STAssertNotNil(array, @"Row shouldn't be nil.");
+    
+    error = nil;
+    NSDictionary *dictionary = [statement fetchRowAsDictionary:&error];
+    
+    STAssertNotNil(dictionary, @"Row shouldn't be nil.");
+
 #if 1
     
     //
