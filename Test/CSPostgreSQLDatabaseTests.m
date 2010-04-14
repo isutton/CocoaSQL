@@ -40,7 +40,7 @@
     CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"PostgreSQL" options:[NSDictionary dictionary] error:&error];
     
     error = nil;
-    CSQLPreparedStatement *statement = [database prepareStatement:@"CREATE TABLE t (i INT, v VARCHAR(255))" error:&error];
+    CSQLPreparedStatement *statement = [database prepareStatement:@"CREATE TABLE t (i NUMERIC, v VARCHAR(255))" error:&error];
 
     STAssertNotNil(statement, @"Statement was not created.");
     STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
@@ -59,20 +59,21 @@
     error = nil;
     
     NSArray *values = [NSArray arrayWithObjects:
-                       [NSNumber numberWithInt:1],
+                       [NSNumber numberWithUnsignedLongLong:18446744073709551615UL],
                        @"v1",
                        nil];
     
     STAssertTrue([statement executeWithValues:values error:&error], @"Statement was not executed.");
     STAssertNil(error, [error description]);
-    STAssertFalse(statement.canFetch, @"Statement should return rows.");
+    STAssertFalse(statement.canFetch, @"Statement should return not rows.");
 #endif
     
+#if 1
+
     //
     // Clean up.
     //
-
-#if 1
+    
     error = nil;
 
     statement = [database prepareStatement:@"DROP TABLE t" error:&error];
