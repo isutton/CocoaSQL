@@ -42,26 +42,41 @@
         PGresult *result = PQprepare(database.databaseHandle, [[NSString stringWithFormat:@"%u", [self hash]] UTF8String], 
                                      [sql UTF8String], 0, nil);
 
-        //
-        // TODO: fill prepare statement return values.
-        //
-        switch (PQresultStatus(result)) {
-            case PGRES_FATAL_ERROR:
-                [self getError:error];
-                break;
-            default:
-                break;
+        if (![self handleResultStatus:result error:error]) {
+            [self release];
         }
-        
+
         PQclear(result);
     }
 
     return self;
 }
 
-- (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
+- (BOOL)handleResultStatus:(PGresult *)result error:(NSError **)error
 {
     BOOL returnValue = YES;
+    
+    switch (PQresultStatus(result)) {
+        case PGRES_FATAL_ERROR:
+            canFetch = NO;
+            returnValue = NO;
+            [self getError:error];
+            break;
+        case PGRES_COMMAND_OK:
+            canFetch = NO;
+            break;
+        case PGRES_TUPLES_OK:
+            canFetch = YES;
+        default:
+            break;
+    }
+    
+    return returnValue;
+}
+
+- (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
+{
+    BOOL returnValue;
     
     int nParams = 0;
     const char **paramValues = nil;
@@ -103,38 +118,16 @@
     if (paramValues)
         free(paramValues);
     
-    //
-    // TODO: fill result status return values.
-    //
-    switch (PQresultStatus(result)) {
-        case PGRES_FATAL_ERROR:
-            canFetch = NO;
-            returnValue = NO;
-            [self getError:error];
-            break;
-        case PGRES_COMMAND_OK:
-            canFetch = NO;
-            break;
-        case PGRES_TUPLES_OK:
-            canFetch = YES;
-            statement = result;
-        default:
-            break;
-    }
+    returnValue = [self handleResultStatus:result error:error];
     
-    // We have rows to retrieve from the database, don't free the result value.
-    if (PQresultStatus(result) != PGRES_TUPLES_OK) {
+    if (result)
         PQclear(result);
-    }
 
     return returnValue;
 }
 
 - (BOOL)finish
 {
-    if (statement) {
-        PQclear(statement);
-    }
     return YES;
 }
 
