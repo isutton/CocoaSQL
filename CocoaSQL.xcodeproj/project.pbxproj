@@ -101,6 +101,7 @@
 		828B5D9B11749B4500AB732C /* libpq.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpq.dylib; sourceTree = "<group>"; };
 		828B5DD21174A1BF00AB732C /* CSPostgreSQLDatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSPostgreSQLDatabaseTests.h; sourceTree = "<group>"; };
 		828B5DD31174A1BF00AB732C /* CSPostgreSQLDatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSPostgreSQLDatabaseTests.m; sourceTree = "<group>"; };
+		828B609B1175DA4500AB732C /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.md; sourceTree = "<group>"; };
 		8295F28F116F8CD10053E781 /* NSError+CocoaSQL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+CocoaSQL.h"; sourceTree = "<group>"; };
 		8295F290116F8CD10053E781 /* NSError+CocoaSQL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+CocoaSQL.m"; sourceTree = "<group>"; };
 		8295F34B117205540053E781 /* CSSQLiteDatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSQLiteDatabaseTests.h; sourceTree = "<group>"; };
@@ -194,6 +195,7 @@
 			children = (
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
+				828B609B1175DA4500AB732C /* TODO.md */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
