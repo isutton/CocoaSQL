@@ -53,9 +53,9 @@
     
     int nParams = 0;
     const char **paramValues = nil;
-    int *paramLengths = nil;
-    int *paramFormats = nil;
-    int resultFormat = 0;
+    int *paramLengths = nil; // don't need param lengths since text
+    int *paramFormats = nil; // default to all text params
+    int resultFormat = 0;    // ask for text results
     
     //
     // TODO: prepare values to feed PQexecPrepared.
@@ -63,18 +63,15 @@
     if (values && [values count] > 0) {
         nParams = [values count];
         paramValues = malloc(nParams * sizeof(*paramValues));
-        paramLengths = malloc(nParams * sizeof(int));
         
         for (int i = 0; i < nParams; i++) {
             id value = [values objectAtIndex:i];
             
             if ([[value class] isSubclassOfClass:[NSNumber class]]) {
                 paramValues[i] = [[(NSNumber *)value stringValue] UTF8String];
-                paramLengths[i] = sizeof(int);
             }
             else if ([[value class] isSubclassOfClass:[NSString class]]) {
                 paramValues[i] = [(NSString *)value UTF8String];
-                paramLengths[i] = strlen(paramValues[i]);
             }
             
             
@@ -90,11 +87,8 @@
                                       paramFormats, 
                                       resultFormat);
     
-    if (values && [values count] > 0) {
+    if (paramValues)
         free(paramValues);
-        free(paramLengths);
-    }
-        
     
     //
     // TODO: fill result status return values.
