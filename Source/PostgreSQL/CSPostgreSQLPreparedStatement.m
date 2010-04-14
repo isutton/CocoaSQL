@@ -27,15 +27,21 @@
     if (self = [super init]) {
         database = [aDatabase retain];
         
-        PGresult *result = PQprepare(database.databaseHandle, "", [sql UTF8String], 0, nil);
+        PGresult *result = PQprepare(database.databaseHandle, [[NSString stringWithFormat:@"%u", [self hash]] UTF8String], 
+                                     [sql UTF8String], 0, nil);
 
         //
         // TODO: fill prepare statement return values.
         //
-        if (!result) {
-            [self getError:error];
+        switch (PQresultStatus(result)) {
+            case PGRES_FATAL_ERROR:
+                [self getError:error];
+                break;
+            default:
+                break;
         }
         
+        PQclear(result);
     }
 
     return self;
@@ -45,32 +51,83 @@
 {
     BOOL returnValue = YES;
     
+    int nParams = 0;
+    const char **paramValues = nil;
+    int *paramLengths = nil;
+    int *paramFormats = nil;
+    int resultFormat = 0;
+    
     //
     // TODO: prepare values to feed PQexecPrepared.
     //
     if (values && [values count] > 0) {
+        nParams = [values count];
+        paramValues = malloc(nParams * sizeof(*paramValues));
+        paramLengths = malloc(nParams * sizeof(int));
+        
+        for (int i = 0; i < nParams; i++) {
+            id value = [values objectAtIndex:i];
+            
+            if ([[value class] isSubclassOfClass:[NSNumber class]]) {
+                paramValues[i] = [[(NSNumber *)value stringValue] UTF8String];
+                paramLengths[i] = sizeof(int);
+            }
+            else if ([[value class] isSubclassOfClass:[NSString class]]) {
+                paramValues[i] = [(NSString *)value UTF8String];
+                paramLengths[i] = strlen(paramValues[i]);
+            }
+            
+            
+        }
         
     }
 
-    PGresult *result = PQexecPrepared(database.databaseHandle, "", 0, nil, nil, nil, 0);
+    PGresult *result = PQexecPrepared(database.databaseHandle, 
+                                      [[NSString stringWithFormat:@"%u", [self hash]] UTF8String],
+                                      nParams, 
+                                      paramValues, 
+                                      paramLengths, 
+                                      paramFormats, 
+                                      resultFormat);
+    
+    if (values && [values count] > 0) {
+        free(paramValues);
+        free(paramLengths);
+    }
+        
     
     //
     // TODO: fill result status return values.
     //
-    if (PQresultStatus(result) == PGRES_FATAL_ERROR) {
-        canFetch = NO;
-        returnValue = NO;
-        [self getError:error];
+    switch (PQresultStatus(result)) {
+        case PGRES_FATAL_ERROR:
+            canFetch = NO;
+            returnValue = NO;
+            [self getError:error];
+            break;
+        case PGRES_COMMAND_OK:
+            canFetch = NO;
+            break;
+        case PGRES_TUPLES_OK:
+            canFetch = YES;
+            statement = result;
+        default:
+            break;
     }
-    else if (PQresultStatus(result) == PGRES_COMMAND_OK) {
-        canFetch = NO;
-    }
-    else if (PQresultStatus(result) == PGRES_TUPLES_OK) {
-        canFetch = YES;
+    
+    // We have rows to retrieve from the database, don't free the result value.
+    if (PQresultStatus(result) != PGRES_TUPLES_OK) {
+        PQclear(result);
     }
 
-    PQclear(result);
+    return returnValue;
+}
 
+- (BOOL)finish
+{
+    if (statement) {
+        PQclear(statement);
+    }
     return YES;
 }
 
