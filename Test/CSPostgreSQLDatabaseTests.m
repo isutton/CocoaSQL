@@ -82,4 +82,67 @@
     
 }
 
+- (void)testDataTypes
+{
+    NSError *error = nil;
+    CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"PostgreSQL" options:[NSDictionary dictionary] error:&error];
+
+    NSString *createTableQuery = @"CREATE TABLE t (i NUMERIC, v VARCHAR(255), b BYTEA)";
+    
+    error = nil;
+    CSQLPreparedStatement *statement = [database prepareStatement:createTableQuery error:&error];
+
+    STAssertNotNil(statement, @"Statement was not created.");
+    STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
+    
+    error = nil;
+    STAssertTrue([statement execute:&error], @"Statement was not executed.");
+    STAssertNil(error, @"An error occurred: %@", error);
+    
+    error = nil;
+    statement = [database prepareStatement:@"INSERT INTO t (i, v, b) VALUES ($1, $2, $3)" error:&error];
+
+    STAssertNotNil(statement, @"Statement was not created.");
+    STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
+
+    NSArray *values = [NSArray arrayWithObjects:
+                       [NSNumber numberWithInt:1],
+                       @"v1",
+                       [@"something here and there" dataUsingEncoding:NSUTF8StringEncoding],
+                       nil];
+    
+    error = nil;
+    
+    STAssertTrue([statement executeWithValues:values error:&error], @"Statement was not executed.");
+    STAssertNil(error, [error description]);
+    STAssertFalse(statement.canFetch, @"Statement should not return rows.");
+    
+    error = nil;
+    
+    statement = [database prepareStatement:@"SELECT i, v, t FROM t" error:&error];
+
+    STAssertNotNil(statement, @"Statement was not created.");
+    STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
+    
+    error = nil;
+    
+    STAssertTrue([statement execute:&error], @"Statement was not executed.");
+    STAssertNil(error, [error description]);
+    STAssertTrue(statement.canFetch, @"Statement should not return rows.");
+    
+#if 1
+    
+    //
+    // Clean up.
+    //
+    
+    error = nil;
+    
+    statement = [database prepareStatement:@"DROP TABLE t" error:&error];
+    STAssertTrue([statement execute:&error], @"Statement was not executed.");
+    STAssertNil(error, @"An error occurred. %@", error);
+    
+#endif    
+    
+}
 @end
