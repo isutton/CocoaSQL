@@ -2,6 +2,7 @@
 build/
 *.mode1v3
 *.pbxuser
+*.perspectivev3
 
 # OSX noise
 .DS_Store
