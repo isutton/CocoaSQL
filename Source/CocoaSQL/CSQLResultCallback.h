@@ -15,23 +15,18 @@
 //  You should have received a copy of the GNU General Public License
 //  along with CocoaSQL.  If not, see <http://www.gnu.org/licenses/>.
 //
-//  CSSQLiteDatabase.h by Igor Sutton on 3/25/10.
+//  CSQLResultCallback.h by xant on 4/15/10.
 //
 
 #import <Cocoa/Cocoa.h>
 
-#import "CSQLDatabase.h"
-#import "CSSQLitePreparedStatement.h"
 
-@interface CSSQLiteDatabase : CSQLDatabase {
-    NSString *path;
+@interface CSQLResultCallback : NSObject {
+	NSMutableArray *rows;
 }
 
-@property (readonly) NSNumber *affectedRows;
-@property (copy) NSString *path;
+- (NSInteger)rowsAsDictionaries:(NSDictionary *)row;
+- (NSInteger)rowsAsArrays:(NSDictionary *)row;
 
-+ (id)databaseWithPath:(NSString *)aPath error:(NSError **)error;
-
-- (id)initWithPath:(NSString *)aPath error:(NSError **)error;
-
+@property(readonly) NSMutableArray *rows;
 @end

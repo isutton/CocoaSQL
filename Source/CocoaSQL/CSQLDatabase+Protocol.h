@@ -89,7 +89,7 @@
  @return Number of rows affected by the SQL statement.
  
  */
-- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error; 
+- (BOOL)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error; 
 
 /**
  
@@ -102,7 +102,7 @@
  @return Number of rows affected by the SQL statement.
  
  */
-- (NSUInteger)executeSQL:(NSString *)sql error:(NSError **)error;
+- (BOOL)executeSQL:(NSString *)sql error:(NSError **)error;
 
 /**
  

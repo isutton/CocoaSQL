@@ -49,6 +49,8 @@
 		AA3698AC116B1C060073A0EB /* CSMySQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */; };
 		AA3698AD116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */; };
 		AA62F97E116C7B3200C4FE4A /* CSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */; };
+		AA7A94D11176F1E700643185 /* CSQLResultCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = AA7A94CF1176F1E700643185 /* CSQLResultCallback.h */; };
+		AA7A94D21176F1E700643185 /* CSQLResultCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7A94D01176F1E700643185 /* CSQLResultCallback.m */; };
 		AA987E91116E5D420023E86F /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
 		AAA449B21174FED6006143D9 /* CSQLResultValue.h in Headers */ = {isa = PBXBuildFile; fileRef = AAF71F9111744D93001D79EA /* CSQLResultValue.h */; };
 		AAA449B31174FED6006143D9 /* CSQLResultValue.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF71F9211744D93001D79EA /* CSQLResultValue.m */; };
@@ -120,6 +122,8 @@
 		AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSMySQLDatabase.m; path = Source/MySQL/CSMySQLDatabase.m; sourceTree = "<group>"; };
 		AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSMySQLPreparedStatement.h; path = Source/MySQL/CSMySQLPreparedStatement.h; sourceTree = "<group>"; };
 		AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CSMySQLPreparedStatement.m; path = Source/MySQL/CSMySQLPreparedStatement.m; sourceTree = "<group>"; };
+		AA7A94CF1176F1E700643185 /* CSQLResultCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLResultCallback.h; sourceTree = "<group>"; };
+		AA7A94D01176F1E700643185 /* CSQLResultCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLResultCallback.m; sourceTree = "<group>"; };
 		AA987E90116E5D420023E86F /* libmysqlclient.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libmysqlclient.dylib; sourceTree = "<group>"; };
 		AAF71F9111744D93001D79EA /* CSQLResultValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSQLResultValue.h; sourceTree = "<group>"; };
 		AAF71F9211744D93001D79EA /* CSQLResultValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSQLResultValue.m; sourceTree = "<group>"; };
@@ -268,6 +272,8 @@
 				8295F290116F8CD10053E781 /* NSError+CocoaSQL.m */,
 				AAF71F9111744D93001D79EA /* CSQLResultValue.h */,
 				AAF71F9211744D93001D79EA /* CSQLResultValue.m */,
+				AA7A94CF1176F1E700643185 /* CSQLResultCallback.h */,
+				AA7A94D01176F1E700643185 /* CSQLResultCallback.m */,
 			);
 			name = CocoaSQL;
 			path = Source/CocoaSQL;
@@ -366,6 +372,7 @@
 				828B5C8F1174621B00AB732C /* CSPostgreSQLDatabase.h in Headers */,
 				828B5C931174623000AB732C /* CSPostgreSQLPreparedStatement.h in Headers */,
 				AAA449B21174FED6006143D9 /* CSQLResultValue.h in Headers */,
+				AA7A94D11176F1E700643185 /* CSQLResultCallback.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -527,6 +534,7 @@
 				828B5D9411749B0E00AB732C /* CSPostgreSQLPreparedStatement.m in Sources */,
 				828B5D9511749B1200AB732C /* CSPostgreSQLDatabase.m in Sources */,
 				AAA449B31174FED6006143D9 /* CSQLResultValue.m in Sources */,
+				AA7A94D21176F1E700643185 /* CSQLResultCallback.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,6 +731,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

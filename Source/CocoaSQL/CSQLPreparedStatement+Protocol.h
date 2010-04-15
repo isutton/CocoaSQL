@@ -62,8 +62,12 @@
 
 // Allows to avoid specifying if the caller wants the row as a dictionary or as an array.
 // Defaults to dictionary in this case.
+- (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error;
+- (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector error:(NSError **)error;
 - (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector;
+- (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector rowAsDictionary:(BOOL)wantsDictionary error:(NSError **)error;
 - (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector rowAsDictionary:(BOOL)wantsDictionary;
+- (BOOL)executeWithReceiver:(id)receiver selector:(SEL)selector error:(NSError **)error;
 - (BOOL)executeWithReceiver:(id)receiver selector:(SEL)selector;
 
 #pragma mark -

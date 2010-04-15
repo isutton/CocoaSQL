@@ -36,12 +36,11 @@
 - (BOOL)createTable:(id)database 
 {
     NSError *error = nil;
-    int affectedRows;
     
-    affectedRows = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME, t timestamp, bs BIGINT signed, bu BIGINT unsigned, f float, n INTEGER NULL)" error:&error];
+    BOOL res = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME, t timestamp, bs BIGINT signed, bu BIGINT unsigned, f float, n INTEGER NULL)" error:&error];
     
     STAssertNil(error, @"Error.");
-    STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
+    STAssertEquals(res, YES, @"CREATE TABLE.");
     
     if (error) {
         return NO;
@@ -63,7 +62,7 @@
 
     [self createTable:database];
     
-    // TODO - test if giving a wrong statement fails properly
+    // TODO - test if giving a wrong statement fails properlye
     CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d, t, bs, bu, f, n) VALUES (?, ?, now(), now(), -9223372036854775808, 18446744073709551615, 0.123456789, NULL)" error:&error];
     
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];

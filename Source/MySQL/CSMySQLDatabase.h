@@ -26,6 +26,7 @@
 }
 
 @property (readwrite,assign) voidPtr databaseHandle;
+@property (readonly) NSNumber *affectedRows;
 
 #pragma mark -
 #pragma mark Initialization related messages

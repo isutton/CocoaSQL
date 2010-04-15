@@ -26,31 +26,18 @@
 @interface CSQLDatabase : NSObject <CSQLDatabase>
 {
     voidPtr databaseHandle;
+	NSNumber *affectedRows;
 }
 
-@property (readwrite,assign) voidPtr databaseHandle;
+@property (readonly,assign) voidPtr databaseHandle;
+@property (readonly,assign) NSNumber *affectedRows;
 
 + (CSQLDatabase *)databaseWithDSN:(NSString *)aDSN error:(NSError **)error;
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error;
 
-- (NSNumber *)affectedRows;
 - (NSNumber *)lastInsertID;
 - (BOOL)disconnect;
 - (BOOL)disconnect:(NSError **)error;
 - (BOOL)isActive;
 - (BOOL)isActive:(NSError **)error;
 @end
-
-#pragma mark -
-#pragma mark callbacks
-
-
-typedef int (*CSQLCallback)(void *, int, char**, char**);
-
-int rowAsArrayCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);
-
-int rowAsDictionaryCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);
-
-int rowsAsDictionariesCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);
-
-int rowsAsArraysCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames);

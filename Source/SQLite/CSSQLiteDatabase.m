@@ -26,6 +26,7 @@
 @implementation CSSQLiteDatabase
 
 @synthesize path;
+@dynamic affectedRows;
 
 + (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
 {
@@ -84,7 +85,7 @@
     [super dealloc];
 }
 
-- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
+- (BOOL)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -95,7 +96,7 @@
     return [statement executeWithValues:values error:error];
 }
 
-- (NSUInteger)executeSQL:(NSString *)sql error:(NSError **)error
+- (BOOL)executeSQL:(NSString *)sql error:(NSError **)error
 {
     return [self executeSQL:sql withValues:nil error:error];
 }
