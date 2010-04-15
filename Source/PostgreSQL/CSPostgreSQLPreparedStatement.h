@@ -24,7 +24,7 @@
 #import <libpq-fe.h>
 
 @interface CSPostgreSQLPreparedStatement : CSQLPreparedStatement {
-
+    int currentRow;
 }
 
 - (void)getError:(NSError **)error;

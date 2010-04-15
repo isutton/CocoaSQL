@@ -19,6 +19,7 @@
 //
 
 #import "CSPostgreSQLPreparedStatement.h"
+#import "CSQLResultValue.h"
 #import <libpq-fe.h>
 
 @implementation CSPostgreSQLPreparedStatement
@@ -36,7 +37,7 @@
 
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
-    if (self = [super init]) {
+    if ([self init]) {
         database = [aDatabase retain];
         
         PGresult *result = PQprepare(database.databaseHandle, [[NSString stringWithFormat:@"%u", [self hash]] UTF8String], 
@@ -44,17 +45,26 @@
 
         if (![self handleResultStatus:result error:error]) {
             [self release];
+            self = nil;
         }
-
-        PQclear(result);
     }
 
+    return self;
+}
+
+- (id)init
+{
+    if (self = [super init]) {
+        currentRow = 0;
+    }
+    
     return self;
 }
 
 - (BOOL)handleResultStatus:(PGresult *)result error:(NSError **)error
 {
     BOOL returnValue = YES;
+    BOOL clearResult = YES;
     
     switch (PQresultStatus(result)) {
         case PGRES_FATAL_ERROR:
@@ -67,8 +77,14 @@
             break;
         case PGRES_TUPLES_OK:
             canFetch = YES;
+            clearResult = NO;
+            statement = result;
         default:
             break;
+    }
+    
+    if (clearResult) {
+        PQclear(result);
     }
     
     return returnValue;
@@ -76,8 +92,6 @@
 
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
-    BOOL returnValue;
-    
     int nParams = 0;
     const char **paramValues = nil;
     int *paramLengths = nil; // don't need param lengths since text
@@ -118,16 +132,15 @@
     if (paramValues)
         free(paramValues);
     
-    returnValue = [self handleResultStatus:result error:error];
-    
-    if (result)
-        PQclear(result);
-
-    return returnValue;
+    return [self handleResultStatus:result error:error];
 }
 
 - (BOOL)finish
 {
+    if (statement) {
+        PQclear(statement);
+    }
+    
     return YES;
 }
 
@@ -143,10 +156,28 @@
 
 - (NSDictionary *)fetchRowAsDictionary:(NSError **)error
 {
-    if (!canFetch) 
+    if (!canFetch)
         return nil;
+    
+    int numFields = PQnfields(statement);
+    int numTuples = PQntuples(statement);
+    
+    if (currentRow == numTuples) {
+        canFetch = NO;
+        return nil;
+    }
+    
+    NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:numFields];
+    
+    for (int i = 0; i < numFields; i++) {
+        NSString *key = [NSString stringWithFormat:@"%s", PQfname(statement, i)];
+        CSQLResultValue *value = [CSQLResultValue valueWithUTF8String:PQgetvalue(statement, currentRow, i)];
+        [row setObject:value forKey:key];
+    }
 
-    return nil;
+    currentRow++;
+    
+    return row;
 }
 
 - (NSArray *)fetchRowAsArray:(NSError **)error
@@ -154,11 +185,29 @@
     if (!canFetch)
         return nil;
     
-    return nil;
+    int numFields = PQnfields(statement);
+    int numTuples = PQntuples(statement);
+    
+    if (currentRow == numTuples) {
+        canFetch = NO;
+        return nil;
+    }
+    
+    NSMutableArray *row = [NSMutableArray arrayWithCapacity:numFields];
+    
+    for (int i = 0; i < numFields; i++) {
+        CSQLResultValue *value = [CSQLResultValue valueWithUTF8String:PQgetvalue(statement, currentRow, i)];
+        [row addObject:value];
+    }
+    
+    currentRow++;
+    
+    return row;
 }
 
 - (void)dealloc
 {
+    [self finish];
     [database release];
     [super dealloc];
 }

@@ -125,20 +125,17 @@
                        nil];
     
     error = nil;
-    
     STAssertTrue([statement executeWithValues:values error:&error], @"Statement was not executed.");
     STAssertNil(error, [error description]);
     STAssertFalse(statement.canFetch, @"Statement should not return rows.");
     
     error = nil;
-    
     statement = [database prepareStatement:@"SELECT i, v, t FROM t" error:&error];
 
     STAssertNotNil(statement, @"Statement was not created.");
     STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
     
     error = nil;
-    
     STAssertTrue([statement execute:&error], @"Statement was not executed.");
     STAssertNil(error, [error description]);
     STAssertTrue(statement.canFetch, @"Statement should return rows.");
@@ -147,12 +144,33 @@
     NSArray *array = [statement fetchRowAsArray:&error];
 
     STAssertNotNil(array, @"Row shouldn't be nil.");
+    STAssertEqualObjects([[array objectAtIndex:0] numberValue], [values objectAtIndex:0], @"");
+    STAssertEqualObjects([[array objectAtIndex:1] stringValue], [values objectAtIndex:1], @"");
+    STAssertEqualObjects([[array objectAtIndex:2] dataValue], [values objectAtIndex:2], @"");
+
+    [statement finish];
+    
+    error = nil;
+    statement = [database prepareStatement:@"SELECT i, v, t FROM t" error:&error];
+    
+    STAssertNotNil(statement, @"Statement was not created.");
+    STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
+    
+    error = nil;
+    STAssertTrue([statement execute:&error], @"Statement was not executed.");
+    STAssertNil(error, [error description]);
+    STAssertTrue(statement.canFetch, @"Statement should return rows.");
     
     error = nil;
     NSDictionary *dictionary = [statement fetchRowAsDictionary:&error];
     
     STAssertNotNil(dictionary, @"Row shouldn't be nil.");
+    STAssertEqualObjects([[dictionary objectForKey:@"i"] numberValue], [values objectAtIndex:0], @"");
+    STAssertEqualObjects([[dictionary objectForKey:@"v"] stringValue], [values objectAtIndex:1], @"");
+    STAssertEqualObjects([[dictionary objectForKey:@"v"] dataValue], [values objectAtIndex:2], @"");
 
+    [statement finish];
+    
 #if 1
     
     //
