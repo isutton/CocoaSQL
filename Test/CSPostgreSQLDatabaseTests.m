@@ -26,7 +26,7 @@
 
 @implementation CSPostgreSQLDatabaseTests
 
-- (void)testDatabaseWithDSN 
+- (void)test1DatabaseWithDSN 
 {
     NSError *error = nil;
     CSQLDatabase *database = [CSQLDatabase databaseWithDSN:@"PostgreSQL:" error:&error];
@@ -36,7 +36,7 @@
     STAssertNotNil(database.databaseHandle, @"Database connection was not opened.");    
 }
 
-- (void)testDatabaseWithDriver
+- (void)test2DatabaseWithDriver
 {
     NSError *error = nil;
     CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"PostgreSQL" options:[NSDictionary dictionary] error:&error];
@@ -46,7 +46,7 @@
     STAssertNotNil(database.databaseHandle, @"Database connection was not opened.");    
 }
 
-- (void)testPreparedStatement
+- (void)test3PreparedStatement
 {
     NSError *error = nil;
     CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"PostgreSQL" options:[NSDictionary dictionary] error:&error];
@@ -95,7 +95,7 @@
     
 }
 
-- (void)testDataTypes
+- (void)test4DataTypes
 {
     NSError *error = nil;
     CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"PostgreSQL" options:[NSDictionary dictionary] error:&error];
@@ -111,6 +111,9 @@
     error = nil;
     STAssertTrue([statement execute:&error], @"Statement was not executed.");
     STAssertNil(error, @"An error occurred: %@", error);
+    
+    [statement release];
+    statement = nil;
     
     error = nil;
     statement = [database prepareStatement:@"INSERT INTO t (i, v, b) VALUES ($1, $2, $3)" error:&error];
@@ -128,6 +131,9 @@
     STAssertTrue([statement executeWithValues:values error:&error], @"Statement was not executed.");
     STAssertNil(error, [error description]);
     STAssertFalse(statement.canFetch, @"Statement should not return rows.");
+    
+    [statement release];
+    statement = nil;
     
     error = nil;
     statement = [database prepareStatement:@"SELECT i, v, t FROM t" error:&error];
@@ -148,7 +154,8 @@
     STAssertEqualObjects([[array objectAtIndex:1] stringValue], [values objectAtIndex:1], @"");
     STAssertEqualObjects([[array objectAtIndex:2] dataValue], [values objectAtIndex:2], @"");
 
-    [statement finish];
+    [statement release];
+    statement = nil;
     
     error = nil;
     statement = [database prepareStatement:@"SELECT i, v, t FROM t" error:&error];
@@ -169,7 +176,8 @@
     STAssertEqualObjects([[dictionary objectForKey:@"v"] stringValue], [values objectAtIndex:1], @"");
     STAssertEqualObjects([[dictionary objectForKey:@"v"] dataValue], [values objectAtIndex:2], @"");
 
-    [statement finish];
+    [statement release];
+    statement = nil;
     
 #if 1
     
@@ -182,6 +190,9 @@
     statement = [database prepareStatement:@"DROP TABLE t" error:&error];
     STAssertTrue([statement execute:&error], @"Statement was not executed.");
     STAssertNil(error, @"An error occurred. %@", error);
+    
+    [statement release];
+    statement = nil;
     
 #endif    
     

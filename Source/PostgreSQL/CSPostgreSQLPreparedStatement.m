@@ -40,7 +40,8 @@
     if ([self init]) {
         database = [aDatabase retain];
         
-        PGresult *result = PQprepare(database.databaseHandle, [[NSString stringWithFormat:@"%u", [self hash]] UTF8String], 
+        PGresult *result = PQprepare(database.databaseHandle, 
+                                     "", 
                                      [sql UTF8String], 0, nil);
 
         if (![self handleResultStatus:result error:error]) {
@@ -85,6 +86,7 @@
     
     if (clearResult) {
         PQclear(result);
+        result = nil;
     }
     
     return returnValue;
@@ -104,17 +106,23 @@
     if (values && [values count] > 0) {
         nParams = [values count];
         paramValues = malloc(nParams * sizeof(*paramValues));
+        paramLengths = calloc(nParams, sizeof(int));
+        paramFormats = calloc(nParams, sizeof(int));
         
         for (int i = 0; i < nParams; i++) {
             id value = [values objectAtIndex:i];
             
             if ([[value class] isSubclassOfClass:[NSNumber class]]) {
+                paramFormats[i] = 0;
                 paramValues[i] = [[(NSNumber *)value stringValue] UTF8String];
             }
             else if ([[value class] isSubclassOfClass:[NSString class]]) {
+                paramFormats[i] = 0;
                 paramValues[i] = [(NSString *)value UTF8String];
             }
             else if ([[value class] isSubclassOfClass:[NSData class]]) {
+                paramFormats[i] = 1; // binary
+                paramLengths[i] = [(NSData *)value length];
                 paramValues[i] = [(NSData *)value bytes];
             }
         }
@@ -122,25 +130,28 @@
     }
 
     PGresult *result = PQexecPrepared(database.databaseHandle, 
-                                      [[NSString stringWithFormat:@"%u", [self hash]] UTF8String],
+                                      "",
                                       nParams, 
                                       paramValues, 
                                       paramLengths, 
                                       paramFormats, 
                                       resultFormat);
     
-    if (paramValues)
+    if (values && [values count] > 0) {
         free(paramValues);
+        free(paramLengths);
+        free(paramFormats);        
+    }
     
     return [self handleResultStatus:result error:error];
 }
 
-- (BOOL)finish
+- (BOOL)finish:(NSError **)error
 {
     if (statement) {
         PQclear(statement);
+        statement = nil;
     }
-    
     return YES;
 }
 
@@ -170,8 +181,15 @@
     NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:numFields];
     
     for (int i = 0; i < numFields; i++) {
+        CSQLResultValue *value;
+        
         NSString *key = [NSString stringWithFormat:@"%s", PQfname(statement, i)];
-        CSQLResultValue *value = [CSQLResultValue valueWithUTF8String:PQgetvalue(statement, currentRow, i)];
+        
+        if (1 && PQfformat(statement, i))
+            value = [CSQLResultValue valueWithData:[NSData dataWithBytes:PQgetvalue(statement, currentRow, i) length:PQfsize(statement, i)]];
+        else
+            value = [CSQLResultValue valueWithUTF8String:PQgetvalue(statement, currentRow, i)];
+
         [row setObject:value forKey:key];
     }
 
@@ -196,7 +214,13 @@
     NSMutableArray *row = [NSMutableArray arrayWithCapacity:numFields];
     
     for (int i = 0; i < numFields; i++) {
-        CSQLResultValue *value = [CSQLResultValue valueWithUTF8String:PQgetvalue(statement, currentRow, i)];
+        CSQLResultValue *value;
+                
+        if (1 && PQfformat(statement, i))
+            value = [CSQLResultValue valueWithData:[NSData dataWithBytes:PQgetvalue(statement, currentRow, i) length:PQfsize(statement, i)]];
+        else
+            value = [CSQLResultValue valueWithUTF8String:PQgetvalue(statement, currentRow, i)];
+
         [row addObject:value];
     }
     
@@ -207,7 +231,11 @@
 
 - (void)dealloc
 {
-    [self finish];
+    if (statement) {
+        PQclear(statement);
+        statement = nil;
+    }
+        
     [database release];
     [super dealloc];
 }
