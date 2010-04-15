@@ -106,27 +106,28 @@
     if (values && [values count] > 0) {
         nParams = [values count];
         paramValues = malloc(nParams * sizeof(*paramValues));
-        paramLengths = calloc(nParams, sizeof(int));
-        paramFormats = calloc(nParams, sizeof(int));
+        if (resultFormat) {
+            paramLengths = calloc(nParams, sizeof(int));
+            paramFormats = calloc(nParams, sizeof(int));
+        }
         
         for (int i = 0; i < nParams; i++) {
             id value = [values objectAtIndex:i];
             
             if ([[value class] isSubclassOfClass:[NSNumber class]]) {
-                paramFormats[i] = 0;
                 paramValues[i] = [[(NSNumber *)value stringValue] UTF8String];
             }
             else if ([[value class] isSubclassOfClass:[NSString class]]) {
-                paramFormats[i] = 0;
                 paramValues[i] = [(NSString *)value UTF8String];
             }
             else if ([[value class] isSubclassOfClass:[NSData class]]) {
-                paramFormats[i] = 1; // binary
-                paramLengths[i] = [(NSData *)value length];
-                paramValues[i] = [(NSData *)value bytes];
+                if (resultFormat) {
+                    paramFormats[i] = 1; // binary
+                    paramLengths[i] = [value length];
+                }
+                paramValues[i] = [value bytes];
             }
         }
-        
     }
 
     PGresult *result = PQexecPrepared(database.databaseHandle, 
@@ -139,8 +140,10 @@
     
     if (values && [values count] > 0) {
         free(paramValues);
-        free(paramLengths);
-        free(paramFormats);        
+        if (resultFormat) {
+            free(paramLengths);
+            free(paramFormats);        
+        }
     }
     
     return [self handleResultStatus:result error:error];
