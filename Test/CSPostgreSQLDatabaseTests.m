@@ -112,7 +112,7 @@
     STAssertTrue([statement execute:&error], @"Statement was not executed.");
     STAssertNil(error, @"An error occurred: %@", error);
     
-    [statement release];
+    //[statement release]; // XXX - that's already in the autorelease pool , we don't need to release it esplicitly
     statement = nil;
     
     error = nil;
@@ -132,7 +132,7 @@
     STAssertNil(error, [error description]);
     STAssertFalse(statement.canFetch, @"Statement should not return rows.");
     
-    [statement release];
+    //[statement release]; // XXX - that's already in the autorelease pool , we don't need to release it esplicitly
     statement = nil;
     
     error = nil;
@@ -154,11 +154,11 @@
     STAssertEqualObjects([[array objectAtIndex:1] stringValue], [values objectAtIndex:1], @"");
     STAssertEqualObjects([[array objectAtIndex:2] dataValue], [values objectAtIndex:2], @"");
 
-    [statement release];
+    //[statement release]; // XXX - that's already in the autorelease pool , we don't need to release it esplicitly
     statement = nil;
     
     error = nil;
-    statement = [database prepareStatement:@"SELECT i, v, t FROM t" error:&error];
+    statement = [database prepareStatement:@"SELECT i, v, b FROM t" error:&error];
     
     STAssertNotNil(statement, @"Statement was not created.");
     STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
@@ -176,7 +176,7 @@
     STAssertEqualObjects([[dictionary objectForKey:@"v"] stringValue], [values objectAtIndex:1], @"");
     STAssertEqualObjects([[dictionary objectForKey:@"b"] dataValue], [values objectAtIndex:2], @"");
 
-    [statement release];
+    //[statement release]; // XXX - that's already in the autorelease pool , we don't need to release it esplicitly
     statement = nil;
     
 #if 1
@@ -191,10 +191,11 @@
     STAssertTrue([statement execute:&error], @"Statement was not executed.");
     STAssertNil(error, @"An error occurred. %@", error);
     
-    [statement release];
+    //[statement release]; // XXX - that's already in the autorelease pool , we don't need to release it esplicitly
     statement = nil;
     
 #endif    
     
 }
+
 @end

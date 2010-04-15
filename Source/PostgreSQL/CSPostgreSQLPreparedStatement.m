@@ -187,10 +187,10 @@
         CSQLResultValue *value;
         
         NSString *key = [NSString stringWithFormat:@"%s", PQfname(statement, i)];
-        
-        if (1 && PQfformat(statement, i))
+        /* TODO - fix once using resultFormat == 1 
+        if (PQfformat(statement, i))
             value = [CSQLResultValue valueWithData:[NSData dataWithBytes:PQgetvalue(statement, currentRow, i) length:PQfsize(statement, i)]];
-        else
+        else*/
             value = [CSQLResultValue valueWithUTF8String:PQgetvalue(statement, currentRow, i)];
 
         [row setObject:value forKey:key];
@@ -218,10 +218,10 @@
     
     for (int i = 0; i < numFields; i++) {
         CSQLResultValue *value;
-                
-        if (1 && PQfformat(statement, i))
+        /* TODO - fix once using resultFormat == 1 
+        if (PQfformat(statement, i))
             value = [CSQLResultValue valueWithData:[NSData dataWithBytes:PQgetvalue(statement, currentRow, i) length:PQfsize(statement, i)]];
-        else
+        else*/
             value = [CSQLResultValue valueWithUTF8String:PQgetvalue(statement, currentRow, i)];
 
         [row addObject:value];

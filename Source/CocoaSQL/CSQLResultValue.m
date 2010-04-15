@@ -84,6 +84,13 @@
 #pragma mark -
 #pragma mark Initializers
 
+- (void)dealloc
+{
+	if (value)
+		[value release];
+	[super dealloc];
+}
+
 - (id)init
 {
     if (!value) // defaults to a null value
@@ -150,7 +157,7 @@
 
 - (id)initWithBool:(BOOL)aValue
 {
-    value = [NSNumber numberWithBool:aValue];
+    value = [[NSNumber numberWithBool:aValue] retain];
     return [self init];
 }
 
