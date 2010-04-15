@@ -258,8 +258,10 @@
 {
     if ([[value class] isSubclassOfClass:[NSData class]])
         return value;
-    if ([[value class] isSubclassOfClass:[NSString class]])
-        return [NSData dataWithBytesNoCopy:(void *)[value UTF8String] length:[value length]]; // XXX - perhaps we should copy? :/
+    if ([[value class] isSubclassOfClass:[NSString class]]) {
+		// TODO - find a way to avoid copying the buffer (refcnt++ ?)
+        return [NSData dataWithBytes:(void *)[value UTF8String] length:[value length]];
+	}
     if ([[value class] isSubclassOfClass:[NSNull class]])
         return [NSData alloc]; // empty data
     if ([[value class] isSubclassOfClass:[NSNumber class]]) {

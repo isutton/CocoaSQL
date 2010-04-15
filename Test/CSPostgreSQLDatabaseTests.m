@@ -136,7 +136,7 @@
     statement = nil;
     
     error = nil;
-    statement = [database prepareStatement:@"SELECT i, v, t FROM t" error:&error];
+    statement = [database prepareStatement:@"SELECT i, v, b FROM t" error:&error];
 
     STAssertNotNil(statement, @"Statement was not created.");
     STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
@@ -174,7 +174,7 @@
     STAssertNotNil(dictionary, @"Row shouldn't be nil.");
     STAssertEqualObjects([[dictionary objectForKey:@"i"] numberValue], [values objectAtIndex:0], @"");
     STAssertEqualObjects([[dictionary objectForKey:@"v"] stringValue], [values objectAtIndex:1], @"");
-    STAssertEqualObjects([[dictionary objectForKey:@"v"] dataValue], [values objectAtIndex:2], @"");
+    STAssertEqualObjects([[dictionary objectForKey:@"b"] dataValue], [values objectAtIndex:2], @"");
 
     [statement release];
     statement = nil;
