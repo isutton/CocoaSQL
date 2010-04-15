@@ -51,6 +51,12 @@
     return [[result initWithString:aValue] autorelease];
 }
 
++ (id)valueWithUTF8String:(char *)aValue
+{
+    CSQLResultValue *result = [self alloc];
+    return [[result initWithUTF8String:aValue] autorelease];
+}
+
 + (id)valueWithDate:(NSDate *)aValue
 {
     CSQLResultValue *result = [self alloc];
@@ -121,6 +127,12 @@
 - (id)initWithString:(NSString *)aValue
 {
     value = [aValue retain];
+    return [self init];
+}
+
+- (id)initWithUTF8String:(char *)aValue
+{
+    value = [[NSString stringWithUTF8String:aValue] retain];
     return [self init];
 }
 

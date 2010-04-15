@@ -29,6 +29,7 @@
 + (id)valueWithNumber:(NSNumber *)aValue;
 + (id)valueWithDecimalNumber:(NSDecimalNumber *)aValue;
 + (id)valueWithString:(NSString *)aValue;
++ (id)valueWithUTF8String:(char *)aValue;
 + (id)valueWithDate:(NSDate *)aValue;
 + (id)valueWithData:(NSData *)aValue;
 + (id)valueWithBool:(BOOL)aValue;
@@ -38,6 +39,7 @@
 - (id)initWithNumber:(NSNumber *)aValue;
 - (id)initWithDecimalNumber:(NSDecimalNumber *)aValue;
 - (id)initWithString:(NSString *)aValue;
+- (id)initWithUTF8String:(char *)aValue;
 - (id)initWithDate:(NSDate *)aValue;
 - (id)initWithData:(NSData *)aValue;
 - (id)initWithBool:(BOOL)aValue;
