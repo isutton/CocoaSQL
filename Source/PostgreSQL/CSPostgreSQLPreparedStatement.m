@@ -351,7 +351,6 @@
     }
     
     NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:row_.numFields];
-
     for (int i = 0; i < row_.numFields; i++) {
         [row setObject:[row_ objectForColumn:i] forKey:[row_ nameForColumn:i]];
     }

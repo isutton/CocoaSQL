@@ -124,10 +124,12 @@
     STAssertNotNil(statement, @"Statement was not created.");
     STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
 
+	char *data = "something here and there"; // TODO - find a better way to load some blob data
     NSArray *values = [NSArray arrayWithObjects:
                        [NSNumber numberWithInt:1],
                        @"v1",
-                       [@"something here and there" dataUsingEncoding:NSUTF8StringEncoding],
+					   
+                       [NSData dataWithBytes:data length:strlen(data)],
                        nil];
     
     error = nil;
