@@ -190,7 +190,7 @@
     if ([self isBinary:index]) {
         switch (type) {
             case BYTEAOID:
-                value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_-sizeof(char *)]];
+                value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
                 break;
             case CHAROID:
             case TEXTOID:
