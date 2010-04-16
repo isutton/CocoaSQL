@@ -21,13 +21,11 @@
 #import <Cocoa/Cocoa.h>
 
 #import "CocoaSQL.h"
-#import <libpq-fe.h>
 
 @interface CSPostgreSQLPreparedStatement : CSQLPreparedStatement {
     int currentRow;
 }
 
 - (void)getError:(NSError **)error;
-- (BOOL)handleResultStatus:(PGresult *)result error:(NSError **)error;
 
 @end

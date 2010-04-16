@@ -234,6 +234,36 @@
 
 @implementation CSPostgreSQLPreparedStatement
 
+- (BOOL)handleResultStatus:(PGresult *)result error:(NSError **)error
+{
+    BOOL returnValue = YES;
+    BOOL clearResult = YES;
+    
+    switch (PQresultStatus(result)) {
+        case PGRES_FATAL_ERROR:
+            canFetch = NO;
+            returnValue = NO;
+            [self getError:error];
+            break;
+        case PGRES_COMMAND_OK:
+            canFetch = NO;
+            break;
+        case PGRES_TUPLES_OK:
+            canFetch = YES;
+            clearResult = NO;
+            statement = result;
+        default:
+            break;
+    }
+    
+    if (clearResult) {
+        PQclear(result);
+        result = nil;
+    }
+    
+    return returnValue;
+}
+
 - (CSQLPreparedStatement *)prepareStatementWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     CSPostgreSQLPreparedStatement *statement_ = [self initWithDatabase:aDatabase andSQL:sql error:error];
@@ -270,36 +300,6 @@
     }
     
     return self;
-}
-
-- (BOOL)handleResultStatus:(PGresult *)result error:(NSError **)error
-{
-    BOOL returnValue = YES;
-    BOOL clearResult = YES;
-    
-    switch (PQresultStatus(result)) {
-        case PGRES_FATAL_ERROR:
-            canFetch = NO;
-            returnValue = NO;
-            [self getError:error];
-            break;
-        case PGRES_COMMAND_OK:
-            canFetch = NO;
-            break;
-        case PGRES_TUPLES_OK:
-            canFetch = YES;
-            clearResult = NO;
-            statement = result;
-        default:
-            break;
-    }
-    
-    if (clearResult) {
-        PQclear(result);
-        result = nil;
-    }
-    
-    return returnValue;
 }
 
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
