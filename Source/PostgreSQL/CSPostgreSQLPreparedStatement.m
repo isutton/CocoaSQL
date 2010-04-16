@@ -141,15 +141,22 @@
 
 @property (readonly) int numFields;
 
++ (id)rowWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index;
 - (id)initWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index;
 - (id)objectForColumn:(int)index;
 - (id)nameForColumn:(int)index;
+
 
 @end
 
 @implementation CSPostgreSQLRow
 
 @synthesize numFields;
+
++ (id)rowWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index
+{
+    return [[[self alloc] initWithStatement:statement andRow:index] autorelease];
+}
 
 - (id)initWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index
 {
@@ -316,7 +323,6 @@
     if (self = [super init]) {
         currentRow = 0;
     }
-    
     return self;
 }
 
@@ -366,7 +372,7 @@
         return nil;
     }
 
-    return [[[[CSPostgreSQLRow alloc] initWithStatement:self andRow:currentRow++] autorelease] rowAsDictionary];
+    return [[CSPostgreSQLRow rowWithStatement:self andRow:currentRow++] rowAsDictionary];
 }
 
 - (NSArray *)fetchRowAsArray:(NSError **)error
@@ -379,7 +385,7 @@
         return nil;
     }
     
-    return [[[[CSPostgreSQLRow alloc] initWithStatement:self andRow:currentRow++] autorelease] rowAsArray];   
+    return [[CSPostgreSQLRow rowWithStatement:self andRow:currentRow++] rowAsArray];   
 }
 
 - (void)dealloc
