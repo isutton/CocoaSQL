@@ -132,6 +132,106 @@
 
 @end
 
+@interface CSPostgreSQLRow : NSObject
+{
+    int row;
+    int numFields;
+    CSPostgreSQLPreparedStatement *statement_;
+}
+
+@property (readonly) int numFields;
+
+- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index;
+- (id)objectForColumn:(int)index;
+- (id)nameForColumn:(int)index;
+
+@end
+
+@implementation CSPostgreSQLRow
+
+@synthesize numFields;
+
+- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index
+{
+    row = index;
+    statement_ = [statement retain];
+    numFields = PQnfields(statement_.statement);
+    return self;
+}
+
+- (BOOL)isBinary:(int)index
+{
+    return PQfformat(statement_.statement, index) == 1;
+}
+
+- (int)lengthForColumn:(int)index
+{
+    return PQgetlength(statement_.statement, row, index);
+}
+
+- (int)typeForColumn:(int)index
+{
+    return PQftype(statement_.statement, index);
+}
+
+- (char *)valueForColumn:(int)index
+{
+    return PQgetvalue(statement_.statement, row, index);
+}
+
+- (id)objectForColumn:(int)index
+{
+    CSQLResultValue *value;
+
+    int type = [self typeForColumn:index];
+    int length_ = [self lengthForColumn:index];
+    char *value_ = [self valueForColumn:index];
+    
+    if ([self isBinary:index]) {
+        switch (type) {
+            case BYTEAOID:
+                value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_-sizeof(char *)]];
+                break;
+            case CHAROID:
+            case TEXTOID:
+            case VARCHAROID:
+                value = [CSQLResultValue valueWithUTF8String:value_];
+                break;
+            case INT8OID:
+            case INT4OID:
+            case INT2OID:
+            case NUMERICOID:
+                value = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
+            default:
+                break;
+        }
+    }            
+    else {
+        switch (type) {
+            case BYTEAOID:
+                value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
+                break;
+            default:
+                value = [CSQLResultValue valueWithUTF8String:value_];        
+                break;
+        }
+    }    
+    return value;
+}
+
+- (id)nameForColumn:(int)index
+{
+    return [NSString stringWithUTF8String:PQfname(statement_.statement, index)];
+}
+
+- (void)dealloc
+{
+    [statement_ release];
+    [super dealloc];
+}
+@end
+
+
 @implementation CSPostgreSQLPreparedStatement
 
 - (CSQLPreparedStatement *)prepareStatementWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
@@ -243,68 +343,19 @@
     if (!canFetch)
         return nil;
     
-    int numFields = PQnfields(statement);
-    int numTuples = PQntuples(statement);
+    CSPostgreSQLRow *row_ = [[CSPostgreSQLRow alloc] initWithStatement:self andRow:currentRow];
     
-    if (currentRow == numTuples) {
+    if (currentRow == PQntuples(statement)) {
         canFetch = NO;
         return nil;
     }
     
-    PGresult *result = PQdescribePrepared(database.databaseHandle, "");
-    
-    NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:numFields];
+    NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:row_.numFields];
 
-    //
-    // The following block is the same as in fetchRowAsArray:error:. We need to refactor
-    // it so both messages can use.
-    //
-    for (int i = 0; i < numFields; i++) {
-        CSQLResultValue *value;
-        int type = PQftype(statement, i);
-        int length_ = PQgetlength(statement, currentRow, i);
-        char *value_ = PQgetvalue(statement, currentRow, i);
-        
-        if (PQfformat(statement, i)) {
-            switch (type) {
-                case BYTEAOID:
-                    value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_-sizeof(char *)]];
-                    break;
-                case CHAROID:
-                case TEXTOID:
-                case VARCHAROID:
-                    value = [CSQLResultValue valueWithUTF8String:value_];
-                    break;
-                case INT8OID:
-                case INT4OID:
-                case INT2OID:
-                case NUMERICOID:
-                    value = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
-                default:
-                    break;
-            }
-        }            
-        else {
-            switch (type) {
-                case BYTEAOID:
-                    value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
-                    break;
-                default:
-                    value = [CSQLResultValue valueWithUTF8String:value_];        
-                    break;
-            }
-        }
-        
-        NSString *key = [NSString stringWithFormat:@"%s", PQfname(statement, i)];
-
-        [row setObject:value forKey:key];
+    for (int i = 0; i < row_.numFields; i++) {
+        [row setObject:[row_ objectForColumn:i] forKey:[row_ nameForColumn:i]];
     }
 
-    if (result) {
-        PQclear(result);
-        result = nil;
-    }
-    
     currentRow++;
     
     return row;
@@ -314,54 +365,18 @@
 {
     if (!canFetch)
         return nil;
-    
-    int numFields = PQnfields(statement);
-    int numTuples = PQntuples(statement);
-    
-    if (currentRow == numTuples) {
+ 
+    CSPostgreSQLRow *row_ = [[CSPostgreSQLRow alloc] initWithStatement:self andRow:currentRow];
+
+    if (currentRow == PQntuples(statement)) {
         canFetch = NO;
         return nil;
     }
     
-    NSMutableArray *row = [NSMutableArray arrayWithCapacity:numFields];
+    NSMutableArray *row = [NSMutableArray arrayWithCapacity:row_.numFields];
     
-    for (int i = 0; i < numFields; i++) {
-        CSQLResultValue *value;
-        int type = PQftype(statement, i);
-        int length_ = PQgetlength(statement, currentRow, i);
-        char *value_ = PQgetvalue(statement, currentRow, i);
-        
-        if (PQfformat(statement, i)) {
-            switch (type) {
-                case BYTEAOID:
-                    value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_-sizeof(char *)]];
-                    break;
-                case CHAROID:
-                case TEXTOID:
-                case VARCHAROID:
-                    value = [CSQLResultValue valueWithUTF8String:value_];
-                    break;
-                case INT8OID:
-                case INT4OID:
-                case INT2OID:
-                case NUMERICOID:
-                    value = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
-                default:
-                    break;
-            }
-        }            
-        else {
-            switch (type) {
-                case BYTEAOID:
-                    value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
-                    break;
-                default:
-                    value = [CSQLResultValue valueWithUTF8String:value_];        
-                    break;
-            }
-        }
-        
-        [row addObject:value];
+    for (int i = 0; i < row_.numFields; i++) {
+        [row addObject:[row_ objectForColumn:i]];
     }
     
     currentRow++;
