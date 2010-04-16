@@ -46,12 +46,14 @@
     if (error) {
         *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
     }
-    return nil;
+    return self;
 }
 
 - (id)initWithDatabase:(CSQLDatabase *)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self initWithDatabase:aDatabase error:error];
+	[self initWithDatabase:aDatabase error:error];
+	[self setSQL:sql error:error];
+	return self;
 }
 
 - (BOOL)setSQL:(NSString *)sql error:(NSError **)error
@@ -142,32 +144,64 @@
     return [self executeWithValues:nil error:error];
 }
 
-- (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector
+- (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
-	return [self executeWithValues:values receiver:receiver selector:selector rowAsDictionary:YES];
+	// subclass MUST implement this method
+	return NO;
 }
 
-- (BOOL)executeAndNotifyReceiver:(id)receiver withSelector:(SEL)selector
+- (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector error:(NSError **)error
+{
+	return [self executeWithValues:values receiver:receiver selector:selector rowAsDictionary:YES error:error];
+}
+
+
+- (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector
+{
+	return [self executeWithValues:values receiver:receiver selector:selector rowAsDictionary:YES error:nil];
+}
+
+- (BOOL)executeWithReceiver:(id)receiver selector:(SEL)selector error:(NSError **)error
+{
+	return [self executeWithValues:nil receiver:receiver selector:selector error:error];
+}
+
+- (BOOL)executeWithReceiver:(id)receiver selector:(SEL)selector
 {
 	return [self executeWithValues:nil receiver:receiver selector:selector];
 }
 
-- (BOOL)executeWithValues:(NSArray *)values receiver:(id)receiver selector:(SEL)selector rowAsDictionary:(BOOL)wantsDictionary
+
+- (BOOL)executeWithValues:(NSArray *)values
+				 receiver:(id)receiver
+				 selector:(SEL)selector
+		  rowAsDictionary:(BOOL)wantsDictionary
+					error:(NSError **)error
 {
 	if ([self executeWithValues:values error:nil]) {
-		SEL fetchSelector;
-		if (wantsDictionary)
-			fetchSelector = @selector(fetchRowAsDictionary:);
-		else
-			fetchSelector = @selector(fetchRowAsArray:);
-
-		NSDictionary *row;
-		while (row = [self performSelector:fetchSelector withObject:nil]) {
-			[receiver performSelector:selector withObject:row];
+		if (receiver && selector) {
+			SEL fetchSelector;
+			if (wantsDictionary)
+				fetchSelector = @selector(fetchRowAsDictionary:);
+			else
+				fetchSelector = @selector(fetchRowAsArray:);
+			
+			NSDictionary *row;
+			while (row = [self performSelector:fetchSelector withObject:nil]) {
+				[receiver performSelector:selector withObject:row];
+			}
 		}
 		return YES;
 	}
 	return NO;
+}
+
+- (BOOL)executeWithValues:(NSArray *)values
+				 receiver:(id)receiver
+				 selector:(SEL)selector
+		  rowAsDictionary:(BOOL)wantsDictionary
+{
+	return [self executeWithValues:values receiver:receiver selector:selector rowAsDictionary:wantsDictionary error:nil];
 }
 
 - (void)dealloc

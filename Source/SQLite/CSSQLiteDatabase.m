@@ -26,6 +26,7 @@
 @implementation CSSQLiteDatabase
 
 @synthesize path;
+@dynamic affectedRows;
 
 + (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
 {
@@ -84,7 +85,7 @@
     [super dealloc];
 }
 
-- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
+- (BOOL)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -95,12 +96,12 @@
     return [statement executeWithValues:values error:error];
 }
 
-- (NSUInteger)executeSQL:(NSString *)sql error:(NSError **)error
+- (BOOL)executeSQL:(NSString *)sql error:(NSError **)error
 {
     return [self executeSQL:sql withValues:nil error:error];
 }
 
-- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -115,10 +116,10 @@
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowAsArrayWithSQL:sql withValues:nil error:error];
+    return [self fetchRowAsArrayWithSQL:sql andValues:nil error:error];
 }
 
-- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -133,10 +134,10 @@
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowAsDictionaryWithSQL:sql withValues:nil error:error];
+    return [self fetchRowAsDictionaryWithSQL:sql andValues:nil error:error];
 }
 
-- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -157,10 +158,10 @@
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowsAsDictionariesWithSQL:sql withValues:nil error:error];
+    return [self fetchRowsAsDictionariesWithSQL:sql andValues:nil error:error];
 }
 
-- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -181,7 +182,7 @@
 
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowsAsArraysWithSQL:sql withValues:nil error:error];
+    return [self fetchRowsAsArraysWithSQL:sql andValues:nil error:error];
 }
 
 - (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error

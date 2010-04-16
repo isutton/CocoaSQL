@@ -75,12 +75,12 @@
 - (BOOL)createTable:(id)database 
 {
     NSError *error = nil;
-    int affectedRows;
+    BOOL res;
     
-    affectedRows = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR(10))" error:&error];
+    res = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR(10))" error:&error];
     
     STAssertNil(error, @"Error.");
-    STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
+    STAssertEquals(res, YES, @"CREATE TABLE.");
     
     if (error) {
         return NO;
@@ -127,10 +127,10 @@
     error = nil;
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
     [values bindIntValue:1];
-    affectedRows = [database executeSQL:@"DELETE FROM t WHERE i = ?" withValues:values error:&error];
+    [database executeSQL:@"DELETE FROM t WHERE i = ?" withValues:values error:&error];
 
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
-    STAssertEquals(affectedRows, 1, @"DELETE with bind values.");
+    STAssertEquals([[database affectedRows] intValue], 1, @"DELETE with bind values.");
     error = nil;
     affectedRows = [database executeSQL:@"DELETE FROM t" error:&error];
     
