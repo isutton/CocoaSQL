@@ -21,7 +21,6 @@
 		824459FB115B750B00950BD9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 824459FA115B750B00950BD9 /* Cocoa.framework */; };
 		82445A55115B9A6400950BD9 /* CSSQLiteDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 82445A53115B9A6400950BD9 /* CSSQLiteDatabase.h */; };
 		82445A56115B9A6400950BD9 /* CSSQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */; };
-		824F86F7116DD57D00075D6F /* CSQLDatabase+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F86F6116DD57D00075D6F /* CSQLDatabase+Protocol.h */; };
 		824F8704116DD65100075D6F /* CSQLPreparedStatement+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */; };
 		828B5C8F1174621B00AB732C /* CSPostgreSQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 828B5C8D1174621B00AB732C /* CSPostgreSQLDatabase.h */; };
 		828B5C931174623000AB732C /* CSPostgreSQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 828B5C911174623000AB732C /* CSPostgreSQLPreparedStatement.h */; };
@@ -96,7 +95,6 @@
 		824459FA115B750B00950BD9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		82445A53115B9A6400950BD9 /* CSSQLiteDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSQLiteDatabase.h; sourceTree = "<group>"; };
 		82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSQLiteDatabase.m; sourceTree = "<group>"; };
-		824F86F6116DD57D00075D6F /* CSQLDatabase+Protocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CSQLDatabase+Protocol.h"; sourceTree = "<group>"; };
 		824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CSQLPreparedStatement+Protocol.h"; sourceTree = "<group>"; };
 		828B5C8D1174621B00AB732C /* CSPostgreSQLDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSPostgreSQLDatabase.h; sourceTree = "<group>"; };
 		828B5C8E1174621B00AB732C /* CSPostgreSQLDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSPostgreSQLDatabase.m; sourceTree = "<group>"; };
@@ -266,7 +264,6 @@
 				821DBB7911633B4E0073C988 /* NSMutableArray+CocoaSQL.h */,
 				821DBB7A11633B4E0073C988 /* NSMutableArray+CocoaSQL.m */,
 				821DBC4111636C100073C988 /* CocoaSQL.h */,
-				824F86F6116DD57D00075D6F /* CSQLDatabase+Protocol.h */,
 				824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */,
 				8295F28F116F8CD10053E781 /* NSError+CocoaSQL.h */,
 				8295F290116F8CD10053E781 /* NSError+CocoaSQL.m */,
@@ -366,7 +363,6 @@
 				821DBC4211636C100073C988 /* CocoaSQL.h in Headers */,
 				AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */,
 				AA3698AC116B1C060073A0EB /* CSMySQLPreparedStatement.h in Headers */,
-				824F86F7116DD57D00075D6F /* CSQLDatabase+Protocol.h in Headers */,
 				824F8704116DD65100075D6F /* CSQLPreparedStatement+Protocol.h in Headers */,
 				8295F291116F8CD10053E781 /* NSError+CocoaSQL.h in Headers */,
 				828B5C8F1174621B00AB732C /* CSPostgreSQLDatabase.h in Headers */,

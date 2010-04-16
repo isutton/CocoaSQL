@@ -144,7 +144,7 @@
 }
 
 
-- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSMySQLPreparedStatement *statement = [CSMySQLPreparedStatement preparedStatementWithDatabase:self andSQL:sql error:error];    
     if (!statement) {
@@ -164,10 +164,10 @@
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowAsArrayWithSQL:sql withValues:nil error:error];
+    return [self fetchRowAsArrayWithSQL:sql andValues:nil error:error];
 }
 
-- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSMySQLPreparedStatement *statement = [CSMySQLPreparedStatement preparedStatementWithDatabase:self andSQL:sql error:error];    
     if (!statement) {
@@ -187,7 +187,7 @@
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowAsDictionaryWithSQL:sql withValues:nil error:error];
+    return [self fetchRowAsDictionaryWithSQL:sql andValues:nil error:error];
 }
 
 
@@ -195,12 +195,12 @@
 #pragma mark Rows as Dictionaries
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql 
-                                 withValues:(NSArray *)values 
+								  andValues:(NSArray *)values 
                                       error:(NSError **)error
 {
     CSQLResultCallback *callback = [CSQLResultCallback alloc];
     BOOL success = [self executeSQL:sql
-                         withValues:values
+                          withValues:values
                            receiver:callback
                             selector:@selector(rowsAsDictionaries:)
                               error:error];
@@ -213,12 +213,12 @@
                                       error:(NSError **)error
 {
     return [self fetchRowsAsDictionariesWithSQL:sql
-                                     withValues:nil
+                                      andValues:nil
                                           error:error];
 }
 
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql 
-                           withValues:(NSArray *)values 
+                            andValues:(NSArray *)values 
                                 error:(NSError **)error
 {
 	CSQLResultCallback *callback = [CSQLResultCallback alloc];
@@ -236,7 +236,7 @@
                                 error:(NSError **)error
 {
     return [self fetchRowsAsArraysWithSQL:sql
-                               withValues:nil
+                                andValues:nil
                                     error:error];
 }
 

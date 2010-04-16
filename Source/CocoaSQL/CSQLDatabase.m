@@ -25,6 +25,14 @@
 @synthesize databaseHandle;
 @synthesize affectedRows;
 
++ (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
+{
+	// MUST be overridden by subclasses
+    if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error
 {
     NSString *aClassName = [NSString stringWithFormat:@"CS%@Database", aDriver];
@@ -104,6 +112,81 @@
     // MUST be overridden by subclasses
     return [NSNumber numberWithInt:0];
 }
+
+- (BOOL)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return NO;
+}
+
+- (BOOL)executeSQL:(NSString *)sql error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return NO;
+}
+
+- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql error:(NSError **)error
+{
+	return [self fetchRowsAsDictionariesWithSQL:sql error:error];
+}
+
+
+- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql error:(NSError **)error
+{
+	return [self fetchRowsAsArraysWithSQL:sql error:error];
+}
+
+- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
 
 @end
 
