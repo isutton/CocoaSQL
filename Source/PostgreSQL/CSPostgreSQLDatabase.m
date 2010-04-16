@@ -39,7 +39,7 @@
     if (self = [super init]) {
         databaseHandle_ = PQconnectdb("");
         if (databaseHandle_) {
-            databaseHandle = (voidPtr)databaseHandle_;
+            databaseHandle = databaseHandle_;
         }
         return self;
     }
