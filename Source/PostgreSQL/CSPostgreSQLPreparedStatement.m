@@ -39,19 +39,98 @@
 
 @interface CSPostgreSQLBindsStorage : NSObject
 {
-    int type;
-    int length;
-    char *value;
+    int numParams;
+    int *paramTypes;
+    int *paramLengths;
+    int *paramFormats;
+    char **paramValues;
+    int resultFormat;
 }
+
+@property (readonly) int numParams;
+@property (readonly) int *paramTypes;
+@property (readonly) int *paramLengths;
+@property (readonly) int *paramFormats;
+@property (readonly) char **paramValues;
+@property (readonly) int resultFormat;
+
+- (id)initWithValues:(NSArray *)values;
+- (BOOL)bindValue:(id)aValue toColumn:(int)index;
 
 @end
 
 
 @implementation CSPostgreSQLBindsStorage
 
+@synthesize numParams;
+@synthesize paramTypes;
+@synthesize paramLengths;
+@synthesize paramFormats;
+@synthesize paramValues;
+@synthesize resultFormat;
+
+- (id)initWithValues:(NSArray *)values
+{
+    if ([self init]) {
+        resultFormat = 0;
+        numParams = [values count];
+        paramValues = malloc([values count] * sizeof(char *));
+        paramLengths = calloc([values count], sizeof(int));
+        paramFormats = calloc([values count], sizeof(int));
+        paramTypes = calloc([values count], sizeof(int));
+        
+        for (int i = 0; i < [values count]; i++) {
+            [self bindValue:[values objectAtIndex:i] toColumn:i];
+        }
+    }
+    return self;
+}
+
+- (BOOL)bindValue:(id)aValue toColumn:(int)index
+{
+    if ([[aValue class] isSubclassOfClass:[NSNumber class]]) {
+        if (resultFormat) {
+            uint32_t value_ = htonl((uint32_t)[aValue intValue]);
+            paramFormats[index] = 1;
+            paramLengths[index] = sizeof(uint32_t);
+            paramValues[index] = (char *)&value_;
+        }
+        else {
+            paramValues[index] = (char *)[[aValue stringValue] UTF8String];
+        }
+        
+    }
+    else if ([[aValue class] isSubclassOfClass:[NSString class]]) {
+        if (resultFormat) {
+            paramFormats[index] = 1;
+            paramLengths[index] = sizeof([[aValue dataUsingEncoding:NSASCIIStringEncoding] bytes]);
+            paramValues[index] = (char *)[[aValue dataUsingEncoding:NSASCIIStringEncoding] bytes];
+        }
+        else {
+            paramValues[index] = (char *)[aValue cStringUsingEncoding:NSASCIIStringEncoding];
+        }
+    }
+    else if ([[aValue class] isSubclassOfClass:[NSData class]]) {
+        if (resultFormat) {
+            paramFormats[index] = 1; // binary
+            paramLengths[index] = [aValue length];
+        }
+        paramValues[index] = (char *)[aValue bytes];
+    }
+    
+    return YES;
+}
+
+- (void)dealloc
+{
+    free(paramValues);
+    free(paramLengths);
+    free(paramFormats);
+    free(paramTypes);
+    [super dealloc];
+}
 
 @end
-
 
 @implementation CSPostgreSQLPreparedStatement
 
@@ -125,108 +204,17 @@
 
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
-    int nParams = 0;
-    const char **paramValues = nil;
-    int *paramLengths = nil; // don't need param lengths since text
-    int *paramFormats = nil; // default to all text params
-    int resultFormat = 0;    // ask for binary results
-    
-    int *mallocBookKeeping = nil;
-    
-    //
-    // TODO: prepare values to feed PQexecPrepared.
-    //
-    if (values && [values count] > 0) {
-        nParams = [values count];
-        paramValues = malloc(nParams * sizeof(char *));
-        mallocBookKeeping = calloc(nParams, sizeof(int));
+    id binds = [[CSPostgreSQLBindsStorage alloc] initWithValues:values];
 
-        if (resultFormat) {
-            paramLengths = calloc(nParams, sizeof(int));
-            paramFormats = calloc(nParams, sizeof(int));
-        }
-
-        for (int i = 0; i < nParams; i++) {
-            id value = [values objectAtIndex:i];
-            
-            if ([[value class] isSubclassOfClass:[NSNumber class]]) {
-                if (resultFormat) {
-                    uint32_t value_ = htonl((uint32_t)[value intValue]);
-                    paramFormats[i] = 1;
-                    paramLengths[i] = sizeof(uint32_t);
-                    paramValues[i] = (char *)&value_;
-                }
-                else {
-                    paramValues[i] = [[value stringValue] UTF8String];
-                }
-
-            }
-            else if ([[value class] isSubclassOfClass:[NSString class]]) {
-                if (resultFormat) {
-                    paramFormats[i] = 1;
-                    paramLengths[i] = sizeof([[value dataUsingEncoding:NSASCIIStringEncoding] bytes]);
-                    paramValues[i] = [[value dataUsingEncoding:NSASCIIStringEncoding] bytes];
-                }
-                else {
-                    paramValues[i] = [value cStringUsingEncoding:NSASCIIStringEncoding];
-                }
-            }
-            else if ([[value class] isSubclassOfClass:[NSData class]]) {
-                if (resultFormat) {
-                    paramFormats[i] = 1; // binary
-                    paramLengths[i] = [value length];
-                }
-                
-#if 0
-                //
-                // For some reason, if I use
-                //
-                // paramValues[i] = [value bytes]
-                //
-                // It is given an extra byte (probably the '\0' character, which is
-                // interpreted by the database as space. The following might be wrong,
-                // but I got better results malloc'ing and copying the bytes using
-                // getBytes:length:
-                //
-                // I suspect something is leaking here, because the tests randomly 
-                // passes.
-                //
-
-                mallocBookKeeping[i] = 1;
-                void *buffer = malloc([value length]);
-                [value getBytes:buffer length:([value length] * sizeof(char))];
-                paramValues[i] = buffer;
-#else
-                // 
-                // Here we always get the extra byte, but at least it is consistent. Another
-                // thing is that it always fails with the GC on.
-                //
-                paramValues[i] = [value bytes];
-#endif
-            }
-        }
-    }
-    
     PGresult *result = PQexecPrepared(database.databaseHandle, 
-                                      "",
-                                      nParams, 
-                                      paramValues, 
-                                      paramLengths, 
-                                      paramFormats, 
-                                      resultFormat);
+                                      "", 
+                                      [binds numParams], 
+                                      (const char **)[binds paramValues], 
+                                      [binds paramLengths], 
+                                      [binds paramFormats], 
+                                      [binds resultFormat]);
     
-    if (values && [values count] > 0) {
-        for (int i = 0; i < [values count]; i++) {
-            if (mallocBookKeeping[i]) {
-                free((char *)paramValues[i]);
-            }
-        }
-        free(paramValues);
-        if (resultFormat) {
-            free(paramLengths);
-            free(paramFormats);        
-        }
-    }
+    [binds release];
     
     return [self handleResultStatus:result error:error];
 }
