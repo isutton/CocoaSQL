@@ -224,6 +224,24 @@
     return [NSString stringWithUTF8String:PQfname(statement_.statement, index)];
 }
 
+- (NSArray *)rowAsArray
+{
+    NSMutableArray *row_ = [NSMutableArray arrayWithCapacity:numFields];
+    for (int i = 0; i < numFields; i++) {
+        [row_ addObject:[self objectForColumn:i]];
+    }
+    return row_;
+}
+
+- (NSDictionary *)rowAsDictionary
+{
+    NSMutableDictionary *row_ = [NSMutableDictionary dictionaryWithCapacity:numFields];
+    for (int i = 0; i < numFields; i++) {
+        [row_ setObject:[self objectForColumn:i] forKey:[self nameForColumn:i]];
+    }
+    return row_;
+}
+
 - (void)dealloc
 {
     [statement_ release];
@@ -343,21 +361,12 @@
     if (!canFetch)
         return nil;
     
-    CSPostgreSQLRow *row_ = [[CSPostgreSQLRow alloc] initWithStatement:self andRow:currentRow];
-    
     if (currentRow == PQntuples(statement)) {
         canFetch = NO;
         return nil;
     }
-    
-    NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:row_.numFields];
-    for (int i = 0; i < row_.numFields; i++) {
-        [row setObject:[row_ objectForColumn:i] forKey:[row_ nameForColumn:i]];
-    }
 
-    currentRow++;
-    
-    return row;
+    return [[[[CSPostgreSQLRow alloc] initWithStatement:self andRow:currentRow++] autorelease] rowAsDictionary];
 }
 
 - (NSArray *)fetchRowAsArray:(NSError **)error
@@ -365,22 +374,12 @@
     if (!canFetch)
         return nil;
  
-    CSPostgreSQLRow *row_ = [[CSPostgreSQLRow alloc] initWithStatement:self andRow:currentRow];
-
     if (currentRow == PQntuples(statement)) {
         canFetch = NO;
         return nil;
     }
     
-    NSMutableArray *row = [NSMutableArray arrayWithCapacity:row_.numFields];
-    
-    for (int i = 0; i < row_.numFields; i++) {
-        [row addObject:[row_ objectForColumn:i]];
-    }
-    
-    currentRow++;
-    
-    return row;
+    return [[[[CSPostgreSQLRow alloc] initWithStatement:self andRow:currentRow++] autorelease] rowAsArray];   
 }
 
 - (void)dealloc
