@@ -1,9 +1,21 @@
 //
-//  CSQLResultValue.m
-//  CocoaSQL
 //
-//  Created by xant on 4/13/10.
-//  Copyright 2010 CocoaSQL.org. All rights reserved.
+//  This file is part of CocoaSQL
+//
+//  CocoaSQL is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  Foobar is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with CocoaSQL.  If not, see <http://www.gnu.org/licenses/>.
+//
+//  CSQLResultValue.m by xant on 4/13/10.
 //
 
 #import "CSQLResultValue.h"
@@ -39,6 +51,12 @@
     return [[result initWithString:aValue] autorelease];
 }
 
++ (id)valueWithUTF8String:(char *)aValue
+{
+    CSQLResultValue *result = [self alloc];
+    return [[result initWithUTF8String:aValue] autorelease];
+}
+
 + (id)valueWithDate:(NSDate *)aValue
 {
     CSQLResultValue *result = [self alloc];
@@ -65,6 +83,13 @@
 
 #pragma mark -
 #pragma mark Initializers
+
+- (void)dealloc
+{
+	if (value)
+		[value release];
+	[super dealloc];
+}
 
 - (id)init
 {
@@ -112,6 +137,12 @@
     return [self init];
 }
 
+- (id)initWithUTF8String:(char *)aValue
+{
+    value = [[NSString stringWithUTF8String:aValue] retain];
+    return [self init];
+}
+
 - (id)initWithDate:(NSDate *)aValue
 {
     value = [aValue retain];
@@ -126,7 +157,7 @@
 
 - (id)initWithBool:(BOOL)aValue
 {
-    value = [NSNumber numberWithBool:aValue];
+    value = [[NSNumber numberWithBool:aValue] retain];
     return [self init];
 }
 
@@ -234,8 +265,10 @@
 {
     if ([[value class] isSubclassOfClass:[NSData class]])
         return value;
-    if ([[value class] isSubclassOfClass:[NSString class]])
-        return [NSData dataWithBytesNoCopy:(void *)[value UTF8String] length:[value length]]; // XXX - perhaps we should copy? :/
+    if ([[value class] isSubclassOfClass:[NSString class]]) {
+		// TODO - find a way to avoid copying the buffer (refcnt++ ?)
+        return [NSData dataWithBytes:(void *)[value UTF8String] length:[value length]];
+	}
     if ([[value class] isSubclassOfClass:[NSNull class]])
         return [NSData alloc]; // empty data
     if ([[value class] isSubclassOfClass:[NSNumber class]]) {

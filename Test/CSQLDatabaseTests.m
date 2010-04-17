@@ -1,9 +1,21 @@
 //
-//  CSQLDatabaseTests.m
-//  CocoaSQL
 //
-//  Created by Igor Sutton on 3/31/10.
-//  Copyright 2010 CocoaSQL.org. All rights reserved.
+//  This file is part of CocoaSQL
+//
+//  CocoaSQL is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  CocoaSQL is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with CocoaSQL.  If not, see <http://www.gnu.org/licenses/>.
+//
+//  CSQLDatabaseTests.m by Igor Sutton on 3/31/10.
 //
 
 #import "CSQLDatabaseTests.h"
@@ -63,12 +75,12 @@
 - (BOOL)createTable:(id)database 
 {
     NSError *error = nil;
-    int affectedRows;
+    BOOL res;
     
-    affectedRows = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR(10))" error:&error];
+    res = [database executeSQL:@"CREATE TABLE t (i INT, v VARCHAR(10))" error:&error];
     
     STAssertNil(error, @"Error.");
-    STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
+    STAssertEquals(res, YES, @"CREATE TABLE.");
     
     if (error) {
         return NO;
@@ -115,10 +127,10 @@
     error = nil;
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
     [values bindIntValue:1];
-    affectedRows = [database executeSQL:@"DELETE FROM t WHERE i = ?" withValues:values error:&error];
+    [database executeSQL:@"DELETE FROM t WHERE i = ?" withValues:values error:&error];
 
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
-    STAssertEquals(affectedRows, 1, @"DELETE with bind values.");
+    STAssertEquals([[database affectedRows] intValue], 1, @"DELETE with bind values.");
     error = nil;
     affectedRows = [database executeSQL:@"DELETE FROM t" error:&error];
     

@@ -1,9 +1,21 @@
 //
-//  CMySQLDatabaseTests.m
-//  CocoaSQL
 //
-//  Created by xant on 4/9/10.
-//  Copyright 2010 CocoaSQL.org. All rights reserved.
+//  This file is part of CocoaSQL
+//
+//  CocoaSQL is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  CocoaSQL is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with CocoaSQL.  If not, see <http://www.gnu.org/licenses/>.
+//
+//  CMySQLDatabaseTests.m by xant on 4/9/10.
 //
 
 #import "CMySQLDatabaseTests.h"
@@ -24,12 +36,11 @@
 - (BOOL)createTable:(id)database 
 {
     NSError *error = nil;
-    int affectedRows;
     
-    affectedRows = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME, t timestamp, bs BIGINT signed, bu BIGINT unsigned, f float, n INTEGER NULL)" error:&error];
+    BOOL res = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME, t timestamp, bs BIGINT signed, bu BIGINT unsigned, f float, n INTEGER NULL)" error:&error];
     
     STAssertNil(error, @"Error.");
-    STAssertEquals(affectedRows, 0, @"CREATE TABLE.");
+    STAssertEquals(res, YES, @"CREATE TABLE.");
     
     if (error) {
         return NO;
@@ -51,7 +62,7 @@
 
     [self createTable:database];
     
-    // TODO - test if giving a wrong statement fails properly
+    // TODO - test if giving a wrong statement fails properlye
     CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO mysql_test (i, v, d, t, bs, bu, f, n) VALUES (?, ?, now(), now(), -9223372036854775808, 18446744073709551615, 0.123456789, NULL)" error:&error];
     
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:2];
@@ -131,9 +142,69 @@
         NSLog(@"%@\n", error);
     STAssertEquals(cnt, 100, @"Number of retreived rows)"); // ensure we got all rows
     
-    [database executeSQL:@"DROP TABLE mysql_test" error:&error];
     if (error)
         NSLog(@"%@\n", error);
+	
+	NSLog(@"Params %@", params);
+	rowCount = 0;
+	[selectStatement executeWithValues:params receiver:self selector:@selector(gotRowAsDictionary:)];
+    STAssertEquals(rowCount, 100, @"Number of retreived rows)"); // ensure we got all rows
+	rowCount = 0;
+	[selectStatement executeWithValues:params receiver:self selector:@selector(gotRowAsArray:) rowAsDictionary:NO];
+    STAssertEquals(rowCount, 100, @"Number of retreived rows)"); // ensure we got all rows
+	[database executeSQL:@"DROP TABLE mysql_test" error:&error];
+
 }
 
+- (void)gotRowAsDictionary:(NSDictionary *)row
+{
+	int cnt = ++rowCount;
+	NSNumber *i = [NSNumber numberWithInt:cnt];
+	NSString *v = [NSString stringWithFormat:@"v%d", cnt];
+	STAssertEquals((int)[row count], 8, @"fetchRowAsDictionaryWithSQL : resultCount");
+	STAssertEqualObjects([[row objectForKey:@"i"] numberValue],
+						 i,
+						 @"fetchRowAsArrayWithSQL : resultElement1");
+	STAssertEqualObjects([[row objectForKey:@"v"] stringValue],
+						 v,
+						 @"fetchRowAsArrayWithSQL : resultElement2");
+	//TODO - find a proper way to test dates
+	//STAssertTrue([[[row objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
+	STAssertEqualObjects([[row objectForKey:@"bs"] numberValue],
+						 [NSNumber numberWithLongLong:-9223372036854775808UL], 
+						 @"fetchRowAsDictionaryWithSQL : bigint signed");
+	STAssertEqualObjects([[row objectForKey:@"bu"] numberValue],
+						 [NSNumber numberWithUnsignedLongLong:18446744073709551615UL],
+						 @"fetchRowAsDictionaryWithSQL : bigint unsigned");
+	STAssertEqualObjects([[row objectForKey:@"f"] numberValue],
+						 [NSNumber numberWithFloat:0.123456789],
+						 @"fetchRowAsDictionaryWithSQL : float");
+	STAssertTrue([[row objectForKey:@"n"] isNull], @"fetchRowAsDictionaryWithSQL : NULL");
+}
+
+- (void)gotRowAsArray:(NSArray *)row
+{
+	int cnt = ++rowCount;
+	NSNumber *i = [NSNumber numberWithInt:cnt];
+	NSString *v = [NSString stringWithFormat:@"v%d", cnt];
+	STAssertEquals((int)[row count], 8, @"fetchRowAsArrayWithSQL : resultCount");
+	STAssertEqualObjects([[row objectAtIndex:0] numberValue],
+						 i,
+						 @"fetchRowAsArrayWithSQL : resultElement1");
+	STAssertEqualObjects([[row objectAtIndex:1] stringValue],
+						 v,
+						 @"fetchRowAsArrayWithSQL : resultElement2");
+	//TODO - find a proper way to test dates
+	//STAssertTrue([[[resultDictionary objectForKey:@"d"] class] isSubclassOfClass:[NSDate class]], @"fetchRowAsArrayWithSQL : resultElement3");
+	STAssertEqualObjects([[row objectAtIndex:4] numberValue],
+						 [NSNumber numberWithLongLong:-9223372036854775808UL], 
+						 @"fetchRowAsDictionaryWithSQL : bigint signed");
+	STAssertEqualObjects([[row objectAtIndex:5] numberValue],
+						 [NSNumber numberWithUnsignedLongLong:18446744073709551615UL],
+						 @"fetchRowAsDictionaryWithSQL : bigint unsigned");
+	STAssertEqualObjects([[row objectAtIndex:6] numberValue],
+						 [NSNumber numberWithFloat:0.123456789],
+						 @"fetchRowAsDictionaryWithSQL : float");
+	STAssertTrue([[row objectAtIndex:7] isNull], @"fetchRowAsArray : NULL");
+}
 @end

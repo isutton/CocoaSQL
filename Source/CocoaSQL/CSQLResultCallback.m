@@ -15,14 +15,44 @@
 //  You should have received a copy of the GNU General Public License
 //  along with CocoaSQL.  If not, see <http://www.gnu.org/licenses/>.
 //
-//  CSQLDatabaseTests.h by Igor Sutton on 3/31/10.
+//  CSQLResultCallback.m by xant on 4/15/10.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
-#import "CocoaSQL.h"
-#import "CSQLDatabase.h"
+#import "CSQLResultCallback.h"
 
-@interface CSQLDatabaseTests : SenTestCase {
+
+@implementation CSQLResultCallback
+
+- (id)init
+{
+	rows = [NSMutableArray array];
+	return [super init];
 }
 
+- (void)dealloc
+{
+	if (rows)
+		[rows release];
+	[super dealloc];
+}
+
+
+- (NSInteger)rowsAsDictionaries:(NSDictionary *)row
+{
+	[rows addObject:row];
+    return 0;
+}
+
+- (NSInteger)rowsAsArrays:(NSDictionary *)row
+{
+	id key;
+	NSEnumerator *enumerator = [row keyEnumerator];
+    NSMutableArray *thisRow = [NSMutableArray array];
+	while ((key = [enumerator nextObject]))
+		[thisRow addObject:[row objectForKey:key]];
+    [rows addObject:thisRow];
+    return 0;
+}
+
+@synthesize rows;
 @end

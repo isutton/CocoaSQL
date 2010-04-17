@@ -1,9 +1,21 @@
 //
-//  CSQLDatabase.m
-//  CocoaSQL
 //
-//  Created by Igor Sutton on 3/31/10.
-//  Copyright 2010 CocoaSQL.org. All rights reserved.
+//  This file is part of CocoaSQL
+//
+//  CocoaSQL is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  Foobar is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with CocoaSQL.  If not, see <http://www.gnu.org/licenses/>.
+//
+//  CSQLDatabase.m by Igor Sutton on 3/25/10.
 //
 
 #import "CocoaSQL.h"
@@ -11,6 +23,15 @@
 @implementation CSQLDatabase
 
 @synthesize databaseHandle;
+@synthesize affectedRows;
+
++ (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
+{
+	// MUST be overridden by subclasses
+    if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
 
 + (CSQLDatabase *)databaseWithDriver:(NSString *)aDriver options:(NSDictionary *)options error:(NSError **)error
 {
@@ -53,6 +74,13 @@
     return [self databaseWithDriver:aDriver options:options error:error];
 }
 
+- (void)dealloc
+{
+	if (affectedRows)
+		[affectedRows release];
+	[super dealloc];
+}
+
 - (BOOL)isActive:(NSError **)error
 {
     // MUST be overridden by subclasses
@@ -79,60 +107,86 @@
     return [self disconnect:nil];
 }
 
-- (NSNumber *)affectedRows
-{
-    // MUST be overridden by subclasses
-    return [NSNumber numberWithInt:0];
-}
-
 - (NSNumber *)lastInsertID
 {
     // MUST be overridden by subclasses
     return [NSNumber numberWithInt:0];
 }
 
+- (BOOL)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return NO;
+}
+
+- (BOOL)executeSQL:(NSString *)sql error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return NO;
+}
+
+- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql error:(NSError **)error
+{
+	return [self fetchRowsAsDictionariesWithSQL:sql error:error];
+}
+
+
+- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql error:(NSError **)error
+{
+	return [self fetchRowsAsArraysWithSQL:sql error:error];
+}
+
+- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
+{
+	if (error)
+        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
+	return nil;
+}
+
+
 @end
-
-
-int rowAsArrayCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames)
-{
-    NSMutableArray *row = callbackContext;
-    for (int i = 0; i < columnCount; i++) {
-        [row addObject:[CSQLResultValue valueWithString:[NSString stringWithFormat:@"%s", columnValues[i]]]];
-    }
-    return 0;
-}
-
-int rowAsDictionaryCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames)
-{
-    NSMutableDictionary *row = callbackContext;
-    for (int i = 0; i < columnCount; i++) {
-        [row setObject:[CSQLResultValue valueWithString:[NSString stringWithFormat:@"%s", columnValues[i]]]
-                forKey:[NSString stringWithFormat:@"%s", columnNames[i]]];
-    }
-    return 0;
-}
-
-int rowsAsDictionariesCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames)
-{
-    NSMutableArray *rows = callbackContext;
-    NSMutableDictionary *row = [NSMutableDictionary dictionaryWithCapacity:columnCount];
-    for (int i = 0; i < columnCount; i++) {
-        [row setObject:[CSQLResultValue valueWithString:[NSString stringWithFormat:@"%s", columnValues[i]]]
-                forKey:[NSString stringWithFormat:@"%s", columnNames[i]]];
-    }
-    [rows addObject:row];
-    return 0;
-}
-
-int rowsAsArraysCallback(void *callbackContext, int columnCount, char **columnValues, char **columnNames)
-{
-    NSMutableArray *rows = callbackContext;
-    NSMutableArray *row = [NSMutableArray arrayWithCapacity:columnCount];
-    for (int i = 0; i < columnCount; i++) {
-        [row addObject:[CSQLResultValue valueWithString:[NSString stringWithFormat:@"%s", columnValues[i]]]];
-    }
-    [rows addObject:row];
-    return 0;
-}
 

@@ -1,9 +1,21 @@
 //
-//  CSMySQLPreparedStatement.m
-//  CocoaSQL
 //
-//  Created by xant on 4/6/10.
-//  Copyright 2010 CocoaSQL.org. All rights reserved.
+//  This file is part of CocoaSQL
+//
+//  CocoaSQL is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  CocoaSQL is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with CocoaSQL.  If not, see <http://www.gnu.org/licenses/>.
+//
+//  CSMySQLPreparedStatement.m by xant on 4/6/10.
 //
 
 #import "CSMySQLPreparedStatement.h"
@@ -449,8 +461,10 @@
 
 - (void)dealloc
 {
-    if (statement)
+    if (statement) {
+		//[(CSMySQLPreparedStatement *)statement finish];
         mysql_stmt_close(statement);
+	}
     if (resultBinds)
         [resultBinds release];
     if (paramBinds)
@@ -466,28 +480,26 @@
 {
     unsigned long bindParameterCount = mysql_stmt_param_count(statement);
 
-    if (bindParameterCount > 0) {
-        BOOL success = NO;
-
-        if (values) {
-            if (paramBinds) // release old paramBinds if any
-                [paramBinds release];
-            paramBinds = [CSMySQLBindsStorage alloc];
-            for (int i = 0; i < bindParameterCount; i++) {
-                if (![paramBinds bindValue:[values objectAtIndex:i] toColumn:i]) {
-                    if (error) {
-                        NSMutableDictionary *errorDetail;
-                        errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                       [NSString stringWithFormat:@"Unknown datatatype %@",
-                                            [[values objectAtIndex:i] className]], 
-                                       @"errorMessage", 
-                                       nil];
-                        *error = [NSError errorWithDomain:@"CSMySQL" code:666 userInfo:errorDetail];
-                    } 
-                }
-            }
-            
-        } 
+	BOOL success = NO;
+	if (paramBinds) // release old paramBinds if any
+		[paramBinds release];
+	paramBinds = [CSMySQLBindsStorage alloc];
+	if (values) {
+		for (int i = 0; i < bindParameterCount; i++) {
+			if (![paramBinds bindValue:[values objectAtIndex:i] toColumn:i]) {
+				if (error) {
+					NSMutableDictionary *errorDetail;
+					errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+								   [NSString stringWithFormat:@"Unknown datatatype %@",
+										[[values objectAtIndex:i] className]], 
+								   @"errorMessage", 
+								   nil];
+					*error = [NSError errorWithDomain:@"CSMySQL" code:666 userInfo:errorDetail];
+				} 
+			}
+		}
+	} 
+	if (bindParameterCount > 0) {
         if (!paramBinds || [paramBinds numFields] < bindParameterCount) {
             if (error) {
                 NSMutableDictionary *errorDetail;
@@ -504,28 +516,34 @@
             }
             return NO;
         }
-
-        if (mysql_stmt_bind_param(statement, [paramBinds binds]) == 0) {
-            if (mysql_stmt_execute(statement) == 0) {
-                canFetch = YES;
-                success = YES;
-            }
-        }
-        // we can already release storage for paramBinds since  we don't need it anymore
-        // (it would have be freed anyway at [finish] or when dealloc'd ... 
-        //  but why keeping that stuff in memory if we don't need it?)
-        [paramBinds release];
-        paramBinds = nil;
-        if (!success) {
-            if (error) {
-                NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-                NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)];
-                [errorDetail setObject:errorMessage forKey:@"errorMessage"];
-                *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
+		if (mysql_stmt_bind_param(statement, [paramBinds binds]) != 0) {
+			/* TODO - Error messages */
+			if (paramBinds) {
+                [paramBinds release];
+                paramBinds = nil;
             }
             return NO;
-        }
-    }
+		}
+
+	}
+	if (mysql_stmt_execute(statement) == 0) {
+		canFetch = YES;
+		success = YES;
+	}
+	// we can already release storage for paramBinds since  we don't need it anymore
+	// (it would have be freed anyway at [finish] or when dealloc'd ... 
+	//  but why keeping that stuff in memory if we don't need it?)
+	[paramBinds release];
+	paramBinds = nil;
+	if (!success) {
+		if (error) {
+			NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
+			NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)];
+			[errorDetail setObject:errorMessage forKey:@"errorMessage"];
+			*error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
+		}
+		return NO;
+	}
     
     return YES;
 }
@@ -598,6 +616,10 @@
         return nil;
     
     int numFields = mysql_stmt_field_count(statement);
+	
+	if (!numFields)
+		return NO;
+	
     MYSQL_FIELD *fields = mysql_fetch_fields(mysql_stmt_result_metadata(statement));
     if (!resultBinds) {
         resultBinds = [[CSMySQLBindsStorage alloc] 

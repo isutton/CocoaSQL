@@ -1,9 +1,21 @@
 //
-//  CSSQLite.m
-//  CocoaSQL
 //
-//  Created by Igor Sutton on 3/25/10.
-//  Copyright 2010 CocoaSQL.org. All rights reserved.
+//  This file is part of CocoaSQL
+//
+//  CocoaSQL is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  CocoaSQL is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with CocoaSQL.  If not, see <http://www.gnu.org/licenses/>.
+//
+//  CSSQLiteDatabase.h by Igor Sutton on 3/25/10.
 //
 
 #import "CocoaSQL.h"
@@ -14,6 +26,7 @@
 @implementation CSSQLiteDatabase
 
 @synthesize path;
+@dynamic affectedRows;
 
 + (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
 {
@@ -72,7 +85,7 @@
     [super dealloc];
 }
 
-- (NSUInteger)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
+- (BOOL)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -83,12 +96,12 @@
     return [statement executeWithValues:values error:error];
 }
 
-- (NSUInteger)executeSQL:(NSString *)sql error:(NSError **)error
+- (BOOL)executeSQL:(NSString *)sql error:(NSError **)error
 {
     return [self executeSQL:sql withValues:nil error:error];
 }
 
-- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -103,10 +116,10 @@
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowAsArrayWithSQL:sql withValues:nil error:error];
+    return [self fetchRowAsArrayWithSQL:sql andValues:nil error:error];
 }
 
-- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -121,10 +134,10 @@
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowAsDictionaryWithSQL:sql withValues:nil error:error];
+    return [self fetchRowAsDictionaryWithSQL:sql andValues:nil error:error];
 }
 
-- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -145,10 +158,10 @@
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowsAsDictionariesWithSQL:sql withValues:nil error:error];
+    return [self fetchRowsAsDictionariesWithSQL:sql andValues:nil error:error];
 }
 
-- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
 {
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
@@ -169,7 +182,7 @@
 
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql error:(NSError **)error
 {
-    return [self fetchRowsAsArraysWithSQL:sql withValues:nil error:error];
+    return [self fetchRowsAsArraysWithSQL:sql andValues:nil error:error];
 }
 
 - (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
