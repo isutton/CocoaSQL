@@ -23,7 +23,6 @@
 #import "CSPostgreSQLPreparedStatement.h"
 #import "CSPostgreSQLDatabaseTests.h"
 
-
 @implementation CSPostgreSQLDatabaseTests
 
 - (void)test1DatabaseWithDSN 
@@ -106,10 +105,11 @@
     CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"PostgreSQL" options:[NSDictionary dictionary] error:&error];
 
     error = nil;
-    CSQLPreparedStatement *statement = [database prepareStatement:@"CREATE TABLE t (i INT, v VARCHAR(255), b BYTEA)" error:&error];
+    CSQLPreparedStatement *statement = [database prepareStatement:@"CREATE TABLE t (i2 SMALLINT, i4 INTEGER, i8 BIGINT, r DOUBLE PRECISION, v VARCHAR(255), d DATE, b BYTEA)" error:&error];
 
     STAssertNotNil(statement, @"Statement was not created.");
     STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
+    STAssertNil(error, @"An error occurred: %@", error);
     
     error = nil;
     STAssertTrue([statement execute:&error], @"Statement was not executed.");
@@ -119,16 +119,19 @@
     statement = nil;
     
     error = nil;
-    statement = [database prepareStatement:@"INSERT INTO t (i, v, b) VALUES ($1, $2, $3)" error:&error];
+    statement = [database prepareStatement:@"INSERT INTO t (i2, i4, i8, r, v, d, b) VALUES ($1, $2, $3, $4, $5, $6, $7)" error:&error];
 
     STAssertNotNil(statement, @"Statement was not created.");
     STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
 
 	char *data = "something here and there"; // TODO - find a better way to load some blob data
     NSArray *values = [NSArray arrayWithObjects:
-                       [NSNumber numberWithInt:1],
+                       [NSNumber numberWithShort:32767],
+                       [NSNumber numberWithInt:2147483647],
+                       [NSNumber numberWithLong:92233720368547758L],
+                       [NSNumber numberWithDouble:1.66666666666666],
                        @"v1",
-					   
+                       [NSDate dateWithString:@"2001-03-24 00:00:00 +0100"],  
                        [NSData dataWithBytes:data length:strlen(data)],
                        nil];
     
@@ -141,7 +144,7 @@
     statement = nil;
     
     error = nil;
-    statement = [database prepareStatement:@"SELECT i, v, b FROM t" error:&error];
+    statement = [database prepareStatement:@"SELECT i2, i4, i8, r, v, d, b FROM t" error:&error];
 
     STAssertNotNil(statement, @"Statement was not created.");
     STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
@@ -154,17 +157,22 @@
     error = nil;
     NSArray *array = [statement fetchRowAsArray:&error];
 
+    int i = 0;
     STAssertNotNil(array, @"Row shouldn't be nil.");
-    STAssertEqualObjects([[array objectAtIndex:0] numberValue], [values objectAtIndex:0], @"");
-    STAssertEqualObjects([[array objectAtIndex:1] stringValue], [values objectAtIndex:1], @"");
-    STAssertEqualObjects([[array objectAtIndex:2] dataValue], [values objectAtIndex:2], @"");
-    NSLog(@"%@ %@", [values objectAtIndex:2], [[array objectAtIndex:2] dataValue]);
+    STAssertEquals([[[array objectAtIndex:i] numberValue] shortValue], [[values objectAtIndex:i++] shortValue], @"");
+    STAssertEqualObjects([[array objectAtIndex:i] numberValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[array objectAtIndex:i] numberValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[array objectAtIndex:i] numberValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[array objectAtIndex:i] stringValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[array objectAtIndex:i] dateValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[array objectAtIndex:i] dataValue], [values objectAtIndex:i++], @"");
+    // NSLog(@"%@ %@", [values objectAtIndex:2], [[array objectAtIndex:2] dataValue]);
 
     //[statement release]; // XXX - that's already in the autorelease pool , we don't need to release it esplicitly
     statement = nil;
     
     error = nil;
-    statement = [database prepareStatement:@"SELECT i, v, b FROM t" error:&error];
+    statement = [database prepareStatement:@"SELECT i2, i4, i8, r, d, v, b FROM t" error:&error];
     
     STAssertNotNil(statement, @"Statement was not created.");
     STAssertTrue([statement isKindOfClass:[CSPostgreSQLPreparedStatement class]], @"Got object of wrong kind.");
@@ -177,11 +185,16 @@
     error = nil;
     NSDictionary *dictionary = [statement fetchRowAsDictionary:&error];
     
+    i = 0;
     STAssertNotNil(dictionary, @"Row shouldn't be nil.");
-    STAssertEqualObjects([[dictionary objectForKey:@"i"] numberValue], [values objectAtIndex:0], @"");
-    STAssertEqualObjects([[dictionary objectForKey:@"v"] stringValue], [values objectAtIndex:1], @"");
-    STAssertEqualObjects([[dictionary objectForKey:@"b"] dataValue], [values objectAtIndex:2], @"");
-    NSLog(@"%@ %@", [values objectAtIndex:2], [[dictionary objectForKey:@"b"] dataValue]);
+    STAssertEqualObjects([[dictionary objectForKey:@"i2"] numberValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[dictionary objectForKey:@"i4"] numberValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[dictionary objectForKey:@"i8"] numberValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[dictionary objectForKey:@"r"] numberValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[dictionary objectForKey:@"v"] stringValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[dictionary objectForKey:@"d"] dateValue], [values objectAtIndex:i++], @"");
+    STAssertEqualObjects([[dictionary objectForKey:@"b"] dataValue], [values objectAtIndex:i++], @"");
+    // NSLog(@"%@ %@", [values objectAtIndex:2], [[dictionary objectForKey:@"b"] dataValue]);
 
     //[statement release]; // XXX - that's already in the autorelease pool , we don't need to release it esplicitly
     statement = nil;
