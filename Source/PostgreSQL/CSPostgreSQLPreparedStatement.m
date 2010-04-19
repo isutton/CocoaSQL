@@ -288,7 +288,8 @@
     }            
     else {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        NSString *dateAsString;
+        NSString *dateAsString = nil;
+        NSDate *date = nil;
         
         switch ([self typeForColumn:index]) {
             case BYTEAOID:
@@ -302,7 +303,13 @@
                 [formatter setDateFormat:@"yyyy-MM-dd"];
                 dateAsString = [NSString stringWithUTF8String:value_];
                 value = [CSQLResultValue valueWithDate:[formatter dateFromString:dateAsString]];
-                [formatter release];
+                break;
+            case TIMESTAMPOID:
+            case TIMESTAMPTZOID:
+                [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                dateAsString = [NSString stringWithUTF8String:value_];
+                date = [formatter dateFromString:dateAsString];
+                value = [CSQLResultValue valueWithDate:date];
                 break;
             case CHAROID:
             case TEXTOID:
@@ -314,6 +321,7 @@
                 value = [CSQLResultValue valueWithUTF8String:value_];
                 break;
         }
+        [formatter release];
     }    
     return value;
 }
