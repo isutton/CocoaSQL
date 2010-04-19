@@ -462,7 +462,7 @@
     }
 }
 
-- (NSDictionary *)fetchRowAsDictionary:(NSError **)error
+- (id)fetchRowWithSelector:(SEL)aSelector error:(NSError **)error
 {
     if (!canFetch)
         return nil;
@@ -471,21 +471,18 @@
         canFetch = NO;
         return nil;
     }
+    
+    return [[CSPostgreSQLRow rowWithStatement:self andRow:currentRow++] performSelector:aSelector];
+}
 
-    return [[CSPostgreSQLRow rowWithStatement:self andRow:currentRow++] rowAsDictionary];
+- (NSDictionary *)fetchRowAsDictionary:(NSError **)error
+{
+    return [self fetchRowWithSelector:@selector(rowAsDictionary) error:error];
 }
 
 - (NSArray *)fetchRowAsArray:(NSError **)error
 {
-    if (!canFetch)
-        return nil;
- 
-    if (currentRow == PQntuples(statement)) {
-        canFetch = NO;
-        return nil;
-    }
-    
-    return [[CSPostgreSQLRow rowWithStatement:self andRow:currentRow++] rowAsArray];   
+    return [self fetchRowWithSelector:@selector(rowAsArray) error:error];
 }
 
 - (void)dealloc
