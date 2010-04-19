@@ -157,7 +157,13 @@
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         switch (type) {
             case DATEOID:
-                // Need to check datestyle.
+                //
+                // CSPostgreSQLDatabase should query the datestyle property
+                // during connection, then we need to change it here to something
+                // like:
+                //
+                // [formatter setDateFormat:self.statement.database.dateStyle];
+                //
                 [formatter setDateFormat:@"MMddyyyy"];
                 break;
             case TIMEOID:
