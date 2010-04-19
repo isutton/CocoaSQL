@@ -145,6 +145,11 @@
                        @"dateValue", SELECTOR,
                        nil],
                       [NSDictionary dictionaryWithObjectsAndKeys:
+                       [NSDate dateWithString:@"2001-03-24 01:23:45 +0100"], BIND_VALUE,
+                       @"TIMESTAMP WITH TIME ZONE", DATA_TYPE,
+                       @"dateValue", SELECTOR,
+                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
                        [NSData dataWithBytes:BLOB length:strlen(BLOB)], BIND_VALUE,
                        @"BYTEA", DATA_TYPE,
                        @"dataValue", SELECTOR,

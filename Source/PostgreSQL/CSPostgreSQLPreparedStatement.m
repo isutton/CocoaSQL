@@ -159,12 +159,14 @@
             case DATEOID:
                 // Need to check datestyle.
                 [formatter setDateFormat:@"MMddyyyy"];
+                break;
             case TIMEOID:
                 [formatter setDateFormat:@"HH:MM:SS"];
+                break;
             case TIMESTAMPOID:
             case TIMESTAMPTZOID:
             default:
-                [formatter setDateFormat:@"MM-dd-yyyy HH:mm:ss ZZZZ"];
+                [formatter setDateFormat:@"MM-dd-yyyy HH:mm:ssZZZ"];
                 break;
         }
         const char *value_ = [[formatter stringFromDate:aValue] UTF8String];
@@ -304,8 +306,13 @@
                 dateAsString = [NSString stringWithUTF8String:value_];
                 value = [CSQLResultValue valueWithDate:[formatter dateFromString:dateAsString]];
                 break;
-            case TIMESTAMPOID:
             case TIMESTAMPTZOID:
+                [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZ"];
+                dateAsString = [NSString stringWithUTF8String:value_];
+                date = [formatter dateFromString:dateAsString];
+                value = [CSQLResultValue valueWithDate:date];
+                break;
+            case TIMESTAMPOID:
                 [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
                 dateAsString = [NSString stringWithUTF8String:value_];
                 date = [formatter dateFromString:dateAsString];
