@@ -122,9 +122,7 @@
 
 - (BOOL)executeSQL:(NSString *)sql error:(NSError **)error
 {
-	if (error)
-        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
-	return NO;
+    return [self executeSQL:sql withValues:nil error:error];
 }
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error

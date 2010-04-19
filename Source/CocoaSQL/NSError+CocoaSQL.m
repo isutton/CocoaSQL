@@ -26,7 +26,7 @@
 + (NSError *)errorWithMessage:(NSString *)errorMessage andCode:(NSInteger)code
 {
     NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-    [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+    [errorDetail setObject:errorMessage forKey:NSLocalizedDescriptionKey];
     return [NSError errorWithDomain:@"CocoaSQL" code:code userInfo:errorDetail];
 }
 
