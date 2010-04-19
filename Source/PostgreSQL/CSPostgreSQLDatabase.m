@@ -71,4 +71,15 @@
     return [CSPostgreSQLPreparedStatement preparedStatementWithDatabase:self andSQL:sql error:error];
 }
 
+- (BOOL)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
+{
+    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
+    
+    if (!statement) {
+        return NO;
+    }
+    
+    return [statement executeWithValues:values error:error];
+}
+
 @end
