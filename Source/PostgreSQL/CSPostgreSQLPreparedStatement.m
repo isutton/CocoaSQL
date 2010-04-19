@@ -280,11 +280,11 @@
             case DATEOID:
                 [formatter setDateFormat:@"MM-dd-yyyy"];
                 value = [CSQLResultValue valueWithDate:[formatter dateFromString:[NSString stringWithUTF8String:value_]]];
-                [formatter release];
                 break;
             default:
                 break;
         }
+        [formatter release];
     }            
     else {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
