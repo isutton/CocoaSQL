@@ -158,13 +158,13 @@
         switch (type) {
             case DATEOID:
                 // Need to check datestyle.
-                [formatter setDateFormat:@"MMddyyyyy"];
+                [formatter setDateFormat:@"MMddyyyy"];
             case TIMEOID:
                 [formatter setDateFormat:@"HH:MM:SS"];
             case TIMESTAMPOID:
             case TIMESTAMPTZOID:
             default:
-                [formatter setDateFormat:@"MM-dd-yyyyy"];
+                [formatter setDateFormat:@"MM-dd-yyyy HH:mm:ss ZZZZ"];
                 break;
         }
         const char *value_ = [[formatter stringFromDate:aValue] UTF8String];
