@@ -24,6 +24,7 @@
 
 @interface CSPostgreSQLPreparedStatement : CSQLPreparedStatement {
     int currentRow;
+    id row;
 }
 
 - (void)getError:(NSError **)error;

@@ -54,7 +54,7 @@
     char **paramValues;
     int resultFormat;
     
-    CSPostgreSQLPreparedStatement *statement_;
+    CSPostgreSQLPreparedStatement *statement;
     
     PGresult *result;
 }
@@ -66,7 +66,7 @@
 @property (readonly) char **paramValues;
 @property (readonly) int resultFormat;
 
-- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)statement andValues:(NSArray *)values;
+- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andValues:(NSArray *)values;
 - (BOOL)bindValue:(id)aValue toColumn:(int)index;
 
 @end
@@ -80,7 +80,7 @@
 @synthesize paramValues;
 @synthesize resultFormat;
 
-- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)statement andValues:(NSArray *)values
+- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andValues:(NSArray *)values
 {
     if ([self init]) {
         resultFormat = 0;
@@ -89,9 +89,9 @@
         paramLengths = calloc([values count], sizeof(int));
         paramFormats = calloc([values count], sizeof(int));
         paramTypes = calloc([values count], sizeof(int));
-        statement_ = [statement retain];
+        statement = [aStatement retain];
         
-        result = PQdescribePrepared(statement_.database.databaseHandle, "");
+        result = PQdescribePrepared(statement.database.databaseHandle, "");
         
         switch (PQresultStatus(result)) {
             case PGRES_FATAL_ERROR:
@@ -112,7 +112,7 @@
 
 - (BOOL)bindValue:(id)aValue toColumn:(int)index
 {
-    int type = PQftype(statement_.statement, index);
+    int type = PQftype(statement.statement, index);
 
     if ([[aValue class] isSubclassOfClass:[NSNumber class]]) {
         double doubleValue;
@@ -137,13 +137,16 @@
         }        
     }
     else if ([[aValue class] isSubclassOfClass:[NSString class]]) {
+        char *value_;
         if (resultFormat) {
+            value_ = (char *)[[aValue dataUsingEncoding:NSUTF8StringEncoding] bytes];
             paramFormats[index] = 1;
-            paramLengths[index] = sizeof(*[[aValue dataUsingEncoding:NSASCIIStringEncoding] bytes]);
-            paramValues[index] = (char *)[[aValue dataUsingEncoding:NSASCIIStringEncoding] bytes];
+            paramLengths[index] = sizeof(*value_);
+            paramValues[index] = value_;
         }
         else {
-            paramValues[index] = (char *)[aValue cStringUsingEncoding:NSASCIIStringEncoding];
+            value_ = (char *)[aValue cStringUsingEncoding:NSUTF8StringEncoding];
+            paramValues[index] = value_;
         }
     }
     else if ([[aValue class] isSubclassOfClass:[NSData class]]) {
@@ -189,7 +192,7 @@
     free(paramLengths);
     free(paramFormats);
     free(paramTypes);
-    [statement_ release];
+    [statement release];
     [super dealloc];
 }
 
@@ -199,13 +202,15 @@
 {
     int row;
     int numFields;
-    CSPostgreSQLPreparedStatement *statement_;
+    CSPostgreSQLPreparedStatement *statement;
 }
 
+@property (readwrite) int row;
 @property (readonly) int numFields;
+@property (readwrite,retain) CSPostgreSQLPreparedStatement *statement;
 
-+ (id)rowWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index;
-- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index;
++ (id)rowWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andRow:(int)index;
+- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andRow:(int)index;
 - (id)objectForColumn:(int)index;
 - (id)nameForColumn:(int)index;
 
@@ -213,44 +218,49 @@
 
 @implementation CSPostgreSQLRow
 
+@synthesize row;
 @synthesize numFields;
+@synthesize statement;
 
-+ (id)rowWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index
++ (id)rowWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andRow:(int)index
 {
-    return [[[self alloc] initWithStatement:statement andRow:index] autorelease];
+    return [[[self alloc] initWithStatement:aStatement andRow:index] autorelease];
 }
 
-- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)statement andRow:(int)index
+- (id)initWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andRow:(int)index
 {
-    row = index;
-    statement_ = [statement retain];
-    numFields = PQnfields(statement_.statement);
+    if (self = [super init]) {
+        self.row = index;
+        self.statement = aStatement;
+        numFields = PQnfields(statement.statement);
+    }
+    
     return self;
 }
 
 - (BOOL)isBinary:(int)index
 {
-    return PQfformat(statement_.statement, index) == 1;
+    return PQfformat(statement.statement, index) == 1;
 }
 
 - (int)lengthForColumn:(int)index
 {
-    return PQgetlength(statement_.statement, row, index);
+    return PQgetlength(statement.statement, row, index);
 }
 
 - (int)typeForColumn:(int)index
 {
-    return PQftype(statement_.statement, index);
+    return PQftype(statement.statement, index);
 }
 
 - (char *)valueForColumn:(int)index
 {
-    return PQgetvalue(statement_.statement, row, index);
+    return PQgetvalue(statement.statement, row, index);
 }
 
 - (id)objectForColumn:(int)index
 {
-    CSQLResultValue *value = nil;
+    CSQLResultValue *aValue = nil;
 
     int length_ = [self lengthForColumn:index];
     char *value_ = [self valueForColumn:index];
@@ -261,33 +271,33 @@
         
         switch ([self typeForColumn:index]) {
             case BYTEAOID:
-                value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
+                aValue = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
                 break;
             case CHAROID:
             case TEXTOID:
             case VARCHAROID:
-                value = [CSQLResultValue valueWithUTF8String:value_];
+                aValue = [CSQLResultValue valueWithUTF8String:value_];
                 break;
             case INT8OID:
-                value = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:ntohl(*(long *)value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:ntohl(*(long *)value_)]];
                 break;
             case INT4OID:
-                value = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
                 break;
             case INT2OID:
                 shortValue = ntohl(*((uint32_t *)value_));
-                value = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:shortValue]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:shortValue]];
                 break;
             case NUMERICOID:
-                value = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
                 break;
             case FLOAT4OID:
             case FLOAT8OID:
-                value = [CSQLResultValue valueWithNumber:[NSNumber numberWithFloat:atof(value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithFloat:atof(value_)]];
                 break;
             case DATEOID:
                 [formatter setDateFormat:@"MM-dd-yyyy"];
-                value = [CSQLResultValue valueWithDate:[formatter dateFromString:[NSString stringWithUTF8String:value_]]];
+                aValue = [CSQLResultValue valueWithDate:[formatter dateFromString:[NSString stringWithUTF8String:value_]]];
                 break;
             default:
                 break;
@@ -301,28 +311,28 @@
         
         switch ([self typeForColumn:index]) {
             case BYTEAOID:
-                value = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
+                aValue = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
                 break;
             case FLOAT4OID:
             case FLOAT8OID:
-                value = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:atof(value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:atof(value_)]];
                 break;
             case DATEOID:
                 [formatter setDateFormat:@"yyyy-MM-dd"];
                 dateAsString = [NSString stringWithUTF8String:value_];
-                value = [CSQLResultValue valueWithDate:[formatter dateFromString:dateAsString]];
+                aValue = [CSQLResultValue valueWithDate:[formatter dateFromString:dateAsString]];
                 break;
             case TIMESTAMPTZOID:
                 [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZ"];
                 dateAsString = [NSString stringWithUTF8String:value_];
                 date = [formatter dateFromString:dateAsString];
-                value = [CSQLResultValue valueWithDate:date];
+                aValue = [CSQLResultValue valueWithDate:date];
                 break;
             case TIMESTAMPOID:
                 [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
                 dateAsString = [NSString stringWithUTF8String:value_];
                 date = [formatter dateFromString:dateAsString];
-                value = [CSQLResultValue valueWithDate:date];
+                aValue = [CSQLResultValue valueWithDate:date];
                 break;
             case CHAROID:
             case TEXTOID:
@@ -331,17 +341,17 @@
             case INT4OID:
             case INT8OID:
             default:
-                value = [CSQLResultValue valueWithUTF8String:value_];
+                aValue = [CSQLResultValue valueWithUTF8String:value_];
                 break;
         }
         [formatter release];
     }    
-    return value;
+    return aValue;
 }
 
 - (id)nameForColumn:(int)index
 {
-    return [NSString stringWithUTF8String:PQfname(statement_.statement, index)];
+    return [NSString stringWithUTF8String:PQfname(statement.statement, index)];
 }
 
 - (NSArray *)rowAsArray
@@ -364,7 +374,7 @@
 
 - (void)dealloc
 {
-    [statement_ release];
+    [statement release];
     [super dealloc];
 }
 @end
@@ -426,6 +436,8 @@
             [self release];
             self = nil;
         }
+        
+        row = nil;
     }
 
     return self;
@@ -477,15 +489,19 @@
 
 - (id)fetchRowWithSelector:(SEL)aSelector error:(NSError **)error
 {
-    if (!canFetch)
-        return nil;
-    
-    if (currentRow == PQntuples(statement)) {
+    if (!canFetch || currentRow == PQntuples(statement)) {
         canFetch = NO;
         return nil;
     }
     
-    return [[CSPostgreSQLRow rowWithStatement:self andRow:currentRow++] performSelector:aSelector];
+    if (row) {
+        [row setRow:currentRow++];
+    }
+    else {
+        row = [[CSPostgreSQLRow rowWithStatement:self andRow:currentRow++] retain];
+    }
+
+    return [row performSelector:aSelector];
 }
 
 - (NSDictionary *)fetchRowAsDictionary:(NSError **)error
@@ -504,7 +520,8 @@
         PQclear(statement);
         statement = nil;
     }
-        
+    if (row)
+        [row release];
     [database release];
     [super dealloc];
 }
