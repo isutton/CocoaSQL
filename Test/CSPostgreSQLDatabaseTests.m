@@ -154,6 +154,10 @@
                        @"BYTEA", DATA_TYPE,
                        @"dataValue", SELECTOR,
                        nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
+                       [NSNull null], BIND_VALUE,
+                       @"VARCHAR(255) NULL", DATA_TYPE,
+                       nil],
                       nil];
     
     CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"PostgreSQL" options:[NSDictionary dictionary] error:&error];
@@ -191,7 +195,14 @@
             error = nil;
             NSArray *row = [statement fetchRowAsArray:&error];
             STAssertNotNil(row, [error description]);
-            STAssertEqualObjects([[row objectAtIndex:0] performSelector:NSSelectorFromString([test objectForKey:SELECTOR])], [test objectForKey:BIND_VALUE], @"%@", [test objectForKey:DATA_TYPE]);
+            if ([[test objectForKey:BIND_VALUE] isKindOfClass:[NSNull class]]) {
+                STAssertTrue([[row objectAtIndex:0] isNull], @"%@", [test objectForKey:DATA_TYPE]);
+            }
+            else {
+                STAssertEqualObjects([[row objectAtIndex:0] performSelector:NSSelectorFromString([test objectForKey:SELECTOR])], [test objectForKey:BIND_VALUE], @"%@", [test objectForKey:DATA_TYPE]);
+            }
+
+            
 
             [statement finish];
         }
@@ -211,8 +222,13 @@
             error = nil;
             NSDictionary *row = [statement fetchRowAsDictionary:&error];
             STAssertNotNil(row, [error description]);
-            STAssertEqualObjects([[row objectForKey:@"c"] performSelector:NSSelectorFromString([test objectForKey:SELECTOR])], [test objectForKey:BIND_VALUE], @"%@", [test objectForKey:DATA_TYPE]);
-            
+            if ([[test objectForKey:BIND_VALUE] isKindOfClass:[NSNull class]]) {
+                STAssertTrue([[row objectForKey:@"c"] isNull], @"%@", [test objectForKey:DATA_TYPE]);
+            } 
+            else {
+                STAssertEqualObjects([[row objectForKey:@"c"] performSelector:NSSelectorFromString([test objectForKey:SELECTOR])], [test objectForKey:BIND_VALUE], @"%@", [test objectForKey:DATA_TYPE]);
+            }
+
             [statement finish];
         }
         
