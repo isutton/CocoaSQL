@@ -130,6 +130,16 @@
                        @"numberValue", SELECTOR,
                        nil],
                       [NSDictionary dictionaryWithObjectsAndKeys:
+                       [NSNumber numberWithDouble:1.66666666], BIND_VALUE,
+                       @"FLOAT", DATA_TYPE,
+                       @"numberValue", SELECTOR,
+                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
+                       [NSNumber numberWithDouble:1.6666], BIND_VALUE,
+                       @"REAL", DATA_TYPE,
+                       @"numberValue", SELECTOR,
+                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
                        @"v1", BIND_VALUE,
                        @"VARCHAR(255)", DATA_TYPE,
                        @"stringValue", SELECTOR,
