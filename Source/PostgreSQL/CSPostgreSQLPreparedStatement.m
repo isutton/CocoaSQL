@@ -279,6 +279,18 @@
     
     if ([self isBinary:index]) {
         short int shortValue;
+        union {
+            float f;
+            uint32_t i;
+        } floatValue;
+
+        union {
+            double d;
+            uint64_t i;
+        } doubleValue;
+
+        uint32_t tmpValue;
+        
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         
         switch ([self typeForColumn:index]) {
@@ -297,15 +309,20 @@
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
                 break;
             case INT2OID:
-                shortValue = ntohl(*((uint32_t *)value_));
+                shortValue = ntohs(*(uint16_t *)value_);
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:shortValue]];
                 break;
             case NUMERICOID:
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
                 break;
             case FLOAT4OID:
+                floatValue.i = ntohl(*(uint32_t *)value_);
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithFloat:floatValue.f]];
+                break;
             case FLOAT8OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithFloat:atof(value_)]];
+                // This should be the opposite of pq_sendint64() in pqformat.c.
+                doubleValue.i = ntohl(*(uint32_t *)value_);
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:doubleValue.d]];
                 break;
             case DATEOID:
                 [formatter setDateFormat:@"MM-dd-yyyy"];
