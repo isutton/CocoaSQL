@@ -45,13 +45,27 @@
     CSQLDatabase *database_;
     NSError *error = nil;
     
-    NSMutableDictionary *options = [NSMutableDictionary dictionary];
-    [options setObject:TEST_DB forKey:@"path"];
+    NSArray *tests = [NSArray arrayWithObjects:
+                      [NSDictionary dictionaryWithObjectsAndKeys:
+                       @"SQLite", @"driver",
+                       @"test.db", @"path",
+                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
+                       @"MySQL", @"driver",
+                       @"test", @"db",
+                       @"localhost", @"host",
+                       @"root", @"user",
+                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
+                       @"PostgreSQL", @"driver",
+                       nil],
+                      nil];
     
-    database_ = [[CSQLDatabase databaseWithDriver:TEST_DRIVER options:options error:&error] retain];
-    
-    STAssertNil(error, @"We got an error.");
-    STAssertNotNil(database_, @"Database should not be nil.");    
+    for (NSDictionary *test in tests) {
+        NSString *driver = [test objectForKey:@"driver"];
+        database_ = [CSQLDatabase databaseWithDriver:driver options:test error:&error];
+        STAssertNotNil(database_, @"Driver %@, %@", driver, [error description]);
+    }    
 }
 
 - (void)testDatabaseWithDSN
