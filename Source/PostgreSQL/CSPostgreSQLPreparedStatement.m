@@ -175,6 +175,9 @@
         paramValues[index] = (char *)value_; 
         [formatter release];
     }
+    else if ([[aValue class] isSubclassOfClass:[NSNull class]]) {
+        paramValues[index] = '\0';
+    }
     
     return YES;
 }
@@ -206,6 +209,7 @@
 - (id)initWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andRow:(int)index;
 - (id)objectForColumn:(int)index;
 - (id)nameForColumn:(int)index;
+- (BOOL)isNull:(int)index;
 
 @end
 
@@ -251,12 +255,21 @@
     return PQgetvalue(statement.statement, row, index);
 }
 
+- (BOOL)isNull:(int)index
+{
+    return (PQgetisnull(statement.statement, row, index) == 1);
+}
+
 - (id)objectForColumn:(int)index
 {
     CSQLResultValue *aValue = nil;
 
     int length_ = [self lengthForColumn:index];
     char *value_ = [self valueForColumn:index];
+    
+    if ([self isNull:index]) {
+        return [CSQLResultValue valueWithNull];
+    }
     
     if ([self isBinary:index]) {
         short int shortValue;
@@ -370,6 +383,7 @@
     [statement release];
     [super dealloc];
 }
+
 @end
 
 
