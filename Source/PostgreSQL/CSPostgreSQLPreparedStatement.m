@@ -18,6 +18,7 @@
 //  CSQLPostgreSQLPreparedStatement.h by Igor Sutton on 4/13/10.
 //
 
+#import "CSPostgreSQLDatabase.h"
 #import "CSPostgreSQLPreparedStatement.h"
 #import "CSQLResultValue.h"
 #include <libpq-fe.h>
@@ -68,6 +69,7 @@
 
 - (id)initWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andValues:(NSArray *)values;
 - (BOOL)bindValue:(id)aValue toColumn:(int)index;
+- (BOOL)setValues:(NSArray *)values;
 
 @end
 
@@ -84,28 +86,13 @@
 {
     if ([self init]) {
         resultFormat = 0;
-        numParams = [values count];
-        paramValues = malloc([values count] * sizeof(char *));
-        paramLengths = calloc([values count], sizeof(int));
-        paramFormats = calloc([values count], sizeof(int));
-        paramTypes = calloc([values count], sizeof(int));
         statement = [aStatement retain];
-        
-        result = PQdescribePrepared(statement.database.databaseHandle, "");
-        
-        switch (PQresultStatus(result)) {
-            case PGRES_FATAL_ERROR:
-                [self release];
-                return nil;
-            case PGRES_COMMAND_OK:
-                break;
-            default:
-                break;
-        }
-        
-        for (int i = 0; i < [values count]; i++) {
-            [self bindValue:[values objectAtIndex:i] toColumn:i];
-        }
+        numParams = 0;
+        paramValues = nil;
+        paramLengths = nil;
+        paramFormats = nil;
+        paramTypes = nil;
+        [self setValues:values];
     }
     return self;
 }
@@ -180,6 +167,25 @@
     }
     
     return YES;
+}
+
+- (BOOL)setValues:(NSArray *)values
+{
+    if (!values)
+        return NO;
+    
+    numParams = [values count];
+    paramValues = malloc([values count] * sizeof(char *));
+    paramLengths = calloc([values count], sizeof(int));
+    paramFormats = calloc([values count], sizeof(int));
+    paramTypes = calloc([values count], sizeof(int));
+    
+    for (int i = 0; i < [values count]; i++) {
+        [self bindValue:[values objectAtIndex:i] toColumn:i];
+    }
+    
+    return YES;
+    
 }
 
 - (void)dealloc
@@ -443,8 +449,6 @@
             [self release];
             self = nil;
         }
-        
-        row = nil;
     }
 
     return self;
@@ -454,14 +458,20 @@
 {
     if (self = [super init]) {
         currentRow = 0;
+        binds = nil;
+        row = nil;
     }
     return self;
 }
 
 - (BOOL)executeWithValues:(NSArray *)values error:(NSError **)error
 {
-    id binds = [[CSPostgreSQLBindsStorage alloc] initWithStatement:self andValues:values];
+    if (!binds)
+        binds = [[[CSPostgreSQLBindsStorage alloc] initWithStatement:self andValues:values] retain];
+    else
+        [binds setValues:values];
 
+    
     PGresult *result = PQexecPrepared(database.databaseHandle, 
                                       "", 
                                       [binds numParams], 
@@ -470,7 +480,6 @@
                                       [binds paramFormats], 
                                       [binds resultFormat]);
     
-    [binds release];
     
     return [self handleResultStatus:result error:error];
 }
@@ -529,6 +538,8 @@
     }
     if (row)
         [row release];
+    if (binds)
+        [binds release];
     [database release];
     [super dealloc];
 }
