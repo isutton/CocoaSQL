@@ -28,4 +28,8 @@
 
 - (id)initWithOptions:(NSDictionary *)options error:(NSError **)error;
 
+- (NSString *)dateStyle;
+- (NSString *)timeStyle;
+- (NSString *)timestampStyle;
+
 @end

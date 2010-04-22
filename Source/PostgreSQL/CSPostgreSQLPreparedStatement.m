@@ -160,22 +160,15 @@
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         switch (type) {
             case DATEOID:
-                //
-                // CSPostgreSQLDatabase should query the datestyle property
-                // during connection, then we need to change it here to something
-                // like:
-                //
-                // [formatter setDateFormat:self.statement.database.dateStyle];
-                //
-                [formatter setDateFormat:@"MMddyyyy"];
+                [formatter setDateFormat:((CSPostgreSQLDatabase *)statement.database).dateStyle];
                 break;
             case TIMEOID:
-                [formatter setDateFormat:@"HH:MM:SS"];
+                [formatter setDateFormat:((CSPostgreSQLDatabase *)statement.database).timeStyle];
                 break;
             case TIMESTAMPOID:
             case TIMESTAMPTZOID:
             default:
-                [formatter setDateFormat:@"MM-dd-yyyy HH:mm:ssZZZ"];
+                [formatter setDateFormat:((CSPostgreSQLDatabase *)statement.database).timestampStyle];
                 break;
         }
         const char *value_ = [[formatter stringFromDate:aValue] UTF8String];
