@@ -46,6 +46,8 @@
 #define TIMESTAMPOID   1114
 #define TIMESTAMPTZOID 1184
 
+#define CSQL_UNPACK_VALUE(x) ((uint64_t)ntohl(*((uint32_t *)x)) << 32) | ((uint64_t)ntohl(*((uint32_t *)x)) & 0x00000000ffffffff)
+
 @interface CSPostgreSQLBindsStorage : NSObject
 {
     int numParams;
@@ -60,12 +62,12 @@
     PGresult *result;
 }
 
-@property (readonly) int numParams;
-@property (readonly) int *paramTypes;
-@property (readonly) int *paramLengths;
-@property (readonly) int *paramFormats;
-@property (readonly) char **paramValues;
-@property (readonly) int resultFormat;
+@property (readonly, assign) int numParams;
+@property (readonly, assign) int *paramTypes;
+@property (readonly, assign) int *paramLengths;
+@property (readonly, assign) int *paramFormats;
+@property (readonly, assign) char **paramValues;
+@property (readonly, assign) int resultFormat;
 
 - (id)initWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andValues:(NSArray *)values;
 - (BOOL)bindValue:(id)aValue toColumn:(int)index;
@@ -278,7 +280,7 @@
     }
     
     if ([self isBinary:index]) {
-        short int shortValue;
+
         union {
             float f;
             uint32_t i;
@@ -288,8 +290,6 @@
             double d;
             uint64_t i;
         } doubleValue;
-
-        uint32_t tmpValue;
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         
@@ -303,14 +303,13 @@
                 aValue = [CSQLResultValue valueWithUTF8String:value_];
                 break;
             case INT8OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:ntohl(*(long *)value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:(long)CSQL_UNPACK_VALUE(value_)]];
                 break;
             case INT4OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(uint32_t *)value_)]];
                 break;
             case INT2OID:
-                shortValue = ntohs(*(uint16_t *)value_);
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:shortValue]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:ntohs(*(uint16_t *)value_)]];
                 break;
             case NUMERICOID:
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
@@ -321,7 +320,7 @@
                 break;
             case FLOAT8OID:
                 // This should be the opposite of pq_sendint64() in pqformat.c.
-                doubleValue.i = ntohl(*(uint32_t *)value_);
+                doubleValue.i = CSQL_UNPACK_VALUE(value_);
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:doubleValue.d]];
                 break;
             case DATEOID:
