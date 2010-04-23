@@ -82,4 +82,19 @@
     return [statement executeWithValues:values error:error];
 }
 
+- (NSString *)dateStyle
+{
+    return @"MMddyyyy";
+}
+
+- (NSString *)timeStyle
+{
+    return @"HH:MM:SS";
+}
+
+- (NSString *)timestampStyle
+{
+    return @"MM-dd-yyyy HH:mm:ssZZZ";
+}
+
 @end

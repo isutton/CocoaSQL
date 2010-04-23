@@ -130,6 +130,16 @@
                        @"numberValue", SELECTOR,
                        nil],
                       [NSDictionary dictionaryWithObjectsAndKeys:
+                       [NSNumber numberWithDouble:1.66666666], BIND_VALUE,
+                       @"FLOAT", DATA_TYPE,
+                       @"numberValue", SELECTOR,
+                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
+                       [NSNumber numberWithDouble:1.6666], BIND_VALUE,
+                       @"REAL", DATA_TYPE,
+                       @"numberValue", SELECTOR,
+                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
                        @"v1", BIND_VALUE,
                        @"VARCHAR(255)", DATA_TYPE,
                        @"stringValue", SELECTOR,
@@ -153,6 +163,10 @@
                        [NSData dataWithBytes:BLOB length:strlen(BLOB)], BIND_VALUE,
                        @"BYTEA", DATA_TYPE,
                        @"dataValue", SELECTOR,
+                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
+                       [NSNull null], BIND_VALUE,
+                       @"VARCHAR(255) NULL", DATA_TYPE,
                        nil],
                       nil];
     
@@ -191,7 +205,14 @@
             error = nil;
             NSArray *row = [statement fetchRowAsArray:&error];
             STAssertNotNil(row, [error description]);
-            STAssertEqualObjects([[row objectAtIndex:0] performSelector:NSSelectorFromString([test objectForKey:SELECTOR])], [test objectForKey:BIND_VALUE], @"%@", [test objectForKey:DATA_TYPE]);
+            if ([[test objectForKey:BIND_VALUE] isKindOfClass:[NSNull class]]) {
+                STAssertTrue([[row objectAtIndex:0] isNull], @"%@", [test objectForKey:DATA_TYPE]);
+            }
+            else {
+                STAssertEqualObjects([[row objectAtIndex:0] performSelector:NSSelectorFromString([test objectForKey:SELECTOR])], [test objectForKey:BIND_VALUE], @"%@", [test objectForKey:DATA_TYPE]);
+            }
+
+            
 
             [statement finish];
         }
@@ -211,8 +232,13 @@
             error = nil;
             NSDictionary *row = [statement fetchRowAsDictionary:&error];
             STAssertNotNil(row, [error description]);
-            STAssertEqualObjects([[row objectForKey:@"c"] performSelector:NSSelectorFromString([test objectForKey:SELECTOR])], [test objectForKey:BIND_VALUE], @"%@", [test objectForKey:DATA_TYPE]);
-            
+            if ([[test objectForKey:BIND_VALUE] isKindOfClass:[NSNull class]]) {
+                STAssertTrue([[row objectForKey:@"c"] isNull], @"%@", [test objectForKey:DATA_TYPE]);
+            } 
+            else {
+                STAssertEqualObjects([[row objectForKey:@"c"] performSelector:NSSelectorFromString([test objectForKey:SELECTOR])], [test objectForKey:BIND_VALUE], @"%@", [test objectForKey:DATA_TYPE]);
+            }
+
             [statement finish];
         }
         
