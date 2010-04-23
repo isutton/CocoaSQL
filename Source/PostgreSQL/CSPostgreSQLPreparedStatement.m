@@ -25,6 +25,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <libkern/OSByteOrder.h>
 
 //
 // TODO: Find the proper way to wire PostgreSQL basic data types.
@@ -46,7 +47,8 @@
 #define TIMESTAMPOID   1114
 #define TIMESTAMPTZOID 1184
 
-#define CSQL_UNPACK_VALUE(x) ((uint64_t)ntohl(*((uint32_t *)x)) << 32) | ((uint64_t)ntohl(*((uint32_t *)x)) & 0x00000000ffffffff)
+#define CSQL_UNPACK_VALUE(x) OSSwapConstInt64(*((uint64_t *)x))
+// (uint64_t)ntohl(*((uint32_t *)x+1)) | (uint64_t)(ntohl(*(uint32_t *)x)) << 32;
 
 @interface CSPostgreSQLBindsStorage : NSObject
 {
@@ -87,7 +89,7 @@
 - (id)initWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andValues:(NSArray *)values
 {
     if ([self init]) {
-        resultFormat = 0;
+        resultFormat = 1;
         statement = [aStatement retain];
         numParams = 0;
         paramValues = nil;
@@ -294,6 +296,7 @@
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         
         switch ([self typeForColumn:index]) {
+                long blah;
             case BYTEAOID:
                 aValue = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
                 break;
@@ -303,7 +306,8 @@
                 aValue = [CSQLResultValue valueWithUTF8String:value_];
                 break;
             case INT8OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:(long)CSQL_UNPACK_VALUE(value_)]];
+                blah = CSQL_UNPACK_VALUE(value_);
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:blah]];
                 break;
             case INT4OID:
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(uint32_t *)value_)]];
