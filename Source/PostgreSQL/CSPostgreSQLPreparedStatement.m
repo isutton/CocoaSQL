@@ -128,16 +128,13 @@
         }        
     }
     else if ([[aValue class] isSubclassOfClass:[NSString class]]) {
-        char *value_;
         if (resultFormat) {
-            value_ = (char *)[[aValue dataUsingEncoding:NSUTF8StringEncoding] bytes];
             paramFormats[index] = 1;
-            paramLengths[index] = sizeof(*value_);
-            paramValues[index] = value_;
+            paramLengths[index] = [aValue length];
+            paramValues[index] = (char *)[[aValue dataUsingEncoding:NSUTF8StringEncoding] bytes];
         }
         else {
-            value_ = (char *)[aValue cStringUsingEncoding:NSUTF8StringEncoding];
-            paramValues[index] = value_;
+            paramValues[index] = (char *)[aValue cStringUsingEncoding:NSUTF8StringEncoding];
         }
     }
     else if ([[aValue class] isSubclassOfClass:[NSData class]]) {
