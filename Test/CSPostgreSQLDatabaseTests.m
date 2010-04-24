@@ -135,7 +135,7 @@
                        @"numberValue", SELECTOR,
                        nil],
                       [NSDictionary dictionaryWithObjectsAndKeys:
-                       [NSNumber numberWithDouble:1.6666], BIND_VALUE,
+                       [NSNumber numberWithFloat:1.6666], BIND_VALUE,
                        @"REAL", DATA_TYPE,
                        @"numberValue", SELECTOR,
                        nil],
@@ -211,8 +211,6 @@
             else {
                 STAssertEqualObjects([[row objectAtIndex:0] performSelector:NSSelectorFromString([test objectForKey:SELECTOR])], [test objectForKey:BIND_VALUE], @"%@", [test objectForKey:DATA_TYPE]);
             }
-
-            
 
             [statement finish];
         }
