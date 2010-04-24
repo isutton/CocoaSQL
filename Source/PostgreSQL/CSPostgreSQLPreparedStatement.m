@@ -106,21 +106,17 @@
     int type = PQftype(statement.statement, index);
 
     if ([[aValue class] isSubclassOfClass:[NSNumber class]]) {
-        double doubleValue;
-        uint32_t intValue;
-        
         switch (type) {
             case FLOAT8OID:
+                paramValues[index] = (char *)[aValue pointerValue];
+                break;
             case FLOAT4OID:
-                doubleValue = [aValue doubleValue];
-                paramValues[index] = (char *)&doubleValue;
+                paramValues[index] = (char *)[aValue pointerValue];
                 break;
             case INT2OID:
             case INT4OID:
             case INT8OID:
-                intValue = [aValue longLongValue];
-                intValue = htonl((uint32_t) intValue);
-                paramValues[index] = (char *)&intValue;
+                *(paramValues[index]) = ((uint32_t)htonl(*((uint32_t *)[aValue pointerValue])));
                 break;
             default:
                 paramValues[index] = (char *)[[aValue stringValue] UTF8String];
@@ -159,11 +155,11 @@
                 [formatter setDateFormat:((CSPostgreSQLDatabase *)statement.database).timestampStyle];
                 break;
         }
-        const char *value_ = [[formatter stringFromDate:aValue] UTF8String];
-        paramValues[index] = (char *)value_; 
+        paramValues[index] = (char *)[[formatter stringFromDate:aValue] UTF8String]; 
         [formatter release];
     }
     else if ([[aValue class] isSubclassOfClass:[NSNull class]]) {
+        paramFormats[index] = 1;
         paramValues[index] = '\0';
     }
     
@@ -293,7 +289,6 @@
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         
         switch ([self typeForColumn:index]) {
-                long blah;
             case BYTEAOID:
                 aValue = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
                 break;
@@ -303,20 +298,19 @@
                 aValue = [CSQLResultValue valueWithUTF8String:value_];
                 break;
             case INT8OID:
-                blah = CSQL_UNPACK_VALUE(value_);
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:blah]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:CSQL_UNPACK_VALUE(value_)]];
                 break;
             case INT4OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(uint32_t *)value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*((uint32_t *)value_))]];
                 break;
             case INT2OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:ntohs(*(uint16_t *)value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:ntohs(*((uint16_t *)value_))]];
                 break;
             case NUMERICOID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*(int *)value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*((int *)value_))]];
                 break;
             case FLOAT4OID:
-                floatValue.i = ntohl(*(uint32_t *)value_);
+                floatValue.i = ntohl(*((uint32_t *)value_));
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithFloat:floatValue.f]];
                 break;
             case FLOAT8OID:
