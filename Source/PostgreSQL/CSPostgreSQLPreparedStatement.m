@@ -318,9 +318,25 @@
                 doubleValue.i = CSQL_UNPACK_VALUE(value_);
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:doubleValue.d]];
                 break;
+                
+                //
+                // Both TIMESTAMPOID and TIMESTAMPTZOID are sent either as int64 if compiled
+                // with timestamp as integers or double (float8 in PostgreSQL speak) if the compile
+                // option was disabled. Basically here we're assuming int64 which are microseconds since
+                // POSTGRES_EPOCH_DATE (2000-01-01).
+                //
+                
+            case TIMESTAMPTZOID:
+                aValue = [CSQLResultValue valueWithDate:[NSDate dateWithTimeInterval:((double)OSSwapConstInt64(*((uint64_t *)value_))/1000000) 
+                                                                           sinceDate:[NSDate dateWithString:@"2000-01-01 00:00:00 +0000"]]];
+                break;
+            case TIMESTAMPOID:
+                aValue = [CSQLResultValue valueWithDate:[NSDate dateWithTimeInterval:((double)OSSwapConstInt64(*((uint64_t *)value_))/1000000) 
+                                                                           sinceDate:[NSDate dateWithString:@"2000-01-01 00:00:00 +0000"]]];
+                break;
             case DATEOID:
-                [formatter setDateFormat:@"MM-dd-yyyy"];
-                aValue = [CSQLResultValue valueWithDate:[formatter dateFromString:[NSString stringWithUTF8String:value_]]];
+                aValue = [CSQLResultValue valueWithDate:[[NSDate dateWithString:@"2000-01-01 00:00:00 +0000"] 
+                                                         dateByAddingTimeInterval:OSSwapConstInt32(*((uint32_t *)value_)) * 24 * 3600]];
                 break;
             default:
                 break;
