@@ -47,9 +47,6 @@
 #define TIMESTAMPOID   1114
 #define TIMESTAMPTZOID 1184
 
-#define CSQL_UNPACK_VALUE(x) OSSwapConstInt64(*((uint64_t *)x))
-// (uint64_t)ntohl(*((uint32_t *)x+1)) | (uint64_t)(ntohl(*(uint32_t *)x)) << 32;
-
 @interface CSPostgreSQLBindsStorage : NSObject
 {
     int numParams;
@@ -298,24 +295,20 @@
                 aValue = [CSQLResultValue valueWithUTF8String:value_];
                 break;
             case INT8OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:CSQL_UNPACK_VALUE(value_)]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:OSSwapConstInt64(*((uint64_t *)value_))]];
                 break;
             case INT4OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*((uint32_t *)value_))]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:OSSwapConstInt32(*((uint32_t *)value_))]];
                 break;
             case INT2OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:ntohs(*((uint16_t *)value_))]];
-                break;
-            case NUMERICOID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:ntohl(*((int *)value_))]];
+                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:OSSwapConstInt16(*((uint16_t *)value_))]];
                 break;
             case FLOAT4OID:
-                floatValue.i = ntohl(*((uint32_t *)value_));
+                floatValue.i = OSSwapConstInt32(*((uint32_t *)value_));
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithFloat:floatValue.f]];
                 break;
             case FLOAT8OID:
-                // This should be the opposite of pq_sendint64() in pqformat.c.
-                doubleValue.i = CSQL_UNPACK_VALUE(value_);
+                doubleValue.i = OSSwapConstInt64(*((uint64_t *)value_));
                 aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:doubleValue.d]];
                 break;
                 
@@ -342,6 +335,10 @@
                 break;
         }
         [formatter release];
+        
+        doubleValue.i = 0;
+        floatValue.i = 0;
+        
     }            
     else {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
