@@ -113,7 +113,7 @@
             case INT2OID:
             case INT4OID:
             case INT8OID:
-                *(paramValues[index]) = ((uint32_t)htonl(*((uint32_t *)[aValue pointerValue])));
+                *paramValues[index] = (uint32_t)htonl(*((uint32_t *)[aValue pointerValue]));
                 break;
             default:
                 paramValues[index] = (char *)[[aValue stringValue] UTF8String];
