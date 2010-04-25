@@ -145,17 +145,17 @@
                        @"stringValue", SELECTOR,
                        nil],
                       [NSDictionary dictionaryWithObjectsAndKeys:
-                       [NSDate dateWithString:@"2001-03-24 00:00:00 +0100"], BIND_VALUE,
+                       [NSDate dateWithString:@"2001-03-24 00:00:00 +0000"], BIND_VALUE,
                        @"DATE", DATA_TYPE,
                        @"dateValue", SELECTOR,
                        nil],
                       [NSDictionary dictionaryWithObjectsAndKeys:
-                       [NSDate dateWithString:@"2001-03-24 01:23:45 +0100"], BIND_VALUE,
+                       [NSDate dateWithString:@"2001-03-24 01:23:45 +0000"], BIND_VALUE,
                        @"TIMESTAMP", DATA_TYPE,
                        @"dateValue", SELECTOR,
                        nil],
                       [NSDictionary dictionaryWithObjectsAndKeys:
-                       [NSDate dateWithString:@"2001-03-24 01:23:45 +0100"], BIND_VALUE,
+                       [NSDate dateWithString:@"2001-03-24 01:23:45 +0000"], BIND_VALUE,
                        @"TIMESTAMP WITH TIME ZONE", DATA_TYPE,
                        @"dateValue", SELECTOR,
                        nil],
