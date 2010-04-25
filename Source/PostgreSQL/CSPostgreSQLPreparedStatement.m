@@ -334,10 +334,6 @@
             default:
                 break;
         }
-        
-        doubleValue.i = 0;
-        floatValue.i = 0;
-        
     }            
     else {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
