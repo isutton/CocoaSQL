@@ -37,10 +37,29 @@
     PGconn *databaseHandle_ = nil;
     
     if (self = [super init]) {
-        databaseHandle_ = PQconnectdb("");
+        
+        NSMutableString *connectionOptions = [NSMutableString string];
+        
+        for (NSString *key in options) {
+            [connectionOptions appendFormat:@"%@=%@ ", key, [options valueForKey:key]];
+        }
+
+        [connectionOptions replaceOccurrencesOfString:@"\"" 
+                                           withString:@"\\\""
+                                              options:NSLiteralSearch 
+                                                range:NSMakeRange(0, [connectionOptions length])];
+
+        [connectionOptions replaceOccurrencesOfString:@"\\" 
+                                           withString:@"\\\\"
+                                              options:NSLiteralSearch 
+                                                range:NSMakeRange(0, [connectionOptions length])];
+        
+        databaseHandle_ = PQconnectdb([connectionOptions UTF8String]);
+        
         if (databaseHandle_) {
             databaseHandle = databaseHandle_;
         }
+        
         return self;
     }
     return nil;
