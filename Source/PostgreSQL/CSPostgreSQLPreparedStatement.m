@@ -273,6 +273,11 @@
     
     if ([self isBinary:index]) {
 
+        static NSDate *POSTGRES_EPOCH_DATE = nil;
+        
+        if (!POSTGRES_EPOCH_DATE)
+            POSTGRES_EPOCH_DATE = [NSDate dateWithString:@"2000-01-01 00:00:00 +0000"];
+        
         union {
             float f;
             uint32_t i;
@@ -318,12 +323,9 @@
                 //
                 
             case TIMESTAMPTZOID:
-                aValue = [CSQLResultValue valueWithDate:[NSDate dateWithTimeInterval:((double)OSSwapConstInt64(*((uint64_t *)value_))/1000000) 
-                                                                           sinceDate:[NSDate dateWithString:@"2000-01-01 00:00:00 +0000"]]];
-                break;
             case TIMESTAMPOID:
                 aValue = [CSQLResultValue valueWithDate:[NSDate dateWithTimeInterval:((double)OSSwapConstInt64(*((uint64_t *)value_))/1000000) 
-                                                                           sinceDate:[NSDate dateWithString:@"2000-01-01 00:00:00 +0000"]]];
+                                                                           sinceDate:POSTGRES_EPOCH_DATE]];
                 break;
             case DATEOID:
                 aValue = [CSQLResultValue valueWithDate:[[NSDate dateWithString:@"2000-01-01 00:00:00 +0000"] 
