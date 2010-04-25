@@ -283,8 +283,6 @@
             uint64_t i;
         } doubleValue;
         
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        
         switch ([self typeForColumn:index]) {
             case BYTEAOID:
                 aValue = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
@@ -334,7 +332,6 @@
             default:
                 break;
         }
-        [formatter release];
         
         doubleValue.i = 0;
         floatValue.i = 0;
