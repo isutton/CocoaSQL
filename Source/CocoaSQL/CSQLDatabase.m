@@ -134,9 +134,7 @@
 
 - (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
 {
-	if (error)
-        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
-	return nil;
+    return [self fetchRowAsDictionaryWithSQL:sql andValues:nil error:error];
 }
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
@@ -148,9 +146,7 @@
 
 - (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
 {
-	if (error)
-        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
-	return nil;
+    return [self fetchRowAsArrayWithSQL:sql andValues:nil error:error];
 }
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
@@ -162,7 +158,7 @@
 
 - (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql error:(NSError **)error
 {
-	return [self fetchRowsAsDictionariesWithSQL:sql error:error];
+	return [self fetchRowsAsDictionariesWithSQL:sql andValues:nil error:error];
 }
 
 
