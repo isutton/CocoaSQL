@@ -407,10 +407,7 @@
         if (error) {
             *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] andCode:501];
         }
-        // XXX - I'm unsure if returning nil here is safe, 
-        //       since an instance has been already alloc'd
-        //       so if used with the idiom [[class alloc] init]
-        //       the alloc'd pointer will be leaked
+        [self release];
         return nil;
     }
     return self;
@@ -422,15 +419,11 @@
         if (![self setSQL:sql error:error]) {
             mysql_stmt_close(statement);
             statement = nil;
-            // XXX - I'm unsure if returning nil here is safe, 
-            //       since an instance has been already alloc'd
-            //       so if used with the idiom [[class alloc] init]
-            //       the alloc'd pointer will be leaked
+            [self release];
             return nil;
         }
         return self;
     }
-    // same here
     return nil;
 }
 
