@@ -11,55 +11,57 @@
 		821DBB7C11633B4E0073C988 /* NSMutableArray+CocoaSQL.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBB7A11633B4E0073C988 /* NSMutableArray+CocoaSQL.m */; };
 		821DBBA911634CB30073C988 /* CSQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBBA811634CB30073C988 /* CSQLDatabase.m */; };
 		821DBC4211636C100073C988 /* CocoaSQL.h in Headers */ = {isa = PBXBuildFile; fileRef = 821DBC4111636C100073C988 /* CocoaSQL.h */; };
-		821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
-		821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
 		823C7C8A115CCD210061ECAD /* CSQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 823C7C89115CCD210061ECAD /* CSQLPreparedStatement.h */; };
-		823C7CC6115CE4DA0061ECAD /* CSSQLitePreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 823C7CC4115CE4DA0061ECAD /* CSSQLitePreparedStatement.h */; };
-		823C7CC7115CE4DA0061ECAD /* CSSQLitePreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 823C7CC5115CE4DA0061ECAD /* CSSQLitePreparedStatement.m */; };
 		823FCBB6115C1CE800F3E4E2 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
 		824459F4115B742A00950BD9 /* CSQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 824459F2115B742A00950BD9 /* CSQLDatabase.h */; };
 		824459FB115B750B00950BD9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 824459FA115B750B00950BD9 /* Cocoa.framework */; };
-		82445A55115B9A6400950BD9 /* CSSQLiteDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 82445A53115B9A6400950BD9 /* CSSQLiteDatabase.h */; };
-		82445A56115B9A6400950BD9 /* CSSQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */; };
 		824F8704116DD65100075D6F /* CSQLPreparedStatement+Protocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 824F8703116DD65100075D6F /* CSQLPreparedStatement+Protocol.h */; };
-		828B5C8F1174621B00AB732C /* CSPostgreSQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 828B5C8D1174621B00AB732C /* CSPostgreSQLDatabase.h */; };
-		828B5C931174623000AB732C /* CSPostgreSQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 828B5C911174623000AB732C /* CSPostgreSQLPreparedStatement.h */; };
-		828B5D9411749B0E00AB732C /* CSPostgreSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 828B5C921174623000AB732C /* CSPostgreSQLPreparedStatement.m */; };
-		828B5D9511749B1200AB732C /* CSPostgreSQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 828B5C8E1174621B00AB732C /* CSPostgreSQLDatabase.m */; };
-		828B5D9C11749B4500AB732C /* libpq.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 828B5D9B11749B4500AB732C /* libpq.dylib */; };
-		828B5DD41174A1BF00AB732C /* CSPostgreSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 828B5DD31174A1BF00AB732C /* CSPostgreSQLDatabaseTests.m */; };
 		828B5DFF1174B8E500AB732C /* CSPostgreSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 828B5DD31174A1BF00AB732C /* CSPostgreSQLDatabaseTests.m */; };
 		828B609E1175DBEA00AB732C /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 828B609C1175DBEA00AB732C /* COPYING */; };
 		828B609F1175DBEA00AB732C /* COPYING.LESSER in Resources */ = {isa = PBXBuildFile; fileRef = 828B609D1175DBEA00AB732C /* COPYING.LESSER */; };
 		8295F291116F8CD10053E781 /* NSError+CocoaSQL.h in Headers */ = {isa = PBXBuildFile; fileRef = 8295F28F116F8CD10053E781 /* NSError+CocoaSQL.h */; };
 		8295F292116F8CD10053E781 /* NSError+CocoaSQL.m in Sources */ = {isa = PBXBuildFile; fileRef = 8295F290116F8CD10053E781 /* NSError+CocoaSQL.m */; };
-		8295F34D117205540053E781 /* CSSQLiteDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8295F34C117205540053E781 /* CSSQLiteDatabaseTests.m */; };
 		8295F384117207FD0053E781 /* CSSQLiteDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8295F34C117205540053E781 /* CSSQLiteDatabaseTests.m */; };
 		82B99917116F478F00378C70 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 824459FA115B750B00950BD9 /* Cocoa.framework */; };
 		82B99922116F47A400378C70 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
-		82B99972116F4A9C00378C70 /* libsqlite3.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
-		82B99973116F4A9C00378C70 /* libmysqlclient.dylib in Resources */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
-		82EC44211185C939006CBDF2 /* CSPostgreSQLRow.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC441F1185C939006CBDF2 /* CSPostgreSQLRow.h */; };
-		82EC44221185C939006CBDF2 /* CSPostgreSQLRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EC44201185C939006CBDF2 /* CSPostgreSQLRow.m */; };
-		82EC44251185C998006CBDF2 /* CSPostgreSQLBindsStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC44231185C998006CBDF2 /* CSPostgreSQLBindsStorage.h */; };
-		82EC44261185C998006CBDF2 /* CSPostgreSQLBindsStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EC44241185C998006CBDF2 /* CSPostgreSQLBindsStorage.m */; };
-		82EC44321185CA69006CBDF2 /* PostgreSQLDataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC44311185CA69006CBDF2 /* PostgreSQLDataType.h */; };
+		82EC44DD11861290006CBDF2 /* libpq.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 828B5D9B11749B4500AB732C /* libpq.dylib */; };
+		82EC44DE118612C5006CBDF2 /* CSPostgreSQLBindsStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EC44241185C998006CBDF2 /* CSPostgreSQLBindsStorage.m */; };
+		82EC44DF118612C5006CBDF2 /* CSPostgreSQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 828B5C8E1174621B00AB732C /* CSPostgreSQLDatabase.m */; };
+		82EC44E0118612C5006CBDF2 /* CSPostgreSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 828B5C921174623000AB732C /* CSPostgreSQLPreparedStatement.m */; };
+		82EC44E1118612C5006CBDF2 /* CSPostgreSQLRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EC44201185C939006CBDF2 /* CSPostgreSQLRow.m */; };
+		82EC44E211861300006CBDF2 /* CSPostgreSQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 828B5C8D1174621B00AB732C /* CSPostgreSQLDatabase.h */; };
+		82EC44E311861300006CBDF2 /* CSPostgreSQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 828B5C911174623000AB732C /* CSPostgreSQLPreparedStatement.h */; };
+		82EC44E411861300006CBDF2 /* CSPostgreSQLRow.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC441F1185C939006CBDF2 /* CSPostgreSQLRow.h */; };
+		82EC44E511861300006CBDF2 /* CSPostgreSQLBindsStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC44231185C998006CBDF2 /* CSPostgreSQLBindsStorage.h */; };
+		82EC44E611861300006CBDF2 /* PostgreSQLDataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC44311185CA69006CBDF2 /* PostgreSQLDataType.h */; };
+		82EC450411861406006CBDF2 /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
+		82EC451A118614AB006CBDF2 /* CSMySQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */; };
+		82EC451B118614AB006CBDF2 /* CSMySQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */; };
+		82EC451C118614B3006CBDF2 /* CSMySQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */; };
+		82EC451D118614B3006CBDF2 /* CSMySQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */; };
+		82EC451E118614C5006CBDF2 /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
+		82EC451F118614D9006CBDF2 /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
+		82EC45351186157B006CBDF2 /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
+		82EC4544118615AC006CBDF2 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
+		82EC454A1186160F006CBDF2 /* CSSQLiteDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 82445A53115B9A6400950BD9 /* CSSQLiteDatabase.h */; };
+		82EC454B1186160F006CBDF2 /* CSSQLitePreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 823C7CC4115CE4DA0061ECAD /* CSSQLitePreparedStatement.h */; };
+		82EC454C1186161B006CBDF2 /* CSSQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 82445A54115B9A6400950BD9 /* CSSQLiteDatabase.m */; };
+		82EC454D1186161B006CBDF2 /* CSSQLitePreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 823C7CC5115CE4DA0061ECAD /* CSSQLitePreparedStatement.m */; };
+		82EC45541186163F006CBDF2 /* libsqlite3.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
+		82EC455511861647006CBDF2 /* libmysqlclient.dylib in Resources */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
+		82EC455611861650006CBDF2 /* libpq.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 828B5D9B11749B4500AB732C /* libpq.dylib */; };
+		82EC459B11861795006CBDF2 /* CocoaSQL-MySQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82EC44F8118613A9006CBDF2 /* CocoaSQL-MySQL.framework */; };
+		82EC459C11861795006CBDF2 /* CocoaSQL-PostgreSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82EC44D511861212006CBDF2 /* CocoaSQL-PostgreSQL.framework */; };
+		82EC459D11861795006CBDF2 /* CocoaSQL-SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82EC452E11861571006CBDF2 /* CocoaSQL-SQLite.framework */; };
 		82EE6F4A116F284300885118 /* otest.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EE6F34116F273A00885118 /* otest.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
-		AA022811116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA022810116FCD280005BF0A /* CMySQLDatabaseTests.m */; };
 		AA022812116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA022810116FCD280005BF0A /* CMySQLDatabaseTests.m */; };
-		AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = AA2B20DD1165CDD600F4DC57 /* CSMySQLDatabase.h */; };
-		AA2B20E01165CDD600F4DC57 /* CSMySQLDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2B20DE1165CDD600F4DC57 /* CSMySQLDatabase.m */; };
-		AA3698AC116B1C060073A0EB /* CSMySQLPreparedStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3698AA116B1C060073A0EB /* CSMySQLPreparedStatement.h */; };
-		AA3698AD116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3698AB116B1C060073A0EB /* CSMySQLPreparedStatement.m */; };
 		AA62F97E116C7B3200C4FE4A /* CSQLPreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 821E2705116B2A4100A0AFF7 /* CSQLPreparedStatement.m */; };
 		AA7A94D11176F1E700643185 /* CSQLResultCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = AA7A94CF1176F1E700643185 /* CSQLResultCallback.h */; };
 		AA7A94D21176F1E700643185 /* CSQLResultCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7A94D01176F1E700643185 /* CSQLResultCallback.m */; };
-		AA987E91116E5D420023E86F /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
 		AAA449B21174FED6006143D9 /* CSQLResultValue.h in Headers */ = {isa = PBXBuildFile; fileRef = AAF71F9111744D93001D79EA /* CSQLResultValue.h */; };
 		AAA449B31174FED6006143D9 /* CSQLResultValue.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF71F9211744D93001D79EA /* CSQLResultValue.m */; };
 		AAC3325D116F5E830097879F /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
-		AAC3327A116F60FB0097879F /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +71,90 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = CocoaSQL;
+		};
+		82EC44FD118613B1006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteInfo = CocoaSQL;
+		};
+		82EC4500118613EB006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteInfo = CocoaSQL;
+		};
+		82EC451511861490006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82EC44F7118613A9006CBDF2 /* CocoaSQL-MySQL */;
+			remoteInfo = "CocoaSQL-MySQL";
+		};
+		82EC453311861577006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteInfo = CocoaSQL;
+		};
+		82EC4545118615CC006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */;
+			remoteInfo = "CocoaSQL-SQLite";
+		};
+		82EC456A118616D5006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82EC44D411861212006CBDF2 /* CocoaSQL-PostgreSQL */;
+			remoteInfo = "CocoaSQL-PostgreSQL";
+		};
+		82EC456C118616D5006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82EC44F7118613A9006CBDF2 /* CocoaSQL-MySQL */;
+			remoteInfo = "CocoaSQL-MySQL";
+		};
+		82EC456E118616D5006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */;
+			remoteInfo = "CocoaSQL-SQLite";
+		};
+		82EC45931186177E006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteInfo = CocoaSQL;
+		};
+		82EC45951186177E006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82EC44D411861212006CBDF2 /* CocoaSQL-PostgreSQL */;
+			remoteInfo = "CocoaSQL-PostgreSQL";
+		};
+		82EC45971186177E006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82EC44F7118613A9006CBDF2 /* CocoaSQL-MySQL */;
+			remoteInfo = "CocoaSQL-MySQL";
+		};
+		82EC45991186177E006CBDF2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */;
+			remoteInfo = "CocoaSQL-SQLite";
 		};
 		82EE6F8A116F2B6800885118 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -120,6 +206,12 @@
 		82EC44231185C998006CBDF2 /* CSPostgreSQLBindsStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSPostgreSQLBindsStorage.h; sourceTree = "<group>"; };
 		82EC44241185C998006CBDF2 /* CSPostgreSQLBindsStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSPostgreSQLBindsStorage.m; sourceTree = "<group>"; };
 		82EC44311185CA69006CBDF2 /* PostgreSQLDataType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostgreSQLDataType.h; sourceTree = "<group>"; };
+		82EC44D511861212006CBDF2 /* CocoaSQL-PostgreSQL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "CocoaSQL-PostgreSQL.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		82EC44D611861212006CBDF2 /* CocoaSQL-PostgreSQL-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CocoaSQL-PostgreSQL-Info.plist"; sourceTree = "<group>"; };
+		82EC44F8118613A9006CBDF2 /* CocoaSQL-MySQL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "CocoaSQL-MySQL.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		82EC44F9118613A9006CBDF2 /* CocoaSQL-MySQL-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CocoaSQL-MySQL-Info.plist"; sourceTree = "<group>"; };
+		82EC452E11861571006CBDF2 /* CocoaSQL-SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "CocoaSQL-SQLite.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		82EC452F11861571006CBDF2 /* CocoaSQL-SQLite-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CocoaSQL-SQLite-Info.plist"; sourceTree = "<group>"; };
 		82EE6F34116F273A00885118 /* otest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = otest.m; sourceTree = "<group>"; };
 		82EE6F45116F282000885118 /* otest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = otest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -142,8 +234,33 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAC3327A116F60FB0097879F /* libmysqlclient.dylib in Frameworks */,
-				821DBCCE116392E30073C988 /* CocoaSQL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC44D311861212006CBDF2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC44DD11861290006CBDF2 /* libpq.dylib in Frameworks */,
+				82EC450411861406006CBDF2 /* CocoaSQL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC44F6118613A9006CBDF2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC451E118614C5006CBDF2 /* CocoaSQL.framework in Frameworks */,
+				82EC451F118614D9006CBDF2 /* libmysqlclient.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC452C11861571006CBDF2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC45351186157B006CBDF2 /* CocoaSQL.framework in Frameworks */,
+				82EC4544118615AC006CBDF2 /* libsqlite3.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +270,9 @@
 			files = (
 				82B99917116F478F00378C70 /* Cocoa.framework in Frameworks */,
 				AAC3325D116F5E830097879F /* CocoaSQL.framework in Frameworks */,
+				82EC459B11861795006CBDF2 /* CocoaSQL-MySQL.framework in Frameworks */,
+				82EC459C11861795006CBDF2 /* CocoaSQL-PostgreSQL.framework in Frameworks */,
+				82EC459D11861795006CBDF2 /* CocoaSQL-SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,8 +282,6 @@
 			files = (
 				824459FB115B750B00950BD9 /* Cocoa.framework in Frameworks */,
 				823FCBB6115C1CE800F3E4E2 /* libsqlite3.0.dylib in Frameworks */,
-				AA987E91116E5D420023E86F /* libmysqlclient.dylib in Frameworks */,
-				828B5D9C11749B4500AB732C /* libpq.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,6 +294,9 @@
 				8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */,
 				821DBC8F1163702E0073C988 /* Unit Tests.octest */,
 				82EE6F45116F282000885118 /* otest */,
+				82EC44D511861212006CBDF2 /* CocoaSQL-PostgreSQL.framework */,
+				82EC44F8118613A9006CBDF2 /* CocoaSQL-MySQL.framework */,
+				82EC452E11861571006CBDF2 /* CocoaSQL-SQLite.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -189,6 +310,9 @@
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				821DBC901163702E0073C988 /* Unit Tests-Info.plist */,
+				82EC44D611861212006CBDF2 /* CocoaSQL-PostgreSQL-Info.plist */,
+				82EC44F9118613A9006CBDF2 /* CocoaSQL-MySQL-Info.plist */,
+				82EC452F11861571006CBDF2 /* CocoaSQL-SQLite-Info.plist */,
 			);
 			name = CSQL;
 			sourceTree = "<group>";
@@ -366,27 +490,48 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		82EC44D011861212006CBDF2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC44E211861300006CBDF2 /* CSPostgreSQLDatabase.h in Headers */,
+				82EC44E311861300006CBDF2 /* CSPostgreSQLPreparedStatement.h in Headers */,
+				82EC44E411861300006CBDF2 /* CSPostgreSQLRow.h in Headers */,
+				82EC44E511861300006CBDF2 /* CSPostgreSQLBindsStorage.h in Headers */,
+				82EC44E611861300006CBDF2 /* PostgreSQLDataType.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC44F3118613A9006CBDF2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC451A118614AB006CBDF2 /* CSMySQLDatabase.h in Headers */,
+				82EC451B118614AB006CBDF2 /* CSMySQLPreparedStatement.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC452911861571006CBDF2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC454A1186160F006CBDF2 /* CSSQLiteDatabase.h in Headers */,
+				82EC454B1186160F006CBDF2 /* CSSQLitePreparedStatement.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DC2EF500486A6940098B216 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				824459F4115B742A00950BD9 /* CSQLDatabase.h in Headers */,
-				82445A55115B9A6400950BD9 /* CSSQLiteDatabase.h in Headers */,
 				823C7C8A115CCD210061ECAD /* CSQLPreparedStatement.h in Headers */,
-				823C7CC6115CE4DA0061ECAD /* CSSQLitePreparedStatement.h in Headers */,
 				821DBB7B11633B4E0073C988 /* NSMutableArray+CocoaSQL.h in Headers */,
 				821DBC4211636C100073C988 /* CocoaSQL.h in Headers */,
-				AA2B20DF1165CDD600F4DC57 /* CSMySQLDatabase.h in Headers */,
-				AA3698AC116B1C060073A0EB /* CSMySQLPreparedStatement.h in Headers */,
 				824F8704116DD65100075D6F /* CSQLPreparedStatement+Protocol.h in Headers */,
 				8295F291116F8CD10053E781 /* NSError+CocoaSQL.h in Headers */,
-				828B5C8F1174621B00AB732C /* CSPostgreSQLDatabase.h in Headers */,
-				828B5C931174623000AB732C /* CSPostgreSQLPreparedStatement.h in Headers */,
 				AAA449B21174FED6006143D9 /* CSQLResultValue.h in Headers */,
 				AA7A94D11176F1E700643185 /* CSQLResultCallback.h in Headers */,
-				82EC44211185C939006CBDF2 /* CSPostgreSQLRow.h in Headers */,
-				82EC44251185C998006CBDF2 /* CSPostgreSQLBindsStorage.h in Headers */,
-				82EC44321185CA69006CBDF2 /* PostgreSQLDataType.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,12 +551,74 @@
 			);
 			dependencies = (
 				821DBC95116370380073C988 /* PBXTargetDependency */,
+				82EC456B118616D5006CBDF2 /* PBXTargetDependency */,
+				82EC456D118616D5006CBDF2 /* PBXTargetDependency */,
+				82EC456F118616D5006CBDF2 /* PBXTargetDependency */,
 				82EE6F8B116F2B6800885118 /* PBXTargetDependency */,
 			);
 			name = "Unit Tests";
 			productName = "Unit Tests";
 			productReference = 821DBC8F1163702E0073C988 /* Unit Tests.octest */;
 			productType = "com.apple.product-type.bundle";
+		};
+		82EC44D411861212006CBDF2 /* CocoaSQL-PostgreSQL */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82EC44D911861213006CBDF2 /* Build configuration list for PBXNativeTarget "CocoaSQL-PostgreSQL" */;
+			buildPhases = (
+				82EC44D011861212006CBDF2 /* Headers */,
+				82EC44D111861212006CBDF2 /* Resources */,
+				82EC44D211861212006CBDF2 /* Sources */,
+				82EC44D311861212006CBDF2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				82EC451611861490006CBDF2 /* PBXTargetDependency */,
+				82EC4501118613EB006CBDF2 /* PBXTargetDependency */,
+			);
+			name = "CocoaSQL-PostgreSQL";
+			productName = "CocoaSQL-PostgreSQL";
+			productReference = 82EC44D511861212006CBDF2 /* CocoaSQL-PostgreSQL.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		82EC44F7118613A9006CBDF2 /* CocoaSQL-MySQL */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82EC44FC118613A9006CBDF2 /* Build configuration list for PBXNativeTarget "CocoaSQL-MySQL" */;
+			buildPhases = (
+				82EC44F3118613A9006CBDF2 /* Headers */,
+				82EC44F4118613A9006CBDF2 /* Resources */,
+				82EC44F5118613A9006CBDF2 /* Sources */,
+				82EC44F6118613A9006CBDF2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				82EC4546118615CC006CBDF2 /* PBXTargetDependency */,
+				82EC44FE118613B1006CBDF2 /* PBXTargetDependency */,
+			);
+			name = "CocoaSQL-MySQL";
+			productName = "CocoaSQL-MySQL";
+			productReference = 82EC44F8118613A9006CBDF2 /* CocoaSQL-MySQL.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82EC453211861571006CBDF2 /* Build configuration list for PBXNativeTarget "CocoaSQL-SQLite" */;
+			buildPhases = (
+				82EC452911861571006CBDF2 /* Headers */,
+				82EC452A11861571006CBDF2 /* Resources */,
+				82EC452B11861571006CBDF2 /* Sources */,
+				82EC452C11861571006CBDF2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				82EC453411861577006CBDF2 /* PBXTargetDependency */,
+			);
+			name = "CocoaSQL-SQLite";
+			productName = "CocoaSQL-SQLite";
+			productReference = 82EC452E11861571006CBDF2 /* CocoaSQL-SQLite.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		82EE6F44116F282000885118 /* otest */ = {
 			isa = PBXNativeTarget;
@@ -423,6 +630,10 @@
 			buildRules = (
 			);
 			dependencies = (
+				82EC45941186177E006CBDF2 /* PBXTargetDependency */,
+				82EC45961186177E006CBDF2 /* PBXTargetDependency */,
+				82EC45981186177E006CBDF2 /* PBXTargetDependency */,
+				82EC459A1186177E006CBDF2 /* PBXTargetDependency */,
 			);
 			name = otest;
 			productName = otest;
@@ -465,6 +676,9 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* CocoaSQL */,
+				82EC44D411861212006CBDF2 /* CocoaSQL-PostgreSQL */,
+				82EC44F7118613A9006CBDF2 /* CocoaSQL-MySQL */,
+				82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */,
 				82EE6F44116F282000885118 /* otest */,
 				821DBC8E1163702E0073C988 /* Unit Tests */,
 			);
@@ -479,12 +693,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		82EC44D111861212006CBDF2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC455611861650006CBDF2 /* libpq.dylib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC44F4118613A9006CBDF2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC455511861647006CBDF2 /* libmysqlclient.dylib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC452A11861571006CBDF2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC45541186163F006CBDF2 /* libsqlite3.0.dylib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DC2EF520486A6940098B216 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82B99972116F4A9C00378C70 /* libsqlite3.0.dylib in Resources */,
-				82B99973116F4A9C00378C70 /* libmysqlclient.dylib in Resources */,
 				8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */,
 				828B609E1175DBEA00AB732C /* COPYING in Resources */,
 				828B609F1175DBEA00AB732C /* COPYING.LESSER in Resources */,
@@ -514,10 +750,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				821DBC9F116370800073C988 /* CSQLDatabaseTests.m in Sources */,
-				AA022811116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */,
-				8295F34D117205540053E781 /* CSSQLiteDatabaseTests.m in Sources */,
-				828B5DD41174A1BF00AB732C /* CSPostgreSQLDatabaseTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC44D211861212006CBDF2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC44DE118612C5006CBDF2 /* CSPostgreSQLBindsStorage.m in Sources */,
+				82EC44DF118612C5006CBDF2 /* CSPostgreSQLDatabase.m in Sources */,
+				82EC44E0118612C5006CBDF2 /* CSPostgreSQLPreparedStatement.m in Sources */,
+				82EC44E1118612C5006CBDF2 /* CSPostgreSQLRow.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC44F5118613A9006CBDF2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC451C118614B3006CBDF2 /* CSMySQLDatabase.m in Sources */,
+				82EC451D118614B3006CBDF2 /* CSMySQLPreparedStatement.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82EC452B11861571006CBDF2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82EC454C1186161B006CBDF2 /* CSSQLiteDatabase.m in Sources */,
+				82EC454D1186161B006CBDF2 /* CSSQLitePreparedStatement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,18 +800,10 @@
 			files = (
 				821DBBA911634CB30073C988 /* CSQLDatabase.m in Sources */,
 				AA62F97E116C7B3200C4FE4A /* CSQLPreparedStatement.m in Sources */,
-				82445A56115B9A6400950BD9 /* CSSQLiteDatabase.m in Sources */,
-				823C7CC7115CE4DA0061ECAD /* CSSQLitePreparedStatement.m in Sources */,
 				821DBB7C11633B4E0073C988 /* NSMutableArray+CocoaSQL.m in Sources */,
-				AA2B20E01165CDD600F4DC57 /* CSMySQLDatabase.m in Sources */,
-				AA3698AD116B1C060073A0EB /* CSMySQLPreparedStatement.m in Sources */,
 				8295F292116F8CD10053E781 /* NSError+CocoaSQL.m in Sources */,
-				828B5D9411749B0E00AB732C /* CSPostgreSQLPreparedStatement.m in Sources */,
-				828B5D9511749B1200AB732C /* CSPostgreSQLDatabase.m in Sources */,
 				AAA449B31174FED6006143D9 /* CSQLResultValue.m in Sources */,
 				AA7A94D21176F1E700643185 /* CSQLResultCallback.m in Sources */,
-				82EC44221185C939006CBDF2 /* CSPostgreSQLRow.m in Sources */,
-				82EC44261185C998006CBDF2 /* CSPostgreSQLBindsStorage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -561,6 +814,66 @@
 			isa = PBXTargetDependency;
 			target = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
 			targetProxy = 821DBC94116370380073C988 /* PBXContainerItemProxy */;
+		};
+		82EC44FE118613B1006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			targetProxy = 82EC44FD118613B1006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC4501118613EB006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			targetProxy = 82EC4500118613EB006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC451611861490006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 82EC44F7118613A9006CBDF2 /* CocoaSQL-MySQL */;
+			targetProxy = 82EC451511861490006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC453411861577006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			targetProxy = 82EC453311861577006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC4546118615CC006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */;
+			targetProxy = 82EC4545118615CC006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC456B118616D5006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 82EC44D411861212006CBDF2 /* CocoaSQL-PostgreSQL */;
+			targetProxy = 82EC456A118616D5006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC456D118616D5006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 82EC44F7118613A9006CBDF2 /* CocoaSQL-MySQL */;
+			targetProxy = 82EC456C118616D5006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC456F118616D5006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */;
+			targetProxy = 82EC456E118616D5006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC45941186177E006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			targetProxy = 82EC45931186177E006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC45961186177E006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 82EC44D411861212006CBDF2 /* CocoaSQL-PostgreSQL */;
+			targetProxy = 82EC45951186177E006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC45981186177E006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 82EC44F7118613A9006CBDF2 /* CocoaSQL-MySQL */;
+			targetProxy = 82EC45971186177E006CBDF2 /* PBXContainerItemProxy */;
+		};
+		82EC459A1186177E006CBDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */;
+			targetProxy = 82EC45991186177E006CBDF2 /* PBXContainerItemProxy */;
 		};
 		82EE6F8B116F2B6800885118 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -739,6 +1052,184 @@
 			};
 			name = Release;
 		};
+		82EC44D711861213006CBDF2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "CocoaSQL-PostgreSQL-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "CocoaSQL-PostgreSQL";
+			};
+			name = Debug;
+		};
+		82EC44D811861213006CBDF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "CocoaSQL-PostgreSQL-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "CocoaSQL-PostgreSQL";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		82EC44FA118613A9006CBDF2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "CocoaSQL-MySQL-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "CocoaSQL-MySQL";
+			};
+			name = Debug;
+		};
+		82EC44FB118613A9006CBDF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "CocoaSQL-MySQL-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "CocoaSQL-MySQL";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		82EC453011861571006CBDF2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "CocoaSQL-SQLite-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "CocoaSQL-SQLite";
+			};
+			name = Debug;
+		};
+		82EC453111861571006CBDF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "CocoaSQL-SQLite-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "CocoaSQL-SQLite";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		82EE6F47116F282100885118 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -826,6 +1317,33 @@
 			buildConfigurations = (
 				821DBC911163702F0073C988 /* Debug */,
 				821DBC921163702F0073C988 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		82EC44D911861213006CBDF2 /* Build configuration list for PBXNativeTarget "CocoaSQL-PostgreSQL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82EC44D711861213006CBDF2 /* Debug */,
+				82EC44D811861213006CBDF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		82EC44FC118613A9006CBDF2 /* Build configuration list for PBXNativeTarget "CocoaSQL-MySQL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82EC44FA118613A9006CBDF2 /* Debug */,
+				82EC44FB118613A9006CBDF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		82EC453211861571006CBDF2 /* Build configuration list for PBXNativeTarget "CocoaSQL-SQLite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82EC453011861571006CBDF2 /* Debug */,
+				82EC453111861571006CBDF2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
