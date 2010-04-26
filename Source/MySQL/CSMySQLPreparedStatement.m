@@ -408,7 +408,7 @@
         if (error) {
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
             [errorDetail setObject:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] 
-                            forKey:@"errorMessage"];
+                            forKey:NSLocalizedDescriptionKey];
             // XXX - which errorcode should be used here?
             *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:501 userInfo:errorDetail];
         }
@@ -451,7 +451,7 @@
             errorDetail = [NSMutableDictionary dictionary];
             NSString *errorMessage = [NSString stringWithFormat:@"%s", 
                                       mysql_error(database.databaseHandle)];
-            [errorDetail setObject:errorMessage forKey:@"errorMessage"];
+            [errorDetail setObject:errorMessage forKey:NSLocalizedDescriptionKey];
             *error = [NSError errorWithDomain:@"CSMySQL" code:errorCode userInfo:errorDetail];
         }
         return NO;
@@ -492,7 +492,7 @@
 					errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 								   [NSString stringWithFormat:@"Unknown datatatype %@",
 										[[values objectAtIndex:i] className]], 
-								   @"errorMessage", 
+								   NSLocalizedDescriptionKey, 
 								   nil];
 					*error = [NSError errorWithDomain:@"CSMySQL" code:666 userInfo:errorDetail];
 				} 
@@ -506,7 +506,7 @@
                 errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                [NSString stringWithFormat:@"Expected %i value(s), %i provided", 
                                     bindParameterCount, [values count]], 
-                               @"errorMessage",
+                               NSLocalizedDescriptionKey,
                                nil];
                 *error = [NSError errorWithDomain:@"CSMySQL" code:100 userInfo:errorDetail];
             }
@@ -539,7 +539,7 @@
 		if (error) {
 			NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
 			NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)];
-			[errorDetail setObject:errorMessage forKey:@"errorMessage"];
+			[errorDetail setObject:errorMessage forKey:NSLocalizedDescriptionKey];
 			*error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
 		}
 		return NO;
@@ -564,7 +564,7 @@
             NSMutableDictionary *errorDetail;
             errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                            [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)], 
-                           @"errorMessage", nil];
+                           NSLocalizedDescriptionKey, nil];
             *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
         }
     }
@@ -576,7 +576,7 @@
             NSMutableDictionary *errorDetail;
             errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                            [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)], 
-                           @"errorMessage", nil];
+                           NSLocalizedDescriptionKey, nil];
             *error = [NSError errorWithDomain:@"CSMySQL" code:102 userInfo:errorDetail];
         }
     }
