@@ -74,7 +74,6 @@
 
 - (BOOL)isActive:(NSError **)error
 {
-    // Assume we are always connected for now.
     return YES;
 }
 
