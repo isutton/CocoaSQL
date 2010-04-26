@@ -39,6 +39,11 @@
 		82B99922116F47A400378C70 /* CSQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 821DBC9E116370800073C988 /* CSQLDatabaseTests.m */; };
 		82B99972116F4A9C00378C70 /* libsqlite3.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 823FCBB2115C1CC500F3E4E2 /* libsqlite3.0.dylib */; };
 		82B99973116F4A9C00378C70 /* libmysqlclient.dylib in Resources */ = {isa = PBXBuildFile; fileRef = AA987E90116E5D420023E86F /* libmysqlclient.dylib */; };
+		82EC44211185C939006CBDF2 /* CSPostgreSQLRow.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC441F1185C939006CBDF2 /* CSPostgreSQLRow.h */; };
+		82EC44221185C939006CBDF2 /* CSPostgreSQLRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EC44201185C939006CBDF2 /* CSPostgreSQLRow.m */; };
+		82EC44251185C998006CBDF2 /* CSPostgreSQLBindsStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC44231185C998006CBDF2 /* CSPostgreSQLBindsStorage.h */; };
+		82EC44261185C998006CBDF2 /* CSPostgreSQLBindsStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EC44241185C998006CBDF2 /* CSPostgreSQLBindsStorage.m */; };
+		82EC44321185CA69006CBDF2 /* PostgreSQLDataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC44311185CA69006CBDF2 /* PostgreSQLDataType.h */; };
 		82EE6F4A116F284300885118 /* otest.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EE6F34116F273A00885118 /* otest.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		AA022811116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA022810116FCD280005BF0A /* CMySQLDatabaseTests.m */; };
@@ -110,6 +115,11 @@
 		8295F290116F8CD10053E781 /* NSError+CocoaSQL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+CocoaSQL.m"; sourceTree = "<group>"; };
 		8295F34B117205540053E781 /* CSSQLiteDatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSQLiteDatabaseTests.h; sourceTree = "<group>"; };
 		8295F34C117205540053E781 /* CSSQLiteDatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSQLiteDatabaseTests.m; sourceTree = "<group>"; };
+		82EC441F1185C939006CBDF2 /* CSPostgreSQLRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSPostgreSQLRow.h; sourceTree = "<group>"; };
+		82EC44201185C939006CBDF2 /* CSPostgreSQLRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSPostgreSQLRow.m; sourceTree = "<group>"; };
+		82EC44231185C998006CBDF2 /* CSPostgreSQLBindsStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSPostgreSQLBindsStorage.h; sourceTree = "<group>"; };
+		82EC44241185C998006CBDF2 /* CSPostgreSQLBindsStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSPostgreSQLBindsStorage.m; sourceTree = "<group>"; };
+		82EC44311185CA69006CBDF2 /* PostgreSQLDataType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostgreSQLDataType.h; sourceTree = "<group>"; };
 		82EE6F34116F273A00885118 /* otest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = otest.m; sourceTree = "<group>"; };
 		82EE6F45116F282000885118 /* otest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = otest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -306,6 +316,11 @@
 				828B5C8E1174621B00AB732C /* CSPostgreSQLDatabase.m */,
 				828B5C911174623000AB732C /* CSPostgreSQLPreparedStatement.h */,
 				828B5C921174623000AB732C /* CSPostgreSQLPreparedStatement.m */,
+				82EC441F1185C939006CBDF2 /* CSPostgreSQLRow.h */,
+				82EC44201185C939006CBDF2 /* CSPostgreSQLRow.m */,
+				82EC44231185C998006CBDF2 /* CSPostgreSQLBindsStorage.h */,
+				82EC44241185C998006CBDF2 /* CSPostgreSQLBindsStorage.m */,
+				82EC44311185CA69006CBDF2 /* PostgreSQLDataType.h */,
 			);
 			name = PostgreSQL;
 			path = Source/PostgreSQL;
@@ -369,6 +384,9 @@
 				828B5C931174623000AB732C /* CSPostgreSQLPreparedStatement.h in Headers */,
 				AAA449B21174FED6006143D9 /* CSQLResultValue.h in Headers */,
 				AA7A94D11176F1E700643185 /* CSQLResultCallback.h in Headers */,
+				82EC44211185C939006CBDF2 /* CSPostgreSQLRow.h in Headers */,
+				82EC44251185C998006CBDF2 /* CSPostgreSQLBindsStorage.h in Headers */,
+				82EC44321185CA69006CBDF2 /* PostgreSQLDataType.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -531,6 +549,8 @@
 				828B5D9511749B1200AB732C /* CSPostgreSQLDatabase.m in Sources */,
 				AAA449B31174FED6006143D9 /* CSQLResultValue.m in Sources */,
 				AA7A94D21176F1E700643185 /* CSQLResultCallback.m in Sources */,
+				82EC44221185C939006CBDF2 /* CSPostgreSQLRow.m in Sources */,
+				82EC44261185C998006CBDF2 /* CSPostgreSQLBindsStorage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
