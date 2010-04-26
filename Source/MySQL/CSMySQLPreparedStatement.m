@@ -405,11 +405,7 @@
     statement = mysql_stmt_init(database.databaseHandle);
     if (!statement) {
         if (error) {
-            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-            [errorDetail setObject:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] 
-                            forKey:NSLocalizedDescriptionKey];
-            // XXX - which errorcode should be used here?
-            *error = [NSError errorWithDomain:@"CSQLPreparedStatement" code:501 userInfo:errorDetail];
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] andCode:501];
         }
         // XXX - I'm unsure if returning nil here is safe, 
         //       since an instance has been already alloc'd
