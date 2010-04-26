@@ -447,12 +447,8 @@
     int errorCode = mysql_stmt_prepare(statement, [sql UTF8String], [sql length]);
     if (errorCode != 0) {
         if (error) {
-            NSMutableDictionary *errorDetail;
-            errorDetail = [NSMutableDictionary dictionary];
-            NSString *errorMessage = [NSString stringWithFormat:@"%s", 
-                                      mysql_error(database.databaseHandle)];
-            [errorDetail setObject:errorMessage forKey:NSLocalizedDescriptionKey];
-            *error = [NSError errorWithDomain:@"CSMySQL" code:errorCode userInfo:errorDetail];
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] 
+                                       andCode:errorCode];
         }
         return NO;
     }
@@ -488,13 +484,7 @@
 		for (int i = 0; i < bindParameterCount; i++) {
 			if (![paramBinds bindValue:[values objectAtIndex:i] toColumn:i]) {
 				if (error) {
-					NSMutableDictionary *errorDetail;
-					errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-								   [NSString stringWithFormat:@"Unknown datatatype %@",
-										[[values objectAtIndex:i] className]], 
-								   NSLocalizedDescriptionKey, 
-								   nil];
-					*error = [NSError errorWithDomain:@"CSMySQL" code:666 userInfo:errorDetail];
+                    *error = [NSError errorWithMessage:[NSString stringWithFormat:@"Unknown datatatype %@", [[values objectAtIndex:i] className]] andCode:666];
 				} 
 			}
 		}
@@ -502,13 +492,7 @@
 	if (bindParameterCount > 0) {
         if (!paramBinds || [paramBinds numFields] < bindParameterCount) {
             if (error) {
-                NSMutableDictionary *errorDetail;
-                errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                               [NSString stringWithFormat:@"Expected %i value(s), %i provided", 
-                                    bindParameterCount, [values count]], 
-                               NSLocalizedDescriptionKey,
-                               nil];
-                *error = [NSError errorWithDomain:@"CSMySQL" code:100 userInfo:errorDetail];
+                *error = [NSError errorWithMessage:[NSString stringWithFormat:@"Expected %i value(s), %i provided", bindParameterCount, [values count]] andCode:100];
             }
             if (paramBinds) {
                 [paramBinds release];
@@ -537,10 +521,7 @@
 	paramBinds = nil;
 	if (!success) {
 		if (error) {
-			NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-			NSString *errorMessage = [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)];
-			[errorDetail setObject:errorMessage forKey:NSLocalizedDescriptionKey];
-			*error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] andCode:101];
 		}
 		return NO;
 	}
@@ -561,23 +542,15 @@
     if (mysql_stmt_bind_result(statement, [resultBinds binds]) != 0) {
         canFetch = NO;
         if (error) {
-            NSMutableDictionary *errorDetail;
-            errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                           [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)], 
-                           NSLocalizedDescriptionKey, nil];
-            *error = [NSError errorWithDomain:@"CSMySQL" code:101 userInfo:errorDetail];
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] andCode:101];
         }
     }
     int ret = mysql_stmt_fetch(statement);
     if (ret != 0){
         canFetch = NO;
         // find a way to notify that data truncation happened
-        if (error && ret != MYSQL_NO_DATA && ret != MYSQL_DATA_TRUNCATED) {  
-            NSMutableDictionary *errorDetail;
-            errorDetail = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                           [NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)], 
-                           NSLocalizedDescriptionKey, nil];
-            *error = [NSError errorWithDomain:@"CSMySQL" code:102 userInfo:errorDetail];
+        if (error && ret != MYSQL_NO_DATA && ret != MYSQL_DATA_TRUNCATED) {
+            *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", mysql_error(database.databaseHandle)] andCode:102];
         }
     }
 }
