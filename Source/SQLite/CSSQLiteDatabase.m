@@ -30,15 +30,12 @@
 
 + (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
 {
-    CSSQLiteDatabase *database;
-    database = [CSSQLiteDatabase databaseWithPath:[options objectForKey:@"path"] error:error];
-    return database;
+    return [CSSQLiteDatabase databaseWithPath:[options objectForKey:@"path"] error:error];
 }
 
 + (id)databaseWithPath:(NSString *)aPath error:(NSError **)error
 {
-    CSSQLiteDatabase *database = [[CSSQLiteDatabase alloc] initWithPath:aPath error:error];
-    return [database autorelease];
+    return [[[CSSQLiteDatabase alloc] initWithPath:aPath error:error] autorelease];
 }
 
 - (id)initWithPath:(NSString *)aPath error:(NSError **)error
