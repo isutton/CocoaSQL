@@ -90,7 +90,7 @@
     CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
     
     if (!statement) {
-        return 0;
+        return NO;
     }
     
     return [statement executeWithValues:values error:error];
