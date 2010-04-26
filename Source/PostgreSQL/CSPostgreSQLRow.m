@@ -74,117 +74,64 @@
     
     int length_ = [self lengthForColumn:index];
     char *value_ = [self valueForColumn:index];
+    union { float f; uint32_t i; } floatValue;
+    union { double d; uint64_t i; } doubleValue;
     
     if ([self isNull:index]) {
         return [CSQLResultValue valueWithNull];
     }
     
-    if ([self isBinary:index]) {
-        
-        static NSDate *POSTGRES_EPOCH_DATE = nil;
-        
-        if (!POSTGRES_EPOCH_DATE)
-            POSTGRES_EPOCH_DATE = [NSDate dateWithString:@"2000-01-01 00:00:00 +0000"];
-        
-        union {
-            float f;
-            uint32_t i;
-        } floatValue;
-        
-        union {
-            double d;
-            uint64_t i;
-        } doubleValue;
-        
-        switch ([self typeForColumn:index]) {
-            case BYTEAOID:
-                aValue = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
-                break;
-            case CHAROID:
-            case TEXTOID:
-            case VARCHAROID:
-                aValue = [CSQLResultValue valueWithUTF8String:value_];
-                break;
-            case INT8OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:OSSwapConstInt64(*((uint64_t *)value_))]];
-                break;
-            case INT4OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:OSSwapConstInt32(*((uint32_t *)value_))]];
-                break;
-            case INT2OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:OSSwapConstInt16(*((uint16_t *)value_))]];
-                break;
-            case FLOAT4OID:
-                floatValue.i = OSSwapConstInt32(*((uint32_t *)value_));
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithFloat:floatValue.f]];
-                break;
-            case FLOAT8OID:
-                doubleValue.i = OSSwapConstInt64(*((uint64_t *)value_));
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:doubleValue.d]];
-                break;
-                
-                //
-                // Both TIMESTAMPOID and TIMESTAMPTZOID are sent either as int64 if compiled
-                // with timestamp as integers or double (float8 in PostgreSQL speak) if the compile
-                // option was disabled. Basically here we're assuming int64 which are microseconds since
-                // POSTGRES_EPOCH_DATE (2000-01-01).
-                //
-                
-            case TIMESTAMPTZOID:
-            case TIMESTAMPOID:
-                aValue = [CSQLResultValue valueWithDate:[NSDate dateWithTimeInterval:((double)OSSwapConstInt64(*((uint64_t *)value_))/1000000) 
-                                                                           sinceDate:POSTGRES_EPOCH_DATE]];
-                break;
-            case DATEOID:
-                aValue = [CSQLResultValue valueWithDate:[[NSDate dateWithString:@"2000-01-01 00:00:00 +0000"] 
-                                                         dateByAddingTimeInterval:OSSwapConstInt32(*((uint32_t *)value_)) * 24 * 3600]];
-                break;
-            default:
-                break;
-        }
-    }            
-    else {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        NSString *dateAsString = nil;
-        NSDate *date = nil;
-        
-        switch ([self typeForColumn:index]) {
-            case BYTEAOID:
-                aValue = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
-                break;
-            case FLOAT4OID:
-            case FLOAT8OID:
-                aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:atof(value_)]];
-                break;
-            case DATEOID:
-                [formatter setDateFormat:@"yyyy-MM-dd"];
-                dateAsString = [NSString stringWithUTF8String:value_];
-                aValue = [CSQLResultValue valueWithDate:[formatter dateFromString:dateAsString]];
-                break;
-            case TIMESTAMPTZOID:
-                [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZ"];
-                dateAsString = [NSString stringWithUTF8String:value_];
-                date = [formatter dateFromString:dateAsString];
-                aValue = [CSQLResultValue valueWithDate:date];
-                break;
-            case TIMESTAMPOID:
-                [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                dateAsString = [NSString stringWithUTF8String:value_];
-                date = [formatter dateFromString:dateAsString];
-                aValue = [CSQLResultValue valueWithDate:date];
-                break;
-            case CHAROID:
-            case TEXTOID:
-            case VARCHAROID:
-            case INT2OID:
-            case INT4OID:
-            case INT8OID:
-            default:
-                aValue = [CSQLResultValue valueWithUTF8String:value_];
-                break;
-        }
-        [formatter release];
-    }    
+    static NSDate *POSTGRES_EPOCH_DATE = nil;
+    
+    if (!POSTGRES_EPOCH_DATE)
+        POSTGRES_EPOCH_DATE = [NSDate dateWithString:@"2000-01-01 00:00:00 +0000"];
+    
+    switch ([self typeForColumn:index]) {
+        case BYTEAOID:
+            aValue = [CSQLResultValue valueWithData:[NSData dataWithBytes:value_ length:length_]];
+            break;
+        case CHAROID:
+        case TEXTOID:
+        case VARCHAROID:
+            aValue = [CSQLResultValue valueWithUTF8String:value_];
+            break;
+        case INT8OID:
+            aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithLong:OSSwapConstInt64(*((uint64_t *)value_))]];
+            break;
+        case INT4OID:
+            aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithInt:OSSwapConstInt32(*((uint32_t *)value_))]];
+            break;
+        case INT2OID:
+            aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithShort:OSSwapConstInt16(*((uint16_t *)value_))]];
+            break;
+        case FLOAT4OID:
+            floatValue.i = OSSwapConstInt32(*((uint32_t *)value_));
+            aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithFloat:floatValue.f]];
+            break;
+        case FLOAT8OID:
+            doubleValue.i = OSSwapConstInt64(*((uint64_t *)value_));
+            aValue = [CSQLResultValue valueWithNumber:[NSNumber numberWithDouble:doubleValue.d]];
+            break;
+            
+            //
+            // Both TIMESTAMPOID and TIMESTAMPTZOID are sent either as int64 if compiled
+            // with timestamp as integers or double (float8 in PostgreSQL speak) if the compile
+            // option was disabled. Basically here we're assuming int64 which are microseconds since
+            // POSTGRES_EPOCH_DATE (2000-01-01).
+            //
+            
+        case TIMESTAMPTZOID:
+        case TIMESTAMPOID:
+            aValue = [CSQLResultValue valueWithDate:[NSDate dateWithTimeInterval:((double)OSSwapConstInt64(*((uint64_t *)value_))/1000000) 
+                                                                       sinceDate:POSTGRES_EPOCH_DATE]];
+            break;
+        case DATEOID:
+            aValue = [CSQLResultValue valueWithDate:[[NSDate dateWithString:@"2000-01-01 00:00:00 +0000"] 
+                                                     dateByAddingTimeInterval:OSSwapConstInt32(*((uint32_t *)value_)) * 24 * 3600]];
+            break;
+        default:
+            break;
+    }
     return aValue;
 }
 

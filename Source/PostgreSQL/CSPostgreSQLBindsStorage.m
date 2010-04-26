@@ -33,8 +33,8 @@
 - (id)initWithStatement:(CSPostgreSQLPreparedStatement *)aStatement andValues:(NSArray *)values
 {
     if ([self init]) {
-        resultFormat = 1;
         statement = [aStatement retain];
+        resultFormat = 1; // We want binary results.
         numParams = 0;
         paramValues = nil;
         paramLengths = nil;
