@@ -89,7 +89,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
 - (void)dealloc
 {
     [self finish];
-//    [database release];
+    [database release];
     [super dealloc];
 }
 
