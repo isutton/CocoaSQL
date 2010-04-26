@@ -338,8 +338,7 @@
         if (binds[index].buffer) // avoid leaking the previously copied string (if any)
             free(binds[index].buffer);
         binds[index].buffer = (void *)strdup([value UTF8String]);
-        binds[index].buffer_length = [value length]; // XXX - does length return 
-                                                     // the bytelength of the buffer?
+        binds[index].buffer_length = [value lengthOfBytesUsingEncoding:NSUTF8StringEncoding]; 
     }
     else if ([valueClass isSubclassOfClass:[NSDate class]])
     {

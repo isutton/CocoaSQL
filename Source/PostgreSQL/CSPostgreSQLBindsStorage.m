@@ -68,20 +68,13 @@
         }        
     }
     else if ([[aValue class] isSubclassOfClass:[NSString class]]) {
-        if (resultFormat) {
-            paramFormats[index] = 1;
-            paramLengths[index] = [aValue length];
-            paramValues[index] = (char *)[[aValue dataUsingEncoding:NSUTF8StringEncoding] bytes];
-        }
-        else {
-            paramValues[index] = (char *)[aValue cStringUsingEncoding:NSUTF8StringEncoding];
-        }
+        paramFormats[index] = 1;
+        paramLengths[index] = [(NSString *)aValue lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+        paramValues[index] = (char *)[aValue UTF8String];
     }
     else if ([[aValue class] isSubclassOfClass:[NSData class]]) {
-        if (resultFormat) {
-            paramFormats[index] = 1; // binary
-            paramLengths[index] = [aValue length];
-        }
+        paramFormats[index] = 1;
+        paramLengths[index] = [aValue length];
         paramValues[index] = (char *)[aValue bytes];
     }
     else if ([[aValue class] isSubclassOfClass:[NSDate class]]) {
