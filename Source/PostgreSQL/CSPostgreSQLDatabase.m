@@ -18,6 +18,7 @@
 //  CSQLPostgreSQLDatabase.m by Igor Sutton on 4/13/10.
 //
 
+#import "CocoaSQL.h"
 #import "CSPostgreSQLDatabase.h"
 #import "CSPostgreSQLPreparedStatement.h"
 #include <libpq-fe.h>
@@ -59,6 +60,11 @@
         if (databaseHandle_) {
             databaseHandle = databaseHandle_;
         }
+        else {
+            if (error)
+                *error = [NSError errorWithMessage:@"Couldn't connect to database." andCode:CSQLOpenConnectionError];
+        }
+
         
         return self;
     }

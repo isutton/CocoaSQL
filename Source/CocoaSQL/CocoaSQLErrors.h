@@ -15,19 +15,15 @@
 //  You should have received a copy of the GNU General Public License
 //  along with CocoaSQL.  If not, see <http://www.gnu.org/licenses/>.
 //
-//  NSError+CocoaSQL.m by Igor Sutton on 4/9/10.
+//  CocoaSQLErrors.h by Igor Sutton on 4/27/10.
 //
 
-#import "NSError+CocoaSQL.h"
-#import "CocoaSQL.h"
+#ifndef __COCOA_SQL_ERRORS__
+#define __COCOA_SQL_ERRORS__
 
-@implementation NSError (CocoaSQL)
+// NSString *const CSQLErrorDomain = @"CSQLErrorDomain";
 
-+ (NSError *)errorWithMessage:(NSString *)errorMessage andCode:(NSInteger)code
-{
-    NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
-    [errorDetail setObject:errorMessage forKey:NSLocalizedDescriptionKey];
-    return [NSError errorWithDomain:@"CSQLErrorDomain" code:code userInfo:errorDetail];
-}
+#define CSQLOpenConnectionError   1
+#define CSQLPrepareStatementError 2
 
-@end
+#endif

@@ -53,6 +53,7 @@
 		82EC459B11861795006CBDF2 /* CocoaSQL-MySQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82EC44F8118613A9006CBDF2 /* CocoaSQL-MySQL.framework */; };
 		82EC459C11861795006CBDF2 /* CocoaSQL-PostgreSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82EC44D511861212006CBDF2 /* CocoaSQL-PostgreSQL.framework */; };
 		82EC459D11861795006CBDF2 /* CocoaSQL-SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82EC452E11861571006CBDF2 /* CocoaSQL-SQLite.framework */; };
+		82EC45C71186D964006CBDF2 /* CocoaSQLErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 82EC45C51186D964006CBDF2 /* CocoaSQLErrors.h */; };
 		82EE6F4A116F284300885118 /* otest.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EE6F34116F273A00885118 /* otest.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		AA022812116FCD280005BF0A /* CMySQLDatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA022810116FCD280005BF0A /* CMySQLDatabaseTests.m */; };
@@ -212,6 +213,7 @@
 		82EC44F9118613A9006CBDF2 /* CocoaSQL-MySQL-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CocoaSQL-MySQL-Info.plist"; sourceTree = "<group>"; };
 		82EC452E11861571006CBDF2 /* CocoaSQL-SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "CocoaSQL-SQLite.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82EC452F11861571006CBDF2 /* CocoaSQL-SQLite-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CocoaSQL-SQLite-Info.plist"; sourceTree = "<group>"; };
+		82EC45C51186D964006CBDF2 /* CocoaSQLErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaSQLErrors.h; sourceTree = "<group>"; };
 		82EE6F34116F273A00885118 /* otest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = otest.m; sourceTree = "<group>"; };
 		82EE6F45116F282000885118 /* otest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = otest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -405,6 +407,7 @@
 				AAF71F9211744D93001D79EA /* CSQLResultValue.m */,
 				AA7A94CF1176F1E700643185 /* CSQLResultCallback.h */,
 				AA7A94D01176F1E700643185 /* CSQLResultCallback.m */,
+				82EC45C51186D964006CBDF2 /* CocoaSQLErrors.h */,
 			);
 			name = CocoaSQL;
 			path = Source/CocoaSQL;
@@ -532,6 +535,7 @@
 				8295F291116F8CD10053E781 /* NSError+CocoaSQL.h in Headers */,
 				AAA449B21174FED6006143D9 /* CSQLResultValue.h in Headers */,
 				AA7A94D11176F1E700643185 /* CSQLResultCallback.h in Headers */,
+				82EC45C71186D964006CBDF2 /* CocoaSQLErrors.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

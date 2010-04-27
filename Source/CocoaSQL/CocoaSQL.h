@@ -25,3 +25,5 @@
 #import "CSQLResultValue.h"
 #import "NSMutableArray+CocoaSQL.h"
 #import "NSError+CocoaSQL.h"
+
+#include "CocoaSQLErrors.h"
