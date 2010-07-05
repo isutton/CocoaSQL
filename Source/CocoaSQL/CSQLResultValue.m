@@ -250,8 +250,7 @@
         return [NSDate dateWithTimeIntervalSince1970:[value doubleValue]];
     }
     if ([[value class] isSubclassOfClass:[NSNull class]]) {
-        // XXX - is this date 0 ? .. perhaps I should create the date from an epoch == 0?
-        return [NSDate alloc];
+        return [NSDate dateWithTimeIntervalSince1970:0];
     }
     if ([[value class] isSubclassOfClass:[NSString class]]) {
         // if the data contains a date string ... a correct NSDate will be returned
@@ -270,7 +269,7 @@
         return [NSData dataWithBytes:(void *)[value UTF8String] length:[value length]];
 	}
     if ([[value class] isSubclassOfClass:[NSNull class]])
-        return [NSData alloc]; // empty data
+        return [NSData data]; // empty data
     if ([[value class] isSubclassOfClass:[NSNumber class]]) {
         const char *objCType = [value objCType];
         int length = 0;
