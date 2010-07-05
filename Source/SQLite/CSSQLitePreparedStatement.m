@@ -28,7 +28,7 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
     sqlite3_value *rawValue = sqlite3_column_value(preparedStatement, column);
     
     sqlite3_int64 signedValue;
-    id value;
+    id value = nil;
     
     switch (columnType) {
         case SQLITE_FLOAT:
