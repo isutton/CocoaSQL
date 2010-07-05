@@ -25,7 +25,7 @@
 @implementation CSQLResultValue
 
 #pragma mark -
-#pragma Constructors
+#pragma mark Constructors
 
 + (id)valueWithObject:(id)aValue
 {
