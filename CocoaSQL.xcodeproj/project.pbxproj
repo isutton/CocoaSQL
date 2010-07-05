@@ -75,91 +75,91 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */;
+			remoteGlobalIDString = 82EC452D11861571006CBDF2;
 			remoteInfo = "CocoaSQL-SQLite";
 		};
 		827E36AE11E21AD400684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 82EE6F44116F282000885118 /* otest */;
+			remoteGlobalIDString = 82EE6F44116F282000885118;
 			remoteInfo = otest;
 		};
 		827E36E411E21E0900684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = CocoaSQL;
 		};
 		827E371011E21EE300684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = CocoaSQL;
 		};
 		827E371211E21EE300684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 82EC44F7118613A9006CBDF2 /* CocoaSQL-MySQL */;
+			remoteGlobalIDString = 82EC44F7118613A9006CBDF2;
 			remoteInfo = "CocoaSQL-MySQL";
 		};
 		827E373311E21F5D00684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 82EE6F44116F282000885118 /* otest */;
+			remoteGlobalIDString = 82EE6F44116F282000885118;
 			remoteInfo = otest;
 		};
 		827E375311E21FDA00684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = CocoaSQL;
 		};
 		827E375511E21FDA00684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 82EC44D411861212006CBDF2 /* CocoaSQL-PostgreSQL */;
+			remoteGlobalIDString = 82EC44D411861212006CBDF2;
 			remoteInfo = "CocoaSQL-PostgreSQL";
 		};
 		827E375711E21FDA00684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 82EE6F44116F282000885118 /* otest */;
+			remoteGlobalIDString = 82EE6F44116F282000885118;
 			remoteInfo = otest;
 		};
 		827E377E11E2205100684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 82EE6F44116F282000885118 /* otest */;
+			remoteGlobalIDString = 82EE6F44116F282000885118;
 			remoteInfo = otest;
 		};
 		827E378011E2205100684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 827E36A511E21AB800684466 /* CocoaSQL-Tests-SQLite */;
+			remoteGlobalIDString = 827E36A511E21AB800684466;
 			remoteInfo = "CocoaSQL-Tests-SQLite";
 		};
 		827E378211E2205100684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 827E370911E21EDB00684466 /* CocoaSQL-Tests-MySQL */;
+			remoteGlobalIDString = 827E370911E21EDB00684466;
 			remoteInfo = "CocoaSQL-Tests-MySQL";
 		};
 		827E378411E2205100684466 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 827E374A11E21FCD00684466 /* CocoaSQL-Tests-PostgreSQL */;
+			remoteGlobalIDString = 827E374A11E21FCD00684466;
 			remoteInfo = "CocoaSQL-Tests-PostgreSQL";
 		};
 		82EC44FD118613B1006CBDF2 /* PBXContainerItemProxy */ = {
@@ -1188,6 +1188,7 @@
 				LIBRARY_SEARCH_PATHS = "/opt/local/lib/**";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx10.6;
 				VALID_ARCHS = "i386 ppc ppc64 ppc7400 ppc970 x86_64";
 			};
@@ -1204,6 +1205,7 @@
 				LIBRARY_SEARCH_PATHS = "/opt/local/lib/**";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx10.6;
 			};
 			name = Release;
