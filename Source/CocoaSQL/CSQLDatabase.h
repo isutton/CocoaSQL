@@ -40,6 +40,7 @@
 - (BOOL)isActive;
 - (BOOL)isActive:(NSError **)error;
 
++ (Class)preparedStatementClass;
 
 #pragma mark -
 #pragma mark Class methods

@@ -28,6 +28,8 @@
 @property (readwrite,assign) voidPtr databaseHandle;
 @property (readonly) NSNumber *affectedRows;
 
++ (Class)preparedStatementClass;
+
 #pragma mark -
 #pragma mark Initialization related messages
 

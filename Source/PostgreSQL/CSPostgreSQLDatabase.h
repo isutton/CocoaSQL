@@ -26,6 +26,8 @@
 
 }
 
++ (Class)preparedStatementClass;
+
 - (id)initWithOptions:(NSDictionary *)options error:(NSError **)error;
 
 - (NSString *)dateStyle;

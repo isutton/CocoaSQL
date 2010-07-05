@@ -29,7 +29,7 @@
 + (id)preparedStatementWithDatabase:(id)aDatabase andSQL:(NSString *)sql error:(NSError **)error
 {
     id preparedStatement;
-    preparedStatement = [[self alloc] initWithDatabase:aDatabase andSQL:sql error:error];
+    preparedStatement = [[[[aDatabase class] preparedStatementClass] alloc] initWithDatabase:aDatabase andSQL:sql error:error];
     if (preparedStatement) {
         return [preparedStatement autorelease];
     }

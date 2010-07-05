@@ -28,6 +28,12 @@
 @dynamic databaseHandle;
 @dynamic affectedRows;
 
+
++ (Class)preparedStatementClass;
+{
+    return [CSMySQLPreparedStatement class];
+}
+
 #pragma mark -
 #pragma mark Initialization and dealloc related messages
 

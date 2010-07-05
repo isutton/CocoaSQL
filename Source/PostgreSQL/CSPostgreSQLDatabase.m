@@ -25,6 +25,11 @@
 
 @implementation CSPostgreSQLDatabase
 
++ (Class)preparedStatementClass
+{
+    return [CSPostgreSQLPreparedStatement class];
+}
+
 + (CSQLDatabase *)databaseWithOptions:(NSDictionary *)options error:(NSError **)error
 {
     CSQLDatabase *database = [[self alloc] initWithOptions:options error:error];
