@@ -215,14 +215,6 @@
     return success ? rows : nil;
 }
 
-- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql 
-                                      error:(NSError **)error
-{
-    return [self fetchRowsAsDictionariesWithSQL:sql
-                                      andValues:nil
-                                          error:error];
-}
-
 - (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql 
                             andValues:(NSArray *)values 
                                 error:(NSError **)error
@@ -236,14 +228,6 @@
     NSMutableArray *rows = [[callback rows] retain]; 
 	[callback release];
     return success ? rows : nil;
-}
-
-- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql 
-                                error:(NSError **)error
-{
-    return [self fetchRowsAsArraysWithSQL:sql
-                                andValues:nil
-                                    error:error];
 }
 
 - (NSNumber *)lastInsertID

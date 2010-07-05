@@ -97,93 +97,14 @@
     return [self executeSQL:sql withValues:nil error:error];
 }
 
-- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
-{
-    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
-    
-    if (!statement) {
-        return nil;
-    }
-    
-    [statement executeWithValues:values error:error];
-
-    return [statement fetchRowAsArray:error];
-}
-
-- (NSArray *)fetchRowAsArrayWithSQL:(NSString *)sql error:(NSError **)error
-{
-    return [self fetchRowAsArrayWithSQL:sql andValues:nil error:error];
-}
-
-- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
-{
-    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
-    
-    if (!statement) {
-        return nil;
-    }
-    
-    [statement executeWithValues:values error:error];
-    
-    return [statement fetchRowAsDictionary:error];
-}
-
-- (NSDictionary *)fetchRowAsDictionaryWithSQL:(NSString *)sql error:(NSError **)error
-{
-    return [self fetchRowAsDictionaryWithSQL:sql andValues:nil error:error];
-}
-
-- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
-{
-    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
-    
-    if (!statement) {
-        return nil;
-    }
-    
-    NSDictionary *row;
-    NSMutableArray *rows = [NSMutableArray array];
-    if ([statement executeWithValues:values error:error]) {
-        while (row = [statement fetchRowAsDictionary:error]) {
-            [rows addObject:row];
-        }
-    }
-
-    return rows;
-}
-
-- (NSArray *)fetchRowsAsDictionariesWithSQL:(NSString *)sql error:(NSError **)error
-{
-    return [self fetchRowsAsDictionariesWithSQL:sql andValues:nil error:error];
-}
-
-- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql andValues:(NSArray *)values error:(NSError **)error
-{
-    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
-    
-    if (!statement) {
-        return nil;
-    }
-    
-    NSArray *row;
-    NSMutableArray *rows = [NSMutableArray array];
-    if ([statement executeWithValues:values error:error]) {
-        while (row = [statement fetchRowAsArray:error]) {
-            [rows addObject:row];
-        }
-    }
-
-    return rows;
-}
-
-- (NSArray *)fetchRowsAsArraysWithSQL:(NSString *)sql error:(NSError **)error
-{
-    return [self fetchRowsAsArraysWithSQL:sql andValues:nil error:error];
-}
-
 - (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
 {
     return [CSSQLitePreparedStatement preparedStatementWithDatabase:self andSQL:sql error:error];
+}
+
++ (Class)preparedStatementClass
+{
+    return [CSSQLitePreparedStatement class];
 }
 
 @end
