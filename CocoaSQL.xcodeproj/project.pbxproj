@@ -183,13 +183,6 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = CocoaSQL;
 		};
-		82EC4545118615CC006CBDF2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 82EC452D11861571006CBDF2;
-			remoteInfo = "CocoaSQL-SQLite";
-		};
 		82EC45931186177E006CBDF2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -730,7 +723,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				82EC4546118615CC006CBDF2 /* PBXTargetDependency */,
 				82EC44FE118613B1006CBDF2 /* PBXTargetDependency */,
 			);
 			name = "CocoaSQL-MySQL";
@@ -1106,11 +1098,6 @@
 			isa = PBXTargetDependency;
 			target = 8DC2EF4F0486A6940098B216 /* CocoaSQL */;
 			targetProxy = 82EC453311861577006CBDF2 /* PBXContainerItemProxy */;
-		};
-		82EC4546118615CC006CBDF2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 82EC452D11861571006CBDF2 /* CocoaSQL-SQLite */;
-			targetProxy = 82EC4545118615CC006CBDF2 /* PBXContainerItemProxy */;
 		};
 		82EC45941186177E006CBDF2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
