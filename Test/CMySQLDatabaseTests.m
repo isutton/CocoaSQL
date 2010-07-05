@@ -108,7 +108,7 @@
     }
     if (error)
         NSLog(@"%@\n", error);
-    STAssertEquals(cnt, 100, @"Number of retreived rows)"); // ensure we got all rows
+    STAssertEquals(cnt, 100, @"Number of retrieved rows"); // ensure we got all rows
     // test fetchRowAsArray
     [selectStatement executeWithValues:params error:&error];
     NSArray *resultArray;
@@ -140,7 +140,7 @@
     }
     if (error)
         NSLog(@"%@\n", error);
-    STAssertEquals(cnt, 100, @"Number of retreived rows)"); // ensure we got all rows
+    STAssertEquals(cnt, 100, @"Number of retrieved rows"); // ensure we got all rows
     
     if (error)
         NSLog(@"%@\n", error);
@@ -148,10 +148,10 @@
 	NSLog(@"Params %@", params);
 	rowCount = 0;
 	[selectStatement executeWithValues:params receiver:self selector:@selector(gotRowAsDictionary:)];
-    STAssertEquals(rowCount, 100, @"Number of retreived rows)"); // ensure we got all rows
+    STAssertEquals(rowCount, 100, @"Number of retrieved rows"); // ensure we got all rows
 	rowCount = 0;
 	[selectStatement executeWithValues:params receiver:self selector:@selector(gotRowAsArray:) rowAsDictionary:NO];
-    STAssertEquals(rowCount, 100, @"Number of retreived rows)"); // ensure we got all rows
+    STAssertEquals(rowCount, 100, @"Number of retrieved rows"); // ensure we got all rows
 	[database executeSQL:@"DROP TABLE mysql_test" error:&error];
 
 }
