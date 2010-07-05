@@ -39,8 +39,8 @@
     
     BOOL res = [database executeSQL:@"CREATE TABLE mysql_test (i MEDIUMINT, v VARCHAR(10), d DATETIME, t timestamp, bs BIGINT signed, bu BIGINT unsigned, f float, n INTEGER NULL)" error:&error];
     
-    STAssertNil(error, @"Error.");
-    STAssertEquals(res, YES, @"CREATE TABLE.");
+    STAssertNil(error, @"%@", error);
+    STAssertEquals(res, YES, @"CREATE TABLE failed.");
     
     if (error) {
         return NO;
