@@ -29,7 +29,7 @@
 - (id) createDatabase:(NSError **)error
 {
     NSString *DSN = TEST_DSN;
-    CSQLDatabase *database = [CSQLDatabase databaseWithDSN:DSN error:&(*error)];
+    CSQLDatabase *database = [CSQLDatabase databaseWithDSN:DSN error:error];
     return database;
 }
 
