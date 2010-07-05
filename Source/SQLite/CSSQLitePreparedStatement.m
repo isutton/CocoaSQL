@@ -151,9 +151,10 @@ static id translate(sqlite3_stmt *preparedStatement, int column)
         for (int i = 1; i <= bindParameterCount; i++) {
             id value = [values objectAtIndex:i-1];
             if (![self bindValue:value toColumn:i]) {
-                *error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
-                                                    sqlite3_errmsg(database.databaseHandle)]
-                                           andCode:500];
+				if (error)
+					*error = [NSError errorWithMessage:[NSString stringWithFormat:@"%s", 
+														sqlite3_errmsg(database.databaseHandle)]
+											   andCode:500];
                 return NO;
             }
         }
