@@ -82,25 +82,9 @@
     [super dealloc];
 }
 
-- (BOOL)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error 
-{
-    CSQLPreparedStatement *statement = [self prepareStatement:sql error:error];
-    
-    if (!statement) {
-        return NO;
-    }
-    
-    return [statement executeWithValues:values error:error];
-}
-
 - (BOOL)executeSQL:(NSString *)sql error:(NSError **)error
 {
     return [self executeSQL:sql withValues:nil error:error];
-}
-
-- (CSQLPreparedStatement *)prepareStatement:(NSString *)sql error:(NSError **)error
-{
-    return [CSSQLitePreparedStatement preparedStatementWithDatabase:self andSQL:sql error:error];
 }
 
 + (Class)preparedStatementClass

@@ -115,9 +115,13 @@
 
 - (BOOL)executeSQL:(NSString *)sql withValues:(NSArray *)values error:(NSError **)error
 {
-	if (error)
-        *error = [NSError errorWithMessage:@"Driver needs to implement this message." andCode:500];
-	return NO;
+    CSQLPreparedStatement *preparedStatement = [self prepareStatement:sql error:error];
+    
+    if (!preparedStatement) {
+        return NO;
+    }
+    
+    return [preparedStatement executeWithValues:values error:error];
 }
 
 - (BOOL)executeSQL:(NSString *)sql error:(NSError **)error
