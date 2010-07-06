@@ -121,13 +121,13 @@
             //
             
         case TIMESTAMPTZOID:
+            aValue = [CSQLResultValue valueWithDate:[NSDate dateWithTimeInterval:((double)OSSwapConstInt64(*((uint64_t *)value_))/1000000) sinceDate:POSTGRES_EPOCH_DATE]];
+            break;
         case TIMESTAMPOID:
-            aValue = [CSQLResultValue valueWithDate:[NSDate dateWithTimeInterval:((double)OSSwapConstInt64(*((uint64_t *)value_))/1000000) 
-                                                                       sinceDate:POSTGRES_EPOCH_DATE]];
+            aValue = [CSQLResultValue valueWithDate:[NSDate dateWithTimeInterval:(((double)OSSwapConstInt64(*((uint64_t *)value_))/1000000) - [[NSTimeZone defaultTimeZone] secondsFromGMTForDate:POSTGRES_EPOCH_DATE]) sinceDate:POSTGRES_EPOCH_DATE]];
             break;
         case DATEOID:
-            aValue = [CSQLResultValue valueWithDate:[[NSDate dateWithString:@"2000-01-01 00:00:00 +0000"] 
-                                                     dateByAddingTimeInterval:OSSwapConstInt32(*((uint32_t *)value_)) * 24 * 3600]];
+            aValue = [CSQLResultValue valueWithDate:[POSTGRES_EPOCH_DATE dateByAddingTimeInterval:OSSwapConstInt32(*((uint32_t *)value_)) * 24 * 3600]];
             break;
         default:
             break;
