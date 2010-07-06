@@ -130,7 +130,7 @@
     return YES;
 }
 
-- (void)getError:(NSError **)error
+- (BOOL)getError:(NSError **)error
 {
     if (error) {
         NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:1];
@@ -138,6 +138,7 @@
         [errorDetail setObject:errorMessage forKey:NSLocalizedDescriptionKey];
         *error = [NSError errorWithDomain:[[self class] description] code:100 userInfo:errorDetail];
     }
+    return YES;
 }
 
 - (id)fetchRowWithSelector:(SEL)aSelector error:(NSError **)error

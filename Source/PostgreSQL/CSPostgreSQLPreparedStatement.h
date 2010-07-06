@@ -28,6 +28,6 @@
     id row;
 }
 
-- (void)getError:(NSError **)error;
+- (BOOL)getError:(NSError **)error;
 
 @end
