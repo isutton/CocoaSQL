@@ -128,6 +128,7 @@
 
 #pragma mark -
 #pragma mark CSQLDatabase related messages
+
 - (BOOL)executeSQL:(NSString *)sql 
               withValues:(NSArray *)values
                    error:(NSError **)error 
@@ -210,7 +211,7 @@
                            receiver:callback
                             selector:@selector(rowsAsDictionaries:)
                               error:error];
-    NSMutableArray *rows = [[callback rows] retain];
+    NSMutableArray *rows = [callback rows];
 	[callback release];
     return success ? rows : nil;
 }
@@ -225,7 +226,7 @@
                            receiver:callback
 						   selector:@selector(rowsAsArrays:) 
                               error:error];
-    NSMutableArray *rows = [[callback rows] retain]; 
+    NSMutableArray *rows = [callback rows]; 
 	[callback release];
     return success ? rows : nil;
 }
