@@ -235,7 +235,7 @@
                               nil];
     NSDictionary *resultDictionary;
     int count = 1;
-    while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
+    while ((resultDictionary = [selectStatement fetchRowAsDictionary:nil])) {
         NSDictionary *expectedDictionary = [expectedArray objectAtIndex:count-1];
         STAssertEquals([resultDictionary count], [expectedDictionary count], @"fetchRowAsArrayWithSQL: number of keys match.");
         STAssertEqualObjects(resultDictionary, expectedDictionary, @"fetchRowAsDictionary: rows match.");
@@ -283,7 +283,7 @@
     
     NSDictionary *resultDictionary;
     int count = 1;
-    while (resultDictionary = [selectStatement fetchRowAsDictionary:nil]) {
+    while ((resultDictionary = [selectStatement fetchRowAsDictionary:nil])) {
         NSNumber *i = [NSNumber numberWithInt:count];
         NSString *v = [NSString stringWithFormat:@"v%d", count];
         STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");

@@ -80,7 +80,7 @@
     [selectStatement executeWithValues:params error:&error];
     NSDictionary *resultDictionary;
     int cnt = 0;
-    while (resultDictionary = [selectStatement fetchRowAsDictionary:&error]) {
+    while ((resultDictionary = [selectStatement fetchRowAsDictionary:&error])) {
         cnt++;
         NSNumber *i = [NSNumber numberWithInt:cnt];
         NSString *v = [NSString stringWithFormat:@"v%d", cnt];
@@ -113,7 +113,7 @@
     [selectStatement executeWithValues:params error:&error];
     NSArray *resultArray;
     cnt = 0;
-    while (resultArray = [selectStatement fetchRowAsArray:nil]) {
+    while ((resultArray = [selectStatement fetchRowAsArray:nil])) {
         cnt++;
         NSNumber *i = [NSNumber numberWithInt:cnt];
         NSString *v = [NSString stringWithFormat:@"v%d", cnt];
