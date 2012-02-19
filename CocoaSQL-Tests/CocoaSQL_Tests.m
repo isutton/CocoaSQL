@@ -47,19 +47,19 @@
     NSError *error = nil;
     
     NSArray *tests = [NSArray arrayWithObjects:
-//                      [NSDictionary dictionaryWithObjectsAndKeys:
-//                       @"SQLite", @"driver",
-//                       @"test.db", @"path",
-//                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
+                       @"SQLite", @"driver",
+                       @"test.db", @"path",
+                       nil],
                       [NSDictionary dictionaryWithObjectsAndKeys:
                        @"MySQL", @"driver",
                        @"test", @"db",
                        @"localhost", @"host",
                        @"root", @"user",
                        nil],
-//                      [NSDictionary dictionaryWithObjectsAndKeys:
-//                       @"PostgreSQL", @"driver",
-//                       nil],
+                      [NSDictionary dictionaryWithObjectsAndKeys:
+                       @"PostgreSQL", @"driver",
+                       nil],
                       nil];
     
     for (NSDictionary *test in tests) {

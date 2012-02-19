@@ -21,6 +21,8 @@
 		826C2FB714F1B29900D1FAD1 /* CocoaSQL_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 826C2FB614F1B29900D1FAD1 /* CocoaSQL_Tests.m */; };
 		826C2FBC14F1B39000D1FAD1 /* CocoaSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* CocoaSQL.framework */; };
 		826C2FBD14F1B52800D1FAD1 /* CocoaSQL-MySQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82EC44F8118613A9006CBDF2 /* CocoaSQL-MySQL.framework */; };
+		826C2FBE14F1B88C00D1FAD1 /* CocoaSQL-PostgreSQL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82EC44D511861212006CBDF2 /* CocoaSQL-PostgreSQL.framework */; };
+		826C2FBF14F1B88C00D1FAD1 /* CocoaSQL-SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82EC452E11861571006CBDF2 /* CocoaSQL-SQLite.framework */; };
 		828B609E1175DBEA00AB732C /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 828B609C1175DBEA00AB732C /* COPYING */; };
 		828B609F1175DBEA00AB732C /* COPYING.LESSER in Resources */ = {isa = PBXBuildFile; fileRef = 828B609D1175DBEA00AB732C /* COPYING.LESSER */; };
 		8295F291116F8CD10053E781 /* NSError+CocoaSQL.h in Headers */ = {isa = PBXBuildFile; fileRef = 8295F28F116F8CD10053E781 /* NSError+CocoaSQL.h */; };
@@ -173,6 +175,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				826C2FBE14F1B88C00D1FAD1 /* CocoaSQL-PostgreSQL.framework in Frameworks */,
+				826C2FBF14F1B88C00D1FAD1 /* CocoaSQL-SQLite.framework in Frameworks */,
 				826C2FBD14F1B52800D1FAD1 /* CocoaSQL-MySQL.framework in Frameworks */,
 				826C2FBC14F1B39000D1FAD1 /* CocoaSQL.framework in Frameworks */,
 				826C2FAD14F1B29900D1FAD1 /* SenTestingKit.framework in Frameworks */,
