@@ -76,48 +76,55 @@
     int affectedRows;
     NSError *error = nil;
 
-    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (1, 'test')" error:&error];
+    NSString *sql = @"INSERT INTO t (i, v) VALUES (1, 'test')";
+    affectedRows = [database executeSQL:sql error:&error];
     
-    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertNil(error, [NSString stringWithFormat:@"%@ (%@)", [error description]], sql);
     STAssertEquals(affectedRows, 1, @"INSERT.");
     
     error = nil;
-    affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (2, 'test2')" error:&error];
+    sql = @"INSERT INTO t (i, v) VALUES (2, 'test2')";
+    affectedRows = [database executeSQL:sql error:&error];
     
-    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    STAssertNil(error, [NSString stringWithFormat:@"%@ (%@)", [error description]], sql);
     STAssertEquals(affectedRows, 1, @"INSERT.");
     
     // test fetchRowAsArrayWithSQL
-    NSArray *resultArray = [database fetchRowAsArrayWithSQL:@"SELECT * FROM t WHERE i=2" error:&error];
-    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    error = nil;
+    sql = @"SELECT * FROM t WHERE i=2";
+    NSArray *resultArray = [database fetchRowAsArrayWithSQL:sql error:&error];
+    STAssertNil(error, [NSString stringWithFormat:@"%@ (%@)", [error description]], sql);
     STAssertEquals((int)[resultArray count], 2, @"fetchRowAsArrayWithSQL : resultArrayCount");
     STAssertEqualObjects([[resultArray objectAtIndex:0] stringValue], @"2" , @"fetchRowAsArrayWithSQL : resultElement1");
     STAssertEqualObjects([[resultArray objectAtIndex:1] stringValue], @"test2" , @"fetchRowAsArrayWithSQL : resultElement2");
     
     // test fetchRowAsDictionaryWithSQL
-    NSDictionary *resultDictionary = [database fetchRowAsDictionaryWithSQL:@"SELECT * FROM t WHERE i=1" error:&error];
-    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    error = nil;
+    sql = @"SELECT * FROM t WHERE i=1";
+    NSDictionary *resultDictionary = [database fetchRowAsDictionaryWithSQL:sql error:&error];
+    STAssertNil(error, [NSString stringWithFormat:@"%@ (%@)", [error description]], sql);
     STAssertEquals((int)[resultDictionary count], 2, @"fetchRowAsArrayWithSQL : resultCount");
     STAssertEqualObjects([[resultDictionary objectForKey:@"i"] stringValue], @"1" , @"fetchRowAsArrayWithSQL : resultElement1");
     STAssertEqualObjects([[resultDictionary objectForKey:@"v"] stringValue], @"test" , @"fetchRowAsArrayWithSQL : resultElement2");
     
     error = nil;
+    sql = @"DELETE FROM t WHERE i = ?";
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
     [values bindIntValue:1];
-    [database executeSQL:@"DELETE FROM t WHERE i = ?" withValues:values error:&error];
-    
-    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    [database executeSQL:sql withValues:values error:&error];
+    STAssertNil(error, [NSString stringWithFormat:@"%@ (%@)", [error description]], sql);
     STAssertEquals([[database affectedRows] intValue], 1, @"DELETE with bind values.");
+
     error = nil;
-    affectedRows = [database executeSQL:@"DELETE FROM t" error:&error];
-    
-    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    sql = @"DELETE FROM t";
+    affectedRows = [database executeSQL:sql error:&error];
+    STAssertNil(error, [NSString stringWithFormat:@"%@ (%@)", [error description]], sql);
     STAssertEquals(affectedRows, 1, @"DELETE.");
     
     error = nil;
-    affectedRows = [database executeSQL:@"DROP TABLE t" error:&error];
-    
-    STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
+    sql = @"DROP TABLE t";
+    affectedRows = [database executeSQL:sql error:&error];
+    STAssertNil(error, [NSString stringWithFormat:@"%@ (%@)", [error description]], sql);
     //STAssertEquals(affectedRows, 1, @"DROP TABLE."); // XXX - This doesn't seem to work with mysql connector, affectedRows is 0 when dropping a table :/
 }
 
