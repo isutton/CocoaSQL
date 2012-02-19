@@ -16,3 +16,6 @@ latex/
 
 # shared objects
 *.dylib
+
+# test artifacts
+test.db
