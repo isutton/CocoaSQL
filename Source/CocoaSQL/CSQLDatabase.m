@@ -174,7 +174,7 @@
     NSMutableArray *rows = [NSMutableArray array];
     
     if ([preparedStatement executeWithValues:values error:error]) {
-        while (row = [preparedStatement fetchRowAsDictionary:error]) {
+        while ((row = [preparedStatement fetchRowAsDictionary:error])) {
             [rows addObject:row];
         }                      
     }
@@ -199,7 +199,7 @@
     NSMutableArray *rows = [NSMutableArray array];
     
     if ([preparedStatement executeWithValues:values error:error]) {
-        while (row = [preparedStatement fetchRowAsArray:error]) {
+        while ((row = [preparedStatement fetchRowAsArray:error])) {
             [rows addObject:row];
         }
     }

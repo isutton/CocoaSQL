@@ -187,7 +187,7 @@
 				fetchSelector = @selector(fetchRowAsArray:);
 			
 			NSDictionary *row;
-			while (row = [self performSelector:fetchSelector withObject:nil]) {
+			while ((row = [self performSelector:fetchSelector withObject:nil])) {
 				[receiver performSelector:selector withObject:row];
 			}
 		}
