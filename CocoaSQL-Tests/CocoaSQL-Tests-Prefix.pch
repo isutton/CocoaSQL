@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'CocoaSQL-Tests' target in the 'CocoaSQL-Tests' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
