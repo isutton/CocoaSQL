@@ -1185,12 +1185,8 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					/opt/local/include,
-					/opt/local/include/mysql5/mysql,
-					/opt/local/include/postgresql84,
-				);
-				LIBRARY_SEARCH_PATHS = "/opt/local/lib/**";
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1206,8 +1202,8 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "/opt/local/include/**";
-				LIBRARY_SEARCH_PATHS = "/opt/local/lib/**";
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				RUN_CLANG_STATIC_ANALYZER = YES;
