@@ -41,34 +41,6 @@
     
 }
 
-- (void)testDatabaseWithDriver
-{
-    CSQLDatabase *database_;
-    NSError *error = nil;
-    
-    NSArray *tests = [NSArray arrayWithObjects:
-                      [NSDictionary dictionaryWithObjectsAndKeys:
-                       @"SQLite", @"driver",
-                       @"test.db", @"path",
-                       nil],
-                      [NSDictionary dictionaryWithObjectsAndKeys:
-                       @"MySQL", @"driver",
-                       @"test", @"db",
-                       @"localhost", @"host",
-                       @"root", @"user",
-                       nil],
-                      [NSDictionary dictionaryWithObjectsAndKeys:
-                       @"PostgreSQL", @"driver",
-                       nil],
-                      nil];
-    
-    for (NSDictionary *test in tests) {
-        NSString *driver = [test objectForKey:@"driver"];
-        database_ = [CSQLDatabase databaseWithDriver:driver options:test error:&error];
-        STAssertNotNil(database_, @"Driver %@, %@", driver, [error description]);
-    }    
-}
-
 - (void)testDatabaseWithDSN
 {
     CSQLDatabase *database_;
@@ -78,13 +50,6 @@
     database_ = [CSQLDatabase databaseWithDSN:DSN error:&error];
     STAssertNil(error, @"We got an error");
     STAssertNotNil(database_, @"Database should not be nil.");    
-}
-
-- (id) createDatabase:(NSError **)error
-{
-    NSString *DSN = [NSString stringWithFormat:TEST_DSN, TEST_DB];
-    CSQLDatabase *database = [CSQLDatabase databaseWithDSN:DSN error:&(*error)];
-    return database;
 }
 
 - (BOOL)createTable:(id)database 
@@ -104,16 +69,13 @@
     return YES;
 }
 
-- (void)testExecuteSQL
+- (void)_testExecuteSQL:(CSQLDatabase *)database
 {
-    NSError *error = nil;
-    int affectedRows;
-    
-    CSQLDatabase *database = [self createDatabase:&error];
-    
     [self createTable:database];
-    
-    error = nil;
+
+    int affectedRows;
+    NSError *error = nil;
+
     affectedRows = [database executeSQL:@"INSERT INTO t (i, v) VALUES (1, 'test')" error:&error];
     
     STAssertNil(error, [NSString stringWithFormat:@"We shouldn't have an error here: %@", [[error userInfo] objectForKey:@"errorMessage"]]);
@@ -159,10 +121,10 @@
     //STAssertEquals(affectedRows, 1, @"DROP TABLE."); // XXX - This doesn't seem to work with mysql connector, affectedRows is 0 when dropping a table :/
 }
 
-- (void)testPreparedStatement
+- (void)_testPreparedStatement:(CSQLDatabase *)database
 {
     NSError *error = nil;
-    CSQLDatabase *database = [self createDatabase:&error];
+
     [self createTable:database];
     
     CSQLPreparedStatement *statement = [database prepareStatement:@"INSERT INTO t (i, v) VALUES (?, ?)" error:&error];
@@ -191,6 +153,47 @@
     }
     [database executeSQL:@"DROP TABLE t" error:&error];
     STAssertNil(error, @"preparedStatement failed.");
+}
+
+- (void)testSQLite
+{
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+                             @"SQLite", @"driver",
+                             @"test.db", @"path",
+                             nil];
+
+    NSError *error = nil;
+    CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"SQLite" options:options error:&error];
+    STAssertNotNil(database, @"Driver %@, %@", [options objectForKey:@"driver"], [error description]);
+    
+    [self _testExecuteSQL:database];
+    [self _testPreparedStatement:database];
+}
+
+- (void)testMySQL
+{
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+                             @"MySQL", @"driver",
+                             @"test", @"db",
+                             @"localhost", @"host",
+                             @"root", @"user",
+                             nil];
+    NSError *error = nil;
+    CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"MySQL" options:options error:&error];
+    STAssertNotNil(database, @"Driver %@, %@", [options objectForKey:@"driver"], [error description]);
+    
+    [self _testExecuteSQL:database];
+    [self _testPreparedStatement:database];
+}
+
+- (void)testPostgreSQL
+{    
+    NSError *error = nil;
+    CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"PostgreSQL" options:[NSDictionary dictionary] error:&error];
+    STAssertNotNil(database, @"Driver PostgreSQL, %@", [error description]);
+        
+    [self _testExecuteSQL:database];
+    [self _testPreparedStatement:database];
 }
 
 @end
