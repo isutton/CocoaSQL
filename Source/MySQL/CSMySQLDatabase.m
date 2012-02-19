@@ -205,7 +205,7 @@
 								  andValues:(NSArray *)values 
                                       error:(NSError **)error
 {
-    CSQLResultCallback *callback = [CSQLResultCallback alloc];
+    CSQLResultCallback *callback = [[CSQLResultCallback alloc] init];
     BOOL success = [self executeSQL:sql
                           withValues:values
                            receiver:callback
