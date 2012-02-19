@@ -25,8 +25,11 @@
 
 - (id)init
 {
-	rows = [NSMutableArray array];
-	return [super init];
+    if (!(self = [super init]))
+        return nil;
+    
+	rows = [[NSMutableArray alloc] init];
+    return self;
 }
 
 - (void)dealloc
