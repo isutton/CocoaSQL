@@ -3,49 +3,14 @@
 The aim of the CocoaSQL project is to deliver a de-facto database API for
 Cocoa. Also, we want it to be as Cocoa compliant as possible.
 
-Our initial plan is to provide at least SQLite and MySQL connectors, and
-eventually extend it to other databases.
+# How to contribute
 
-The project is, at the time of this writing, composed of the following 
-protocols that must be implemented on a per driver basis:
+The easiest way to contribute to it is:
 
-* CSQLDatabase
-* CSQLPreparedStatement
+* Install [Homebrew](https://github.com/mxcl/homebrew).
+* Install MySQL: `brew install mysql`
+* Copy `libmysqlclient.dylib` into the project directory’s root folder.
+* Install PostgreSQL: `brew install postgres`
+* Copy `libpq.dylib` into the project directory’s root folder.
 
-Additionally, provides the following concrete classes:
-
-* CSQLDatabase
-* CSQLBindValue
-
-# Sample Code
-        #import <CocoaSQL.h>
-
-	NSError *error = nil;
-	NSMutableDictionary *options = [NSMutableDictionary dictionary];
-
-	// Connects to a SQLite database.
-	CSQLDatabase *database = [CSQLDatabase databaseWithDriver:@"SQLite" andOptions:options error:&error];
-	
-	// Executes a query.
-	NSUInteger affectedRows = [database executeSQL:@"DELETE FROM t" error:&error];
-
-	// Creates a new prepared statement
-	CSQLPreparedStatement *statement = [database prepareStatement:@"SELECT * FROM t WHERE i = ? LIMIT 10" error:&error];
-
-	// Create the binding values. the bind*Value in NSMutableArray is added through
-	// the CocoaSQL category.
-	NSMutableArray *values = [NSMutableArray arrayWithCapacity:1];
-	[values bindIntValue:1];
-
-	// or simply by creating/populating an NSArray (or a normal NSMutableArray) with CSQLBindValues
-	NSArray *values = [NSArray arrayWithObject:[CSQLBindValue bindValueWithInt:1]];
-
-	// Executes the prepared statement.
-	BOOL success = [statement executeWithValues:values error:&error];
-	
-	// Fetch all rows, one by one.
-	NSDictionary* row = nil;
-	while (row = [statement fetchRowAsDictionary:&error]) {
-		NSLog(@"Row: %@", row);
-	}
-	
+In order to run the tests (at least for now) you need to install both RDBM’s.
